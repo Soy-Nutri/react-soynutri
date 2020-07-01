@@ -1,0 +1,13 @@
+:root {
+  --mainPurple: #58157c;
+  --lightPurple: #ab47bc;
+  --darkPurple: #4a148c;
+}
+@font-face {
+  font-family: yellowtail;
+  src: url(resources/yellowtail.ttf);
+}
+
+.nav-title {
+  font-family: yellowtail;
+}
