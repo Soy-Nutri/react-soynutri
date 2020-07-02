@@ -10,7 +10,9 @@ import MenuList from "@material-ui/core/MenuList";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 
-const WeeklyDietMenuStyled = styled.div`
+import PersonIcon from "@material-ui/icons/Person";
+
+const UserMenuStyled = styled.div`
   margin-left: 1em;
   margin-right: 1em;
   .button-menu {
@@ -19,6 +21,9 @@ const WeeklyDietMenuStyled = styled.div`
   .menu-item:hover {
     background-color: var(--mainPurple);
     color: white;
+  }
+  .icon {
+    margin-right: 0.2em;
   }
 `;
 
@@ -55,7 +60,7 @@ export default function UserMenu() {
     prevOpen.current = open;
   }, [open]);
   return (
-    <WeeklyDietMenuStyled>
+    <UserMenuStyled>
       <Button
         ref={anchorRef}
         aria-controls={open ? "menu-list-grow" : undefined}
@@ -64,7 +69,8 @@ export default function UserMenu() {
         variant="text"
         className="button-menu"
       >
-        Minutas semanales
+        <PersonIcon fontSize="inherit" className="icon" />
+        Usuarios
         {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
       </Button>
       <Popper
@@ -89,17 +95,17 @@ export default function UserMenu() {
                   id="menu-list-grow"
                   onKeyDown={handleListKeyDown}
                 >
-                  <MenuItem className="menu-item" onClick={handleClose}>
-                    Agregar minuta semanal
+                  <MenuItem className="menu-item add" onClick={handleClose}>
+                    Agregar usuario
                   </MenuItem>
-                  <MenuItem className="menu-item" onClick={handleClose}>
-                    Ver minuta semanal
+                  <MenuItem className="menu-item see" onClick={handleClose}>
+                    Ver usuario
                   </MenuItem>
-                  <MenuItem className="menu-item" onClick={handleClose}>
-                    Modificar minuta semanal
+                  <MenuItem className="menu-item mod" onClick={handleClose}>
+                    Modificar usuario
                   </MenuItem>
-                  <MenuItem className="menu-item" onClick={handleClose}>
-                    Eliminar minuta semanal
+                  <MenuItem className="menu-item del" onClick={handleClose}>
+                    Eliminar usuario
                   </MenuItem>
                 </MenuList>
               </ClickAwayListener>
@@ -107,6 +113,6 @@ export default function UserMenu() {
           </Grow>
         )}
       </Popper>
-    </WeeklyDietMenuStyled>
+    </UserMenuStyled>
   );
 }

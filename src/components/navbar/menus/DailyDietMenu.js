@@ -10,8 +10,10 @@ import MenuList from "@material-ui/core/MenuList";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 
-const UserMenuStyled = styled.div`
-  margin-left: 5em;
+import TodayIcon from "@material-ui/icons/Today";
+
+const DailyDietMenuStyled = styled.div`
+  margin-left: 1em;
   margin-right: 1em;
   .button-menu {
     color: white;
@@ -19,6 +21,9 @@ const UserMenuStyled = styled.div`
   .menu-item:hover {
     background-color: var(--mainPurple);
     color: white;
+  }
+  .icon {
+    margin-right: 0.2em;
   }
 `;
 
@@ -55,7 +60,7 @@ export default function UserMenu() {
     prevOpen.current = open;
   }, [open]);
   return (
-    <UserMenuStyled>
+    <DailyDietMenuStyled>
       <Button
         ref={anchorRef}
         aria-controls={open ? "menu-list-grow" : undefined}
@@ -64,7 +69,8 @@ export default function UserMenu() {
         variant="text"
         className="button-menu"
       >
-        Usuarios
+        <TodayIcon fontSize="inherit" className="icon" />
+        Pautas diarias
         {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
       </Button>
       <Popper
@@ -90,16 +96,16 @@ export default function UserMenu() {
                   onKeyDown={handleListKeyDown}
                 >
                   <MenuItem className="menu-item" onClick={handleClose}>
-                    Agregar usuario
+                    Agregar pauta diaria
                   </MenuItem>
                   <MenuItem className="menu-item" onClick={handleClose}>
-                    Ver usuario
+                    Ver pauta diaria
                   </MenuItem>
                   <MenuItem className="menu-item" onClick={handleClose}>
-                    Modificar usuario
+                    Modificar pauta diaria
                   </MenuItem>
                   <MenuItem className="menu-item" onClick={handleClose}>
-                    Eliminar usuario
+                    Eliminar pauta diaria
                   </MenuItem>
                 </MenuList>
               </ClickAwayListener>
@@ -107,6 +113,6 @@ export default function UserMenu() {
           </Grow>
         )}
       </Popper>
-    </UserMenuStyled>
+    </DailyDietMenuStyled>
   );
 }

@@ -10,7 +10,9 @@ import MenuList from "@material-ui/core/MenuList";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 
-const DailyDietMenuStyled = styled.div`
+import DateRangeIcon from "@material-ui/icons/DateRange";
+
+const WeeklyDietMenuStyled = styled.div`
   margin-left: 1em;
   margin-right: 1em;
   .button-menu {
@@ -19,6 +21,9 @@ const DailyDietMenuStyled = styled.div`
   .menu-item:hover {
     background-color: var(--mainPurple);
     color: white;
+  }
+  .icon {
+    margin-right: 0.2em;
   }
 `;
 
@@ -55,7 +60,7 @@ export default function UserMenu() {
     prevOpen.current = open;
   }, [open]);
   return (
-    <DailyDietMenuStyled>
+    <WeeklyDietMenuStyled>
       <Button
         ref={anchorRef}
         aria-controls={open ? "menu-list-grow" : undefined}
@@ -64,7 +69,8 @@ export default function UserMenu() {
         variant="text"
         className="button-menu"
       >
-        Pautas diarias
+        <DateRangeIcon fontSize="inherit" className="icon" />
+        Minutas semanales
         {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
       </Button>
       <Popper
@@ -90,16 +96,16 @@ export default function UserMenu() {
                   onKeyDown={handleListKeyDown}
                 >
                   <MenuItem className="menu-item" onClick={handleClose}>
-                    Agregar pauta diaria
+                    Agregar minuta semanal
                   </MenuItem>
                   <MenuItem className="menu-item" onClick={handleClose}>
-                    Ver pauta diaria
+                    Ver minuta semanal
                   </MenuItem>
                   <MenuItem className="menu-item" onClick={handleClose}>
-                    Modificar pauta diaria
+                    Modificar minuta semanal
                   </MenuItem>
                   <MenuItem className="menu-item" onClick={handleClose}>
-                    Eliminar pauta diaria
+                    Eliminar minuta semanal
                   </MenuItem>
                 </MenuList>
               </ClickAwayListener>
@@ -107,6 +113,6 @@ export default function UserMenu() {
           </Grow>
         )}
       </Popper>
-    </DailyDietMenuStyled>
+    </WeeklyDietMenuStyled>
   );
 }

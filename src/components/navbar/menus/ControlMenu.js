@@ -10,6 +10,8 @@ import MenuList from "@material-ui/core/MenuList";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 
+import AssignmentIcon from "@material-ui/icons/Assignment";
+
 const ControlMenuStyled = styled.div`
   margin-left: 1em;
   margin-right: 1em;
@@ -19,6 +21,9 @@ const ControlMenuStyled = styled.div`
   .menu-item:hover {
     background-color: var(--mainPurple);
     color: white;
+  }
+  .icon {
+    margin-right: 0.2em;
   }
 `;
 
@@ -64,6 +69,7 @@ export default function UserMenu() {
         variant="text"
         className="button-menu"
       >
+        <AssignmentIcon fontSize="inherit" className="icon" />
         Controles
         {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
       </Button>
