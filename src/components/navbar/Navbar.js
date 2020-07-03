@@ -14,8 +14,14 @@ import ControlMenu from "./menus/ControlMenu";
 import DailyDietMenu from "./menus/DailyDietMenu";
 import WeeklyDietMenu from "./menus/WeeklyDietMenu";
 import DrawerMenu from "./menus/drawer/Drawer";
+import IconButton from "@material-ui/core/IconButton";
+
+// icons
+import BrightnessHighIcon from "@material-ui/icons/BrightnessHigh";
+import Brightness2Icon from "@material-ui/icons/Brightness2";
 
 const NavbarStyled = styled.div`
+  margin-bottom: 3em;
   .nav-title {
     font-family: yellowtail;
     font-size: 1.6em;
@@ -40,6 +46,7 @@ const NavbarStyled = styled.div`
     .flex {
       margin-left: auto;
       margin-right: auto;
+      margin-top: 0.5em;
     }
     .menu-container {
       margin-left: auto;
@@ -57,13 +64,13 @@ const NavbarStyled = styled.div`
   }
 `;
 
-export default function Navbar() {
+export default function Navbar(props) {
   return (
     <NavbarStyled>
       <Grid container>
         <AppBar position="sticky" color="primary">
           <Toolbar className="toolbar">
-            <Grid item xs={0} sm={1}></Grid>
+            <Grid item xs={false} sm={1}></Grid>
             <DrawerMenu />
             <Grid item container xs={12} sm={10}>
               <Link className="flex" to="/">
@@ -71,13 +78,23 @@ export default function Navbar() {
                 <Typography className="nav-title">SoyNutri</Typography>
               </Link>
               <div className="menu-container">
-                <UserMenu />
-                <ControlMenu />
-                <DailyDietMenu />
-                <WeeklyDietMenu />
+                <UserMenu className="item-menu" />
+                <ControlMenu className="item-menu" />
+                <DailyDietMenu className="item-menu" />
+                <WeeklyDietMenu className="item-menu" />
               </div>
             </Grid>
-            <Grid item xs={0} sm={1}></Grid>
+            <IconButton
+              onClick={props.handleThemeChange}
+              children={
+                props.darkState ? (
+                  <BrightnessHighIcon />
+                ) : (
+                  <Brightness2Icon style={{ color: "white" }} />
+                )
+              }
+            ></IconButton>
+            <Grid item xs={false} sm={1}></Grid>
           </Toolbar>
         </AppBar>
       </Grid>

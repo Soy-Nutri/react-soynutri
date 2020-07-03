@@ -1,5 +1,7 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
+
 import Button from "@material-ui/core/Button";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Grow from "@material-ui/core/Grow";
@@ -95,16 +97,36 @@ export default function UserMenu() {
                   id="menu-list-grow"
                   onKeyDown={handleListKeyDown}
                 >
-                  <MenuItem className="menu-item add" onClick={handleClose}>
+                  <MenuItem
+                    className="menu-item add"
+                    onClick={handleClose}
+                    component={Link}
+                    to="/agregar_usuario"
+                  >
                     Agregar usuario
                   </MenuItem>
-                  <MenuItem className="menu-item see" onClick={handleClose}>
+                  <MenuItem
+                    className="menu-item see"
+                    onClick={handleClose}
+                    component={Link}
+                    to="/ver_usuario"
+                  >
                     Ver usuario
                   </MenuItem>
-                  <MenuItem className="menu-item mod" onClick={handleClose}>
+                  <MenuItem
+                    className="menu-item mod"
+                    onClick={handleClose}
+                    component={Link}
+                    to="/modificar_usuario"
+                  >
                     Modificar usuario
                   </MenuItem>
-                  <MenuItem className="menu-item del" onClick={handleClose}>
+                  <MenuItem
+                    className="menu-item del"
+                    onClick={handleClose}
+                    component={Link}
+                    to="/eliminar_usuario"
+                  >
                     Eliminar usuario
                   </MenuItem>
                 </MenuList>
