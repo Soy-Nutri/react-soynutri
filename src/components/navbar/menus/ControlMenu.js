@@ -1,5 +1,7 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
+
 import Button from "@material-ui/core/Button";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Grow from "@material-ui/core/Grow";
@@ -19,7 +21,7 @@ const ControlMenuStyled = styled.div`
     color: white;
   }
   .menu-item:hover {
-    background-color: var(--mainPurple);
+    background-color: var(--lightPurple);
     color: white;
   }
   .icon {
@@ -95,16 +97,36 @@ export default function UserMenu() {
                   id="menu-list-grow"
                   onKeyDown={handleListKeyDown}
                 >
-                  <MenuItem className="menu-item" onClick={handleClose}>
+                  <MenuItem
+                    className="menu-item"
+                    onClick={handleClose}
+                    component={Link}
+                    to="/agregar_control"
+                  >
                     Agregar control
                   </MenuItem>
-                  <MenuItem className="menu-item" onClick={handleClose}>
+                  <MenuItem
+                    className="menu-item"
+                    onClick={handleClose}
+                    component={Link}
+                    to="/ver_control"
+                  >
                     Ver control
                   </MenuItem>
-                  <MenuItem className="menu-item" onClick={handleClose}>
+                  <MenuItem
+                    className="menu-item"
+                    onClick={handleClose}
+                    component={Link}
+                    to="/modificar_control"
+                  >
                     Modificar control
                   </MenuItem>
-                  <MenuItem className="menu-item" onClick={handleClose}>
+                  <MenuItem
+                    className="menu-item"
+                    onClick={handleClose}
+                    component={Link}
+                    to="/eliminar_control"
+                  >
                     Eliminar control
                   </MenuItem>
                 </MenuList>

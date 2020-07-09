@@ -9,7 +9,7 @@ import icon from "../../resources/icon.png";
 import { Link } from "react-router-dom";
 
 // components
-import UserMenu from "./menus/UserMenu";
+import UserMenu from "./menus/PatientMenu";
 import ControlMenu from "./menus/ControlMenu";
 import DailyDietMenu from "./menus/DailyDietMenu";
 import WeeklyDietMenu from "./menus/WeeklyDietMenu";

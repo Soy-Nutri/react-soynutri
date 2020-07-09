@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
 import { useForm } from "react-hook-form";
@@ -10,8 +10,16 @@ import Grid from "@material-ui/core/Grid";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 
-const AddUserStyled = styled.div`
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { useTheme } from "@material-ui/core/styles";
+
+const ModifyPatientStyled = styled.div`
   /* Hidde spinner number input Chrome, Safari, Edge, Opera */
   input::-webkit-outer-spin-button,
   input::-webkit-inner-spin-button {
@@ -30,6 +38,7 @@ const AddUserStyled = styled.div`
     margin-right: 1em;
   }
   .form-button {
+    margin-top: 1.5em;
     margin-left: auto;
     margin-right: auto;
   }
@@ -44,7 +53,9 @@ const AddUserStyled = styled.div`
   }
 `;
 
-export default function AddUser() {
+// TODO: poner como valor por default en los input los datos que haya guardados en la bd
+
+export default function ModifyPatient() {
   const { register, errors, handleSubmit } = useForm();
   const onSubmit = (data) => {
     console.log(data);
@@ -53,8 +64,25 @@ export default function AddUser() {
 
   const reqmsg = "Campo obligatorio";
 
+  const [open, setOpen] = useState(false);
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("xs"), {
+    defaultMatches: true,
+  });
+
+  const handleClickOpen = () => {
+    if (!errors) {
+      setOpen(true);
+    }
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
-    <AddUserStyled>
+    <ModifyPatientStyled>
       <form
         autoComplete="off"
         className="form"
@@ -62,31 +90,14 @@ export default function AddUser() {
       >
         <Grid container alignItems="center">
           <Typography className="title" variant="h5" color="primary">
-            Agregar paciente
+            Modificar datos de paciente
           </Typography>
         </Grid>
         <Grid container justify="center">
-          <Grid item container spacing={2}>
-            <Grid item xs={false} sm={4}></Grid>
-            <Grid item xs={12} sm={2}>
-              <TextField
-                name="rut"
-                type="number"
-                label="Rut"
-                variant="outlined"
-                margin="dense"
-                className="input"
-                fullWidth
-                error={errors.rut}
-                helperText={
-                  errors.rut ? errors.rut.message : "Sin puntos ni guión"
-                }
-                inputRef={register({
-                  required: { value: true, message: reqmsg },
-                })}
-              />
-            </Grid>
-            <Grid item xs={12} sm={2}>
+          <Grid item container spacing={isMobile ? 0 : 2}>
+            <Grid item xs={false} sm={2} md={3} lg={4}></Grid>
+
+            <Grid item xs={12} sm={4} md={3} lg={2}>
               <TextField
                 name="names"
                 type="text"
@@ -102,12 +113,7 @@ export default function AddUser() {
                 })}
               />
             </Grid>
-            <Grid item xs={false} sm={4}></Grid>
-          </Grid>
-
-          <Grid item container spacing={2}>
-            <Grid item xs={false} sm={4}></Grid>
-            <Grid item xs={12} sm={2}>
+            <Grid item xs={12} sm={4} md={3} lg={2}>
               <TextField
                 name="father_last_name"
                 type="text"
@@ -125,7 +131,12 @@ export default function AddUser() {
                 })}
               />
             </Grid>
-            <Grid item xs={12} sm={2}>
+            <Grid item xs={false} sm={2} md={3} lg={4}></Grid>
+          </Grid>
+
+          <Grid item container spacing={isMobile ? 0 : 2}>
+            <Grid item xs={false} sm={2} md={3} lg={4}></Grid>
+            <Grid item xs={12} sm={4} md={3} lg={2}>
               <TextField
                 name="mother_last_name"
                 type="text"
@@ -143,12 +154,7 @@ export default function AddUser() {
                 })}
               />
             </Grid>
-            <Grid item xs={false} sm={4}></Grid>
-          </Grid>
-
-          <Grid item container spacing={2}>
-            <Grid item xs={false} sm={4}></Grid>
-            <Grid item xs={12} sm={2}>
+            <Grid item xs={12} sm={4} md={3} lg={2}>
               <TextField
                 name="city"
                 type="text"
@@ -164,11 +170,16 @@ export default function AddUser() {
                 })}
               />
             </Grid>
-            <Grid item xs={12} sm={2}>
+            <Grid item xs={false} sm={2} md={3} lg={4}></Grid>
+          </Grid>
+
+          <Grid item container spacing={isMobile ? 0 : 2}>
+            <Grid item xs={false} sm={2} md={3} lg={4}></Grid>
+            <Grid item xs={12} sm={4} md={3} lg={2}>
               <TextField
                 name="email"
                 label="Email"
-                type="text"
+                type="email"
                 variant="outlined"
                 margin="dense"
                 className="input"
@@ -180,12 +191,7 @@ export default function AddUser() {
                 })}
               />
             </Grid>
-            <Grid item xs={false} sm={4}></Grid>
-          </Grid>
-
-          <Grid item container spacing={2}>
-            <Grid item xs={false} sm={4}></Grid>
-            <Grid item xs={12} sm={2}>
+            <Grid item xs={12} sm={4} md={3} lg={2}>
               <TextField
                 name="phone"
                 label="Teléfono"
@@ -201,7 +207,12 @@ export default function AddUser() {
                 })}
               />
             </Grid>
-            <Grid item xs={12} sm={2}>
+            <Grid item xs={false} sm={2} md={3} lg={4}></Grid>
+          </Grid>
+
+          <Grid item container spacing={isMobile ? 0 : 2}>
+            <Grid item xs={false} sm={2} md={3} lg={4}></Grid>
+            <Grid item xs={12} sm={4} md={3} lg={2}>
               <TextField
                 name="alimentation"
                 label="Tipo de alimentación"
@@ -219,12 +230,7 @@ export default function AddUser() {
                 })}
               />
             </Grid>
-            <Grid item xs={false} sm={4}></Grid>
-          </Grid>
-
-          <Grid item container spacing={2}>
-            <Grid item xs={false} sm={4}></Grid>
-            <Grid item xs={12} sm={2}>
+            <Grid item xs={12} sm={4} md={3} lg={2}>
               <TextField
                 name="birth_date"
                 type="date"
@@ -243,18 +249,30 @@ export default function AddUser() {
                 })}
               />
             </Grid>
-            <Grid item xs={12} sm={2}>
+            <Grid item xs={false} sm={2} md={3} lg={4}></Grid>
+          </Grid>
+
+          <Grid item container spacing={isMobile ? 0 : 2}>
+            <Grid item xs={false} sm={2} md={3} lg={4}></Grid>
+            <Grid item xs={12} sm={4} md={3} lg={2}>
               <FormControl variant="outlined" margin="dense" fullWidth>
-                <InputLabel htmlFor="outlined-age-native-simple">
-                  Sexo
-                </InputLabel>
+                <InputLabel htmlFor="select-sex">Sexo</InputLabel>
                 <Select native name="sex" label="Sexo" inputRef={register}>
                   <option value={"male"}>Masculino</option>
                   <option value={"female"}>Femenino</option>
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={false} sm={4}></Grid>
+            <Grid item xs={12} sm={4} md={3} lg={2}>
+              <FormControl variant="outlined" margin="dense" fullWidth>
+                <InputLabel htmlFor="select-state">Estado</InputLabel>
+                <Select native name="sex" label="Estado" inputRef={register}>
+                  <option value={"active"}>Activo</option>
+                  <option value={"unactive"}>Inactivo</option>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={false} sm={2} md={3} lg={4}></Grid>
           </Grid>
         </Grid>
 
@@ -264,11 +282,37 @@ export default function AddUser() {
             variant="outlined"
             type="submit"
             color="primary"
+            onClick={handleClickOpen}
           >
-            Agregar
+            Guardar cambios
           </Button>
         </Grid>
       </form>
-    </AddUserStyled>
+      <div>
+        <Dialog
+          fullScreen={fullScreen}
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="responsive-dialog-title"
+        >
+          <DialogTitle id="responsive-dialog-title">
+            {"¿Realmente desea guardar los cambios?"}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Los datos de {"{nombre paciente}"} serán modificados
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button autoFocus onClick={handleClose} color="primary">
+              Cancelar
+            </Button>
+            <Button onClick={handleClose} color="primary" autoFocus>
+              Guardar
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+    </ModifyPatientStyled>
   );
 }

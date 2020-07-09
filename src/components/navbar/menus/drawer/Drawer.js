@@ -14,7 +14,7 @@ import clsx from "clsx";
 import { Link } from "react-router-dom";
 
 // components
-import UserItem from "./UserItem";
+import UserItem from "./PatientItem";
 import ControlItem from "./ControlItem";
 import DailyDietItem from "./DailyDietItem";
 import WeeklyDietItem from "./WeeklyDietItem";

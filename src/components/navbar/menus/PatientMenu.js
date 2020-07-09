@@ -14,14 +14,14 @@ import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 
 import PersonIcon from "@material-ui/icons/Person";
 
-const UserMenuStyled = styled.div`
+const PatientMenuStyled = styled.div`
   margin-left: 1em;
   margin-right: 1em;
   .button-menu {
     color: white;
   }
   .menu-item:hover {
-    background-color: var(--mainPurple);
+    background-color: var(--lightPurple);
     color: white;
   }
   .icon {
@@ -29,7 +29,7 @@ const UserMenuStyled = styled.div`
   }
 `;
 
-export default function UserMenu() {
+export default function PatientMenu() {
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
 
@@ -62,7 +62,7 @@ export default function UserMenu() {
     prevOpen.current = open;
   }, [open]);
   return (
-    <UserMenuStyled>
+    <PatientMenuStyled>
       <Button
         ref={anchorRef}
         aria-controls={open ? "menu-list-grow" : undefined}
@@ -72,7 +72,7 @@ export default function UserMenu() {
         className="button-menu"
       >
         <PersonIcon fontSize="inherit" className="icon" />
-        Usuarios
+        Pacientes
         {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
       </Button>
       <Popper
@@ -101,33 +101,33 @@ export default function UserMenu() {
                     className="menu-item add"
                     onClick={handleClose}
                     component={Link}
-                    to="/agregar_usuario"
+                    to="/agregar_paciente"
                   >
-                    Agregar usuario
+                    Agregar paciente
                   </MenuItem>
                   <MenuItem
                     className="menu-item see"
                     onClick={handleClose}
                     component={Link}
-                    to="/ver_usuario"
+                    to="/ver_paciente"
                   >
-                    Ver usuario
+                    Ver paciente
                   </MenuItem>
                   <MenuItem
                     className="menu-item mod"
                     onClick={handleClose}
                     component={Link}
-                    to="/modificar_usuario"
+                    to="/modificar_paciente"
                   >
-                    Modificar usuario
+                    Modificar paciente
                   </MenuItem>
                   <MenuItem
                     className="menu-item del"
                     onClick={handleClose}
                     component={Link}
-                    to="/eliminar_usuario"
+                    to="/borrar_paciente"
                   >
-                    Eliminar usuario
+                    Eliminar paciente
                   </MenuItem>
                 </MenuList>
               </ClickAwayListener>
@@ -135,6 +135,6 @@ export default function UserMenu() {
           </Grow>
         )}
       </Popper>
-    </UserMenuStyled>
+    </PatientMenuStyled>
   );
 }

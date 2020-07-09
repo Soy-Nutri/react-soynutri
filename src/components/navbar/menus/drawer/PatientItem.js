@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function UserItem(props) {
+export default function PatientItem(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
@@ -42,7 +42,7 @@ export default function UserItem(props) {
         <ListItemIcon>
           <PersonIcon />
         </ListItemIcon>
-        <ListItemText primary="Usuarios" />
+        <ListItemText primary="Pacientes" />
         {open ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
       <Collapse in={open} timeout="auto" unmountOnExit>
@@ -52,42 +52,48 @@ export default function UserItem(props) {
             onClick={props.handleDrawerClose}
             className={classes.nested}
             component={Link}
-            to="/agregar_usuario"
+            to="/agregar_paciente"
           >
             <ListItemIcon>
               <AddIcon />
             </ListItemIcon>
-            <ListItemText primary="Agregar usuario" />
+            <ListItemText primary="Agregar paciente" />
           </ListItem>
           <ListItem
             button
             onClick={props.handleDrawerClose}
             className={classes.nested}
+            component={Link}
+            to="/ver_paciente"
           >
             <ListItemIcon>
               <VisibilityIcon />
             </ListItemIcon>
-            <ListItemText primary="Ver usuario" />
+            <ListItemText primary="Ver paciente" />
           </ListItem>
           <ListItem
             button
             onClick={props.handleDrawerClose}
             className={classes.nested}
+            component={Link}
+            to="/modificar_paciente"
           >
             <ListItemIcon>
               <CreateIcon />
             </ListItemIcon>
-            <ListItemText primary="Modificar usuario" />
+            <ListItemText primary="Modificar paciente" />
           </ListItem>
           <ListItem
             button
             onClick={props.handleDrawerClose}
             className={classes.nested}
+            component={Link}
+            to="/borrar_paciente"
           >
             <ListItemIcon>
               <DeleteIcon />
             </ListItemIcon>
-            <ListItemText primary="Eliminar usuario" />
+            <ListItemText primary="Eliminar paciente" />
           </ListItem>
         </List>
       </Collapse>
