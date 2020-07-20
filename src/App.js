@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 // material ui stuff
 import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { esEs } from "@material-ui/core/locale";
 import purple from "@material-ui/core/colors/purple";
 import deepPurple from "@material-ui/core/colors/deepPurple";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
@@ -34,20 +35,26 @@ function App() {
   const palletType = darkState ? "dark" : "light";
   const mainPrimaryColor = darkState ? purple[500] : "#58157c";
   const mainSecondaryColor = darkState ? deepPurple[500] : deepPurple[900];
-  const theme = createMuiTheme({
-    palette: {
-      type: palletType,
-      primary: {
-        main: mainPrimaryColor,
-      },
-      secondary: {
-        main: mainSecondaryColor,
+
+  const theme = createMuiTheme(
+    {
+      palette: {
+        type: palletType,
+        primary: {
+          main: mainPrimaryColor,
+        },
+        secondary: {
+          main: mainSecondaryColor,
+        },
       },
     },
-  });
+    esEs
+  );
+
   const handleThemeChange = () => {
     setDarkState(!darkState);
   };
+
   React.useEffect(() => {
     const obtenerInfo = () => {
       setDarkState(prefersDarkMode ? true : false);

@@ -9,16 +9,16 @@ import icon from "../../resources/icon.png";
 import { Link } from "react-router-dom";
 
 // components
-import UserMenu from "./menus/PatientMenu";
-import ControlMenu from "./menus/ControlMenu";
-import DailyDietMenu from "./menus/DailyDietMenu";
-import WeeklyDietMenu from "./menus/WeeklyDietMenu";
+import AdminLinks from "./AdminLinks";
+import PatientLinks from "./PatientLinks";
 import DrawerMenu from "./menus/drawer/Drawer";
 import IconButton from "@material-ui/core/IconButton";
 
 // icons
 import BrightnessHighIcon from "@material-ui/icons/BrightnessHigh";
 import Brightness2Icon from "@material-ui/icons/Brightness2";
+import Avatar from "@material-ui/core/Avatar";
+import Chip from "@material-ui/core/Chip";
 
 const NavbarStyled = styled.div`
   margin-bottom: 3em;
@@ -41,6 +41,22 @@ const NavbarStyled = styled.div`
   }
   .menu-container {
     display: inline-flex;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .avatar {
+    margin-left: 5px;
+    color: white;
+  }
+  .avatar2 {
+    border: solid 0.8px white;
+    border-radius: 50%;
+    border-color: plum;
+    padding: 5px;
+    margin-left: 5px;
+    &:hover {
+      cursor: pointer;
+    }
   }
   @media screen and (max-width: 1152px) {
     .flex {
@@ -65,6 +81,9 @@ const NavbarStyled = styled.div`
 `;
 
 export default function Navbar(props) {
+  const handleClick = () => {
+    console.info("You clicked the Chip.");
+  };
   return (
     <NavbarStyled>
       <Grid container>
@@ -78,10 +97,8 @@ export default function Navbar(props) {
                 <Typography className="nav-title">SoyNutri</Typography>
               </Link>
               <div className="menu-container">
-                <UserMenu className="item-menu" />
-                <ControlMenu className="item-menu" />
-                <DailyDietMenu className="item-menu" />
-                <WeeklyDietMenu className="item-menu" />
+                <AdminLinks />
+                {/* <PatientLinks /> */}
               </div>
             </Grid>
             <IconButton
@@ -94,6 +111,13 @@ export default function Navbar(props) {
                 )
               }
             ></IconButton>
+            <div className="avatar2">NN</div>
+            <Chip
+              className="avatar"
+              variant="outlined"
+              label="NN"
+              onClick={handleClick}
+            />
             <Grid item xs={false} sm={1}></Grid>
           </Toolbar>
         </AppBar>

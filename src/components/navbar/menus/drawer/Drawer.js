@@ -14,10 +14,8 @@ import clsx from "clsx";
 import { Link } from "react-router-dom";
 
 // components
-import UserItem from "./PatientItem";
-import ControlItem from "./ControlItem";
-import DailyDietItem from "./DailyDietItem";
-import WeeklyDietItem from "./WeeklyDietItem";
+import AdminItemsLinks from "./AdminItemsLinks";
+import PatientItemsLinks from "./PatientItemsLinks";
 
 // icons
 import MenuIcon from "@material-ui/icons/Menu";
@@ -120,10 +118,9 @@ export default function DrawerMenu() {
             </ListItemIcon>
             <ListItemText primary="Inicio" />
           </ListItem>
-          <UserItem handleDrawerClose={handleDrawerClose} />
-          <ControlItem handleDrawerClose={handleDrawerClose} />
-          <DailyDietItem handleDrawerClose={handleDrawerClose} />
-          <WeeklyDietItem handleDrawerClose={handleDrawerClose} />
+
+          {/* <AdminItemsLinks handleDrawerClose={handleDrawerClose} /> */}
+          <PatientItemsLinks handleDrawerClose={handleDrawerClose} />
         </List>
       </Drawer>
     </div>

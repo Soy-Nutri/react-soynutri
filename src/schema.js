@@ -2,21 +2,51 @@
 DB Schema 
 */
 
-let DB = {
+export const DB = {
   patients: [
     {
       rut: 189876787,
-      names: "rodrigo alberto",
-      father_last_name: "rodriguez",
-      mother_last_name: "henriquez",
+      names: "Rodrigo Alberto",
+      father_last_name: "Rodriguez",
+      mother_last_name: "Henriquez",
       city: "Talca",
       state: "activo",
-      in_date: "01/01/2020",
+      in_date: "24/01/2020",
       email: "rrhen@email.com",
       phone: "+56923456789",
       birth_date: "02/06/1995",
       sex: "masculino",
       alimentation: "vegetariano",
+      password: "",
+    },
+    {
+      rut: 179876787,
+      names: "Fernando Ricardo",
+      father_last_name: "fernandez",
+      mother_last_name: "muñoz",
+      city: "Talca",
+      state: "activo",
+      in_date: "05/02/2020",
+      email: "ferfer@email.com",
+      phone: "+56923498602",
+      birth_date: "12/09/1996",
+      sex: "masculino",
+      alimentation: "vegano",
+      password: "",
+    },
+    {
+      rut: 183546709,
+      names: "Casimiro  Antonio",
+      father_last_name: "Faundez",
+      mother_last_name: "Sierra",
+      city: "Talca",
+      state: "activo",
+      in_date: "16/01/2020",
+      email: "casi@email.com",
+      phone: "+5692348971",
+      birth_date: "01/04/1998",
+      sex: "masculino",
+      alimentation: "omnívoro",
       password: "",
     },
   ],
@@ -25,7 +55,7 @@ let DB = {
       rut: 189876787,
       controls: [
         {
-          date: "02/02/2020",
+          date: "24/01/2020",
           weight: 87.5, // kg
           size: 1.8, // m
           cbr: 30, //cm
@@ -47,9 +77,41 @@ let DB = {
       ],
       biochemists: [
         {
-          date: "04/01/2020",
+          date: "20/01/2020",
           b12: "normal",
-          d: "alterada (29,5)",
+          d: "alterada (29,6)",
+        },
+      ],
+    },
+    {
+      rut: 183546709,
+      controls: [
+        {
+          date: "05/02/2020",
+          weight: 77.5, // kg
+          size: 1.75, // m
+          cbr: 28, //cm
+          cbc: 31, // cm
+          cc_min: 76, // cm
+          cc_max: 81, // cm
+          cad_max: 99, //cm
+          triceps_fold: 9, // mm
+          subscapular_fold: 10, // mm
+          abdominal_fold: 13, // mm
+          imc: 21, // kg/mt2
+          dni: "normal",
+          biological_age: 20,
+          visceral_fat: 4,
+          fat: 14.3, // %
+          mass: 42, // %
+          muscle_mass: 25, // kg
+        },
+      ],
+      biochemists: [
+        {
+          date: "01/02/2020",
+          b12: "normal",
+          d: "normal (28)",
         },
       ],
     },
