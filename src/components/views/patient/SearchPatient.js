@@ -17,6 +17,10 @@ import VisibilityIcon from "@material-ui/icons/Visibility";
 
 import { DB } from "../../../schema";
 
+// redux
+import { useDispatch, useSelector } from "react-redux";
+// import { getPoke } from "../../../redux/ducks/authDucks";
+
 const SearchPatientStyled = styled.div`
   .paper-input {
     margin-top: 2em;
@@ -91,6 +95,12 @@ export default function SearchPatient() {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+
+  // redux
+  const dispatch = useDispatch();
+
+  const poke = useSelector((store) => store);
+  console.log(poke);
 
   return (
     <SearchPatientStyled>

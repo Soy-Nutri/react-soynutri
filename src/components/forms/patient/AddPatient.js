@@ -11,8 +11,15 @@ import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
+
 import { useTheme } from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+
+// redux
+import { useDispatch, useSelector } from "react-redux";
+import { addPatient } from "../../../redux/ducks/patientsDucks";
 
 const AddPatientStyled = styled.div`
   /* Hidde spinner number input Chrome, Safari, Edge, Opera */
@@ -48,12 +55,34 @@ const AddPatientStyled = styled.div`
   }
 `;
 
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 export default function AddPatient() {
   const { register, errors, handleSubmit } = useForm();
+  const dispatch = useDispatch();
+  const [open, setOpen] = React.useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
+  };
+
   const onSubmit = (data) => {
     console.log(data);
     console.log(errors);
+    dispatch(addPatient(data));
+
+    handleOpen();
   };
+  const newPatient = useSelector((store) => store.patients.newPatient);
 
   const reqmsg = "Campo obligatorio";
 
@@ -278,6 +307,17 @@ export default function AddPatient() {
           </Button>
         </Grid>
       </form>
+
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        {newPatient ? (
+          <Alert onClose={handleClose} severity="success">
+            El paciente {newPatient.names} {newPatient.father_last_name}{" "}
+            {newPatient.mother_last_name} fue agregado exitosamente!{" "}
+          </Alert>
+        ) : (
+          ""
+        )}
+      </Snackbar>
     </AddPatientStyled>
   );
 }
