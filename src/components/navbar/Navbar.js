@@ -147,7 +147,7 @@ export default function Navbar(props) {
                 Admin
               </Button>
             ) : localStorage.getItem("rol") === "/patient" ? (
-              <div className="avatar2" onClick={handleClick("bottom-end")}>
+              <div className="avatar2" onClick={handleClick}>
                 NN
               </div>
             ) : (
