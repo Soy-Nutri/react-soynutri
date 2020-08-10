@@ -39,6 +39,10 @@ export const loginUser = (userData) => (dispatch) => {
     axios.post("/patientsAuth/login", userData).then((res) => {
       setAuthorizationHeader(res.data.token);
       localStorage.setItem("rol", "/paciente");
+      localStorage.setItem(
+        "nick",
+        res.data.names[0] + res.data.father_last_name[0]
+      );
       dispatch({
         type: SET_USER,
       });
@@ -51,6 +55,7 @@ export const loginUser = (userData) => (dispatch) => {
 export const logoutUser = () => (dispatch) => {
   localStorage.removeItem("FBIdToken");
   localStorage.removeItem("rol");
+  localStorage.removeItem("nick");
   delete axios.defaults.headers.common["Authorization"];
   window.location.reload();
   window.location.href = "/";
