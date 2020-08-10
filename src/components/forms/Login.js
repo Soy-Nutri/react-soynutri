@@ -12,7 +12,7 @@ import { useTheme } from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 // redux
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { loginUser } from "../../redux/ducks/authDucks";
 
 const AddPatientStyled = styled.div`
@@ -54,7 +54,6 @@ export default function AddPatient() {
   // redux
   const dispatch = useDispatch();
   const onSubmit = (userData) => {
-    console.log(userData);
     dispatch(loginUser(userData));
   };
 

@@ -39,6 +39,8 @@ export const loginUser = (userData) => (dispatch) => {
     axios.post("/patientsAuth/login", userData).then((res) => {
       setAuthorizationHeader(res.data.token);
       localStorage.setItem("rol", "/paciente");
+      window.location.reload();
+      window.location.href = "/";
     });
   }
 };

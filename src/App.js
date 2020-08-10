@@ -82,11 +82,7 @@ function App() {
   const token = localStorage.FBIdToken;
   if (token) {
     const decodedToken = jwtDecode(token);
-    console.log(token);
-
     if (localStorage.rol === "/soynutri-adm") {
-      console.log("logout");
-      console.log(decodedToken);
       if ((decodedToken.auth_time + 86400) * 1000 < Date.now()) {
         // 1 day of expiration for admin
         store.dispatch(logoutUser());
