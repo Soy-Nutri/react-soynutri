@@ -64,6 +64,9 @@ export default function AddPatient() {
   const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
 
+  const newPatient = useSelector((store) => store.patients.newPatient);
+  const newPatientError = useSelector((store) => store.patients.errors);
+
   const handleOpen = () => {
     setOpen(true);
   };
@@ -74,15 +77,10 @@ export default function AddPatient() {
     }
     setOpen(false);
   };
-
   const onSubmit = (data) => {
-    console.log(data);
-    console.log(errors);
     dispatch(addPatient(data));
-
     handleOpen();
   };
-  const newPatient = useSelector((store) => store.patients.newPatient);
 
   const reqmsg = "Campo obligatorio";
 
@@ -109,7 +107,7 @@ export default function AddPatient() {
             <Grid item xs={12} sm={4} md={3} lg={2}>
               <TextField
                 name="rut"
-                type="number"
+                type="text"
                 label="Rut"
                 variant="outlined"
                 margin="dense"
@@ -308,16 +306,22 @@ export default function AddPatient() {
         </Grid>
       </form>
 
-      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-        {newPatient ? (
+      {newPatient ? (
+        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
           <Alert onClose={handleClose} severity="success">
             El paciente {newPatient.names} {newPatient.father_last_name}{" "}
             {newPatient.mother_last_name} fue agregado exitosamente!{" "}
           </Alert>
-        ) : (
-          ""
-        )}
-      </Snackbar>
+        </Snackbar>
+      ) : newPatientError ? (
+        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+          <Alert onClose={handleClose} severity="error">
+            {newPatientError}
+          </Alert>
+        </Snackbar>
+      ) : (
+        ""
+      )}
     </AddPatientStyled>
   );
 }

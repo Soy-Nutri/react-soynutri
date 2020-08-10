@@ -119,13 +119,13 @@ export default function DrawerMenu() {
             <ListItemText primary="Inicio" />
           </ListItem>
 
-          {/* <AdminItemsLinks handleDrawerClose={handleDrawerClose} /> */}
           {localStorage.rol === "/soynutri-adm" ? (
             <AdminItemsLinks handleDrawerClose={handleDrawerClose} />
           ) : localStorage.rol === "/patient" ? (
             <PatientItemsLinks handleDrawerClose={handleDrawerClose} />
           ) : (
             <div></div>
+
           )}
         </List>
       </Drawer>
