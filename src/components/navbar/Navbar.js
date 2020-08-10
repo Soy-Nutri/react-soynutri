@@ -61,6 +61,7 @@ const NavbarStyled = styled.div`
     border-color: plum;
     padding: 5px;
     margin-left: 5px;
+    min-width: 32px;
     &:hover {
       cursor: pointer;
     }
@@ -127,8 +128,10 @@ export default function Navbar(props) {
               <div className="menu-container">
                 {localStorage.rol === "/soynutri-adm" ? (
                   <AdminLinks />
-                ) : (
+                ) : localStorage.rol === "/patient" ? (
                   <PatientLinks />
+                ) : (
+                  <div></div>
                 )}
               </div>
             </Grid>
@@ -147,8 +150,8 @@ export default function Navbar(props) {
                 Admin
               </Button>
             ) : localStorage.getItem("rol") === "/patient" ? (
-              <div className="avatar2" onClick={handleClick("bottom-end")}>
-                NN
+              <div className="avatar2" onClick={handleClick}>
+                <div style={{ textAlign: "center" }}>{localStorage.nick}</div>
               </div>
             ) : (
               <Link to="/login" style={{ textDecoration: "none" }}>
