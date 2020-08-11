@@ -31,6 +31,10 @@ import ModifyControl from "./components/forms/control/ModifyControl";
 import AddDailyDiet from "./components/forms/dailydiet/AddDailyDiet";
 import ModifyDailyDiet from "./components/forms/dailydiet/ModifyDailyDiet";
 
+//Weekly diets
+
+import WeeklyDiet from "./components/forms/weeklydiet/AddWeeklyDiet";
+
 // axios
 import axios from "axios";
 
@@ -142,6 +146,9 @@ function App() {
               exact
               component={PatientWeeklyDiets}
             />
+
+            <Route path="/agregar_minuta_semanal" exact component = {WeeklyDiet} />
+
             <Route component={Error}></Route>
           </Switch>
         </Provider>

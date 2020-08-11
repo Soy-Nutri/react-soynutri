@@ -9,18 +9,19 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 
 import WatchLaterIcon from "@material-ui/icons/WatchLater";
-
+import InputLabel from '@material-ui/core/InputLabel';
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
-
+import MenuItem from '@material-ui/core/MenuItem';
 import DateFnsUtils from "@date-io/date-fns";
+import Select from '@material-ui/core/Select';
 
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
 } from "@material-ui/pickers";
 
-const AddDailyDietStyled = styled.div`
+const AddWeeklyDietStyled = styled.div`
   /* Hidde spinner number input Chrome, Safari, Edge, Opera */
   input::-webkit-outer-spin-button,
   input::-webkit-inner-spin-button {
@@ -56,9 +57,17 @@ const AddDailyDietStyled = styled.div`
     .MuiGrid-root.MuiGrid-item.MuiGrid-grid-md-1 {
       display: none;
     }
+    .texto{
+        margin-right:0.2px;
+    }
+    .semana{
+        margin-top:15px;
+        margin-left:15px;
+    }
     .lunch-picker {
       margin-right: 0.1px;
     }
+    .
     .grid-invisible {
       display: none;
     }
@@ -70,7 +79,7 @@ const AddDailyDietStyled = styled.div`
   }
 `;
 
-export default function AddDailyDiet() {
+export default function AddWeeklyDiet() {
   const { register, errors, handleSubmit, control } = useForm();
   const onSubmit = (data) => {
     console.log(data);
@@ -92,6 +101,9 @@ export default function AddDailyDiet() {
     new Date("2020 January 1 19:30").getTime()
   );
 
+  const [dayOfWeek, setDayOfWeek] = React.useState('Dia de la semana');
+
+
   const handleBreakfastTime = (date) => {
     setBreakfastTime(date);
   };
@@ -104,6 +116,12 @@ export default function AddDailyDiet() {
   const handleDinnerTime = (date) => {
     setDinnerTime(date);
   };
+
+  const handleChangeDay = (event) => {
+    setDayOfWeek(event.target.value);
+  };
+
+
 
   // function prettyTime(date) {
   //   // this function makes de datetype date in a "HH:MM" format
@@ -119,7 +137,7 @@ export default function AddDailyDiet() {
   });
 
   return (
-    <AddDailyDietStyled>
+    <AddWeeklyDietStyled>
       <form
         autoComplete="off"
         className="form"
@@ -127,12 +145,15 @@ export default function AddDailyDiet() {
       >
         <Grid container alignItems="center">
           <Typography className="title" variant="h5" color="primary">
-            Agregar pauta diaria
+            Agregar dieta semanal 
           </Typography>
         </Grid>
-        
+
+
+    
         <Grid container justify="center" spacing={isMobile ? 0 : 2}>
           <Grid item xs={12} sm={8} md={4} lg={4}>
+          
             <TextField
               name="rut"
               type="number"
@@ -140,12 +161,51 @@ export default function AddDailyDiet() {
               variant="outlined"
               margin="dense"
               fullWidth
+              
               error={errors.rut}
               helperText={errors.rut ? errors.rut.message : ""}
               inputRef={register({
                 required: { value: true, message: reqmsg },
               })}
             />
+            
+          </Grid>
+          <Grid item xs={12} sm={8} md={4} lg={4} className="semana" >
+
+           {/*<InputLabel htmlFor="age-native-simple">Día de la semana</InputLabel> */}
+            
+            <Select
+       
+          value={dayOfWeek}
+        
+          name="dayofweek"
+    
+          onChange={handleChangeDay}>
+
+          <MenuItem disabled value="Dia de la semana">
+              <em> Dia de la semana</em>
+              <br/>
+          </MenuItem> 
+
+          <MenuItem value={"Lunes"}>Lunes</MenuItem>
+          <MenuItem value={"Martes"}>Martes</MenuItem>
+          <MenuItem value={"Miercoles"}>Miércoles</MenuItem>
+          <MenuItem value={"Jueves"}>Jueves</MenuItem>
+          <MenuItem value={"Viernes"}>Viernes</MenuItem>
+          <MenuItem value={"Sabado"}>Sábado</MenuItem>
+          <MenuItem value={"Domingo"}>Domingo</MenuItem>
+           </Select>
+
+          </Grid>
+
+        </Grid>
+             
+        <Grid container justify="center" spacing={isMobile ? 0 : 2}>
+     
+          <Grid item xs={12} sm={8} md={4} lg={4}>
+          
+     
+
           </Grid>
         </Grid>
 
@@ -386,10 +446,10 @@ export default function AddDailyDiet() {
             type="submit"
             color="primary"
           >
-            Agregar pauta diaria
+            Guardar Minuta Semanal
           </Button>
         </Grid>
       </form>
-    </AddDailyDietStyled>
+    </AddWeeklyDietStyled>
   );
 }
