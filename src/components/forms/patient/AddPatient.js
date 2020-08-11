@@ -77,9 +77,11 @@ export default function AddPatient() {
     }
     setOpen(false);
   };
-  const onSubmit = (data) => {
+
+  const onSubmit = (data, e) => {
     dispatch(addPatient(data));
     handleOpen();
+    e.target.reset();
   };
 
   const reqmsg = "Campo obligatorio";
