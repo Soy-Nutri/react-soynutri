@@ -64,7 +64,7 @@ export default function PatientItem(props) {
             onClick={props.handleDrawerClose}
             className={classes.nested}
             component={Link}
-            to="/ver_paciente"
+            to="/buscar_paciente"
           >
             <ListItemIcon>
               <VisibilityIcon />

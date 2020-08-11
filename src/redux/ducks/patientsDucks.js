@@ -5,6 +5,7 @@ const ADD_PATIENT = "ADD_PATIENT";
 const ADD_PATIENT_ERROR = "ADD_PATIENT_ERROR";
 const CLEAR_ERRORS = "CLEAR_ERRORS";
 const GET_PATIENTS = "GET_PATIENTS";
+//const DELETE_PATIENT = "DELETE_PATIENT";
 
 const initialState = {
   newPatient: null,
@@ -28,7 +29,9 @@ export default function patientsReducer(state = initialState, action) {
   }
 }
 
-// Action creators
+/* ACTION CREATORS */
+
+// add a patient
 export const addPatient = (patientData) => (dispatch) => {
   dispatch({ type: CLEAR_ERRORS });
   axios
@@ -47,6 +50,7 @@ export const addPatient = (patientData) => (dispatch) => {
     });
 };
 
+// get a list of patient with basic info
 export const getPatients = () => (dispatch) => {
   axios
     .get("/patients/getId")
@@ -54,4 +58,15 @@ export const getPatients = () => (dispatch) => {
       dispatch({ type: GET_PATIENTS, payload: res.data });
     })
     .catch((error) => console.log(error));
+};
+
+// delete a patient by rut
+export const deletePatient = (rut) => (dispatch) => {
+  // delete changes the state to inactive
+  axios
+    .delete("/patients/deletePerfil", rut)
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((error) => console.log(error.response));
 };

@@ -109,7 +109,7 @@ export default function PatientMenu() {
                     className="menu-item see"
                     onClick={handleClose}
                     component={Link}
-                    to="/ver_paciente"
+                    to="/buscar_paciente"
                   >
                     Ver paciente
                   </MenuItem>
