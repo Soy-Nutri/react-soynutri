@@ -39,6 +39,11 @@ import { Provider } from "react-redux";
 import generateStore from "./redux/store";
 import { logoutUser } from "./redux/ducks/authDucks";
 
+//Patient views
+import PatientControl from "./components/patients/Control";
+import PatientDailyDiets from "./components/patients/DailyDiets";
+import PatientWeeklyDiets from "./components/patients/WeeklyDiets";
+
 axios.defaults.baseURL =
   "https://us-central1-back-f0378.cloudfunctions.net/api";
 //axios.defaults.baseURL = "https://pokeapi.co/api/v2";
@@ -82,11 +87,7 @@ function App() {
   const token = localStorage.FBIdToken;
   if (token) {
     const decodedToken = jwtDecode(token);
-    console.log(token);
-
     if (localStorage.rol === "/soynutri-adm") {
-      console.log("logout");
-      console.log(decodedToken);
       if ((decodedToken.auth_time + 86400) * 1000 < Date.now()) {
         // 1 day of expiration for admin
         store.dispatch(logoutUser());
@@ -133,6 +134,13 @@ function App() {
               path="/modificar_pauta_diaria"
               exact
               component={ModifyDailyDiet}
+            />
+            <Route path="/carnet" exact component={PatientControl} />
+            <Route path="/pauta_diaria" exact component={PatientDailyDiets} />
+            <Route
+              path="/minuta_semanal"
+              exact
+              component={PatientWeeklyDiets}
             />
             <Route component={Error}></Route>
           </Switch>

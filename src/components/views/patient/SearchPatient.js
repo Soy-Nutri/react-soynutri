@@ -15,11 +15,9 @@ import TableRow from "@material-ui/core/TableRow";
 import SearchIcon from "@material-ui/icons/Search";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 
-import { DB } from "../../../schema";
-
 // redux
 import { useDispatch, useSelector } from "react-redux";
-// import { getPoke } from "../../../redux/ducks/authDucks";
+import { getPatients } from "../../../redux/ducks/patientsDucks";
 
 const SearchPatientStyled = styled.div`
   .paper-input {
@@ -67,22 +65,14 @@ function createRow(rut, names, father_last_name, mother_last_name) {
 }
 
 export default function SearchPatient() {
-  const [patients, setPatients] = React.useState([]);
+  const dispatch = useDispatch();
+  const patients = useSelector((store) => store.patients.patientsData);
+
+  //const [rowss, setRowss] = React.useState([]);
 
   useEffect(() => {
-    setPatients(DB.patients);
-    console.log(patients);
-  }, [patients]);
-
-  const rowss = patients.map((patient) => {
-    return createRow(
-      patient.rut,
-      patient.names,
-      patient.father_last_name,
-      patient.mother_last_name
-    );
-  });
-  console.log("pat", rowss);
+    dispatch(getPatients());
+  }, [dispatch]);
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -96,11 +86,16 @@ export default function SearchPatient() {
     setPage(0);
   };
 
-  // redux
-  const dispatch = useDispatch();
+  console.log(patients);
 
-  const poke = useSelector((store) => store);
-  console.log(poke);
+  const rowss = patients.map((patient) => {
+    return createRow(
+      patient.rut,
+      patient.names,
+      patient.father_last_name,
+      patient.mother_last_name
+    );
+  });
 
   return (
     <SearchPatientStyled>

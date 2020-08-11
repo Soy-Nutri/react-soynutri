@@ -20,7 +20,7 @@ export default function PatientItemsLinks(props) {
         onClick={props.handleDrawerClose}
         className=""
         component={Link}
-        to="/"
+        to="/carnet"
       >
         <ListItemIcon>
           <AssignmentIcon />
@@ -33,7 +33,7 @@ export default function PatientItemsLinks(props) {
         onClick={props.handleDrawerClose}
         className=""
         component={Link}
-        to="/"
+        to="/pauta_diaria"
       >
         <ListItemIcon>
           <TodayIcon />
@@ -46,7 +46,7 @@ export default function PatientItemsLinks(props) {
         onClick={props.handleDrawerClose}
         className=""
         component={Link}
-        to="/"
+        to="/minuta_semanal"
       >
         <ListItemIcon>
           <DateRangeIcon />
