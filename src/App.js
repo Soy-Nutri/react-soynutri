@@ -18,10 +18,14 @@ import Login from "./components/forms/Login";
 
 //patient
 import AddPatient from "./components/forms/patient/AddPatient";
-//import SeePatient from "./components/views/patient/SeePatient";
+import SeePatient from "./components/views/patient/SeePatient";
 import ModifyPatient from "./components/forms/patient/ModifyPatient";
 import DeletePatient from "./components/forms/patient/DeletePatient";
 import SearchPatient from "./components/views/patient/SearchPatient";
+//Patient documents
+import PatientControl from "./components/patients/Control";
+import PatientDailyDiets from "./components/patients/DailyDiets";
+import PatientWeeklyDiets from "./components/patients/WeeklyDiets";
 
 // controls
 import AddControl from "./components/forms/control/AddControl";
@@ -38,11 +42,6 @@ import axios from "axios";
 import { Provider } from "react-redux";
 import generateStore from "./redux/store";
 import { logoutUser } from "./redux/ducks/authDucks";
-
-//Patient views
-import PatientControl from "./components/patients/Control";
-import PatientDailyDiets from "./components/patients/DailyDiets";
-import PatientWeeklyDiets from "./components/patients/WeeklyDiets";
 
 axios.defaults.baseURL =
   "https://us-central1-back-f0378.cloudfunctions.net/api";
@@ -118,8 +117,13 @@ function App() {
             <Route path="/login" component={Login} />
 
             <Route path="/agregar_paciente" exact component={AddPatient} />
-            <Route path="/ver_paciente" exact component={SearchPatient} />
-            <Route path="/modificar_paciente" exact component={ModifyPatient} />
+            <Route path="/buscar_paciente" exact component={SearchPatient} />
+            <Route path="/ver_paciente/:rut" exact component={SeePatient} />
+            <Route
+              path="/modificar_paciente/:rut"
+              exact
+              component={ModifyPatient}
+            />
             <Route path="/borrar_paciente" exact component={DeletePatient} />
 
             <Route path="/agregar_control" exact component={AddControl} />

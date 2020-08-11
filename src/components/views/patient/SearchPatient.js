@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import InputBase from "@material-ui/core/InputBase";
 import Grid from "@material-ui/core/Grid";
@@ -49,6 +50,9 @@ const SearchPatientStyled = styled.div`
     max-height: 440px;
     border-radius: 5px;
   }
+  .view-patient {
+    cursor: pointer;
+  }
 `;
 
 // Data
@@ -66,6 +70,7 @@ function createRow(rut, names, father_last_name, mother_last_name) {
 
 export default function SearchPatient() {
   const dispatch = useDispatch();
+  const history = useHistory();
   const patients = useSelector((store) => store.patients.patientsData);
 
   //const [rowss, setRowss] = React.useState([]);
@@ -96,6 +101,10 @@ export default function SearchPatient() {
       patient.mother_last_name
     );
   });
+
+  const handleClick = (rut) => {
+    history.push(`/ver_paciente/${rut}`);
+  };
 
   return (
     <SearchPatientStyled>
@@ -145,10 +154,24 @@ export default function SearchPatient() {
                             const value = row[column.id];
                             return (
                               <TableCell key={column.id} align={column.align}>
-                                {column.id !== "see_icon" ? (
+                                {column.id === "rut" ? (
+                                  <span
+                                    style={{
+                                      whiteSpace: "nowrap",
+                                      overflow: "hidden",
+                                      width: "150px",
+                                      display: "block",
+                                    }}
+                                  >
+                                    {value}
+                                  </span>
+                                ) : column.id !== "see_icon" ? (
                                   value
                                 ) : (
-                                  <VisibilityIcon />
+                                  <VisibilityIcon
+                                    className="view-patient"
+                                    onClick={() => handleClick(row.rut)}
+                                  />
                                 )}
                               </TableCell>
                             );
