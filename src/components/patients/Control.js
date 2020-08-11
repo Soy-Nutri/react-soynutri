@@ -81,7 +81,7 @@ export default function Controls() {
         <Skeleton variant="rect" height={600} />
       ) : carnet[0] === "error" ? (
         <Grid container direction="row" justify="center" alignItems="center">
-          <h3>Este usuario no cuenta con ingresos en el carnet de control.</h3>
+          <h3>Este usuario no cuenta con controles aún.</h3>
         </Grid>
       ) : (
         <TableC carnet={carnet} />
@@ -91,9 +91,7 @@ export default function Controls() {
         <Skeleton variant="rect" height={100} />
       ) : biochemical[0] === "error" ? (
         <Grid container direction="row" justify="center" alignItems="center">
-          <h3>
-            Este usuario no cuenta con ingresos en los análisis bioquímicos.
-          </h3>
+          <h3>Este usuario no cuenta con análisis bioquímicos aún.</h3>
         </Grid>
       ) : (
         <TableB biochemical={biochemical} />
