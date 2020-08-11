@@ -3,14 +3,18 @@ import thunk from "redux-thunk";
 
 import authReducer from "./ducks/authDucks";
 import patientsReducer from "./ducks/patientsDucks";
-import generalInfoReducer from "./ducks/generalInfoDucks";
 import carnetReducer from "./ducks/carnet";
+import dailyDietsReducer from "./ducks/dailyDiets";
+import weeklyDiets from "./ducks/dailyDiets";
+import generalInfoReducer from "./ducks/generalInfoDucks";
 
 const rootReducer = combineReducers({
   auth: authReducer,
   patients: patientsReducer,
-  generalInfo: generalInfoReducer,
   carnet: carnetReducer,
+  dailyDiets: dailyDietsReducer,
+  weeklyDiets: weeklyDiets,
+  generalInfo: generalInfoReducer,
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
