@@ -64,7 +64,6 @@ export default function Controls() {
   const carnet = useSelector((store) => store.carnet.control);
   const biochemical = useSelector((store) => store.carnet.biochemical);
 
-
   React.useEffect(() => {
     const getCarnet = () => {
       dispatch(getControl(localStorage.rut));
