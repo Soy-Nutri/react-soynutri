@@ -3,12 +3,12 @@ import styled from "styled-components";
 
 // redux
 import { useDispatch, useSelector } from "react-redux";
-import { getDailyDiets } from "../../redux/ducks/dailyDiets";
+import { getDailyDiets } from "../../redux/ducks/patientsDailyDietsDuck";
 
 import Table from "./DailyDiets/table";
 
 import Grid from "@material-ui/core/Grid";
-import Skeleton from "@material-ui/lab/Skeleton";
+import Skeleton from "./DailyDiets/skeleton";
 
 const DailyDietsStyled = styled.div``;
 
@@ -65,15 +65,15 @@ export default function DailyDiets() {
     getInfoDailyDiets();
   }, [dispatch]);
 
-  console.log(dailyDiets);
   let dates = [];
   let diets = {};
-  for (let i = 0; i < dailyDiets.length; i++) {
-    dates.push(dailyDiets[i].date);
-    diets[dailyDiets[i].date] = dailyDiets[i];
+  if (dailyDiets.length > 0 && dailyDiets[0] !== "error") {
+    for (let i = 0; i < dailyDiets.length; i++) {
+      dates.push(dailyDiets[i].date);
+      diets[dailyDiets[i].date.toString()] = dailyDiets[i];
+    }
   }
-  console.log(dates);
-  console.log(diets);
+  dates.sort().reverse();
 
   return (
     <DailyDietsStyled style={{ margin: 50 }}>
@@ -90,8 +90,7 @@ export default function DailyDiets() {
           <h3>Este usuario no cuenta con planes de alimentación aún.</h3>
         </Grid>
       ) : (
-        // <Table dates={dates} diets={diets} />
-        <h1>Aquí irá la tabla.</h1>
+        <Table dates={dates} diets={diets} />
       )}
     </DailyDietsStyled>
   );
