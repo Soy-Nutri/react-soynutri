@@ -118,6 +118,7 @@ export default function ModifyWeeklyDiet() {
 
   
   const onSubmit = (data,e) => {
+     /* TENI QUE DEJAR EL DATE A CA AGREGARLO AL JSON data['date']= new Date(); */
     dispatch(modifyWeeklyDiet(data));
     handleOpen();
     e.target.reset();
