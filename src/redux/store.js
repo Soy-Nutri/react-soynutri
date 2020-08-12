@@ -7,6 +7,7 @@ import carnetReducer from "./ducks/patientsCarnetDucks";
 import dailyDietsReducer from "./ducks/patientsDailyDietsDuck";
 import patientWeeklyDietsReducer from "./ducks/patientsWeeklyDietsDucks";
 import generalInfoReducer from "./ducks/generalInfoDucks";
+import controlReducer from "./ducks/controlDucks";
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   dailyDiets: dailyDietsReducer,
   patientWeeklyDiets: patientWeeklyDietsReducer,
   generalInfo: generalInfoReducer,
+  control: controlReducer,
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
