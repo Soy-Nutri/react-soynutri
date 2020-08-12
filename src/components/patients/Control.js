@@ -9,7 +9,7 @@ const ControlsStyled = styled.div``;
 
 export default function Controls() {
   const dispatch = useDispatch();
-  const carnet = useSelector((store) => store.carnet.control);
+  const carnet = useSelector((state) => state.carnet.control);
 
   React.useEffect(() => {
     const getCarnet = () => {
