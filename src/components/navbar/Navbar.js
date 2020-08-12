@@ -146,7 +146,11 @@ export default function Navbar(props) {
               }
             ></IconButton>
             {localStorage.getItem("rol") === "/soynutri-adm" ? (
-              <Button aria-describedby={id} onClick={handleClick}>
+              <Button
+                aria-describedby={id}
+                onClick={handleClick}
+                style={{ color: "white" }}
+              >
                 Admin
               </Button>
             ) : localStorage.getItem("rol") === "/patient" ? (

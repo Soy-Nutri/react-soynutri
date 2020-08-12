@@ -18,7 +18,9 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
-
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
+import Skeleton from "@material-ui/lab/Skeleton";
 //redux
 import {
   getPatientInfo,
@@ -38,6 +40,7 @@ const SeePatientStyled = styled.div`
     border: 1px solid grey;
   }
 `;
+
 function getDate(date) {
   let newDate = new Date(date);
   let month = newDate.getMonth().toString();
@@ -48,9 +51,14 @@ function getDate(date) {
   return `${dayS}/${monthS}/${year}`;
 }
 
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 export default function SeePatient({ match, history }) {
   const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
+  const [openSnack, setOpenSnack] = React.useState(false);
   //const [patientInfo, setPatientInfo] = React.useState({});
   const patientInfo = useSelector((state) => state.patients.patientInfo);
 
@@ -68,6 +76,19 @@ export default function SeePatient({ match, history }) {
     setOpen(false);
   };
 
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleOpenSnack = () => {
+    setOpenSnack(true);
+  };
+  const handleCloseSnack = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSnack(false);
+  };
+
   React.useEffect(() => {
     dispatch(getPatientInfo(match.params.rut));
   }, [dispatch, match.params.rut]);
@@ -75,21 +96,20 @@ export default function SeePatient({ match, history }) {
   const handleModifyClick = (rut) => {
     history.push(`/modificar_paciente/${rut}`);
   };
-  const handleOpen = () => {
-    setOpen(true);
-  };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     dispatch(deletePatient({ rut: match.params.rut }));
     handleClose();
+    handleOpenSnack();
   };
+
   return (
     <SeePatientStyled>
       <Container maxWidth="sm">
-        <Card>
-          <CardContent>
-            {/* <Typography color="textSecondary">adjective</Typography> */}
-            {patientInfo && (
+        {patientInfo ? (
+          <Card>
+            <CardContent>
+              {/* <Typography color="textSecondary">adjective</Typography> */}
               <div style={{ lineHeight: "2" }}>
                 <Typography variant="h5">
                   {patientInfo.names} {patientInfo.father_last_name}{" "}
@@ -109,45 +129,51 @@ export default function SeePatient({ match, history }) {
                 &bull; <strong>Tipo de alimentación:</strong>{" "}
                 {patientInfo.alimentation} <br />
               </div>
-            )}
-          </CardContent>
-          <CardActions style={{ marginLeft: "5px", marginRight: "5px" }}>
-            <Button
-              startIcon={<VisibilityIcon />}
-              size="small"
-              onClick={handleDocClick}
-            >
-              Documentos nutricionales
-            </Button>
-
-            <Menu
-              id="simple-menu"
-              anchorEl={anchorEl}
-              keepMounted
-              open={Boolean(anchorEl)}
-              onClose={handleDocClose}
-            >
-              <MenuItem onClick={handleDocClose}>Controles</MenuItem>
-              <MenuItem onClick={handleDocClose}>Pautas Diarias</MenuItem>
-              <MenuItem onClick={handleDocClose}>Minutas Semanales</MenuItem>
-            </Menu>
-
-            <Tooltip title="Modificar paciente" placement="top">
+            </CardContent>
+            <CardActions style={{ marginLeft: "5px", marginRight: "5px" }}>
               <Button
-                style={{ marginLeft: "auto" }}
+                startIcon={<VisibilityIcon />}
                 size="small"
-                onClick={() => handleModifyClick(match.params.rut)}
+                onClick={handleDocClick}
               >
-                <CreateIcon />
+                Documentos nutricionales
               </Button>
-            </Tooltip>
-            <Tooltip title="Eliminar paciente" placement="top">
-              <Button size="small" onClick={() => handleOpen()}>
-                <DeleteIcon />
-              </Button>
-            </Tooltip>
-          </CardActions>
-        </Card>
+
+              <Menu
+                id="simple-menu"
+                anchorEl={anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={handleDocClose}
+              >
+                <MenuItem onClick={handleDocClose}>Controles</MenuItem>
+                <MenuItem onClick={handleDocClose}>Pautas Diarias</MenuItem>
+                <MenuItem onClick={handleDocClose}>Minutas Semanales</MenuItem>
+              </Menu>
+
+              <Tooltip title="Modificar paciente" placement="top">
+                <Button
+                  style={{ marginLeft: "auto" }}
+                  size="small"
+                  onClick={() => handleModifyClick(match.params.rut)}
+                >
+                  <CreateIcon />
+                </Button>
+              </Tooltip>
+              <Tooltip title="Eliminar paciente" placement="top">
+                <Button size="small" onClick={() => handleOpen()}>
+                  <DeleteIcon />
+                </Button>
+              </Tooltip>
+            </CardActions>
+          </Card>
+        ) : (
+          <Skeleton
+            variant="rect"
+            height={380}
+            style={{ borderRadius: "5px" }}
+          />
+        )}
       </Container>
       <Dialog
         open={open}
@@ -173,6 +199,15 @@ export default function SeePatient({ match, history }) {
           </Button>
         </DialogActions>
       </Dialog>
+      <Snackbar
+        open={openSnack}
+        autoHideDuration={6000}
+        onClose={handleCloseSnack}
+      >
+        <Alert onClose={handleCloseSnack} severity="success">
+          El paciente fue eliminado exitosamente!
+        </Alert>
+      </Snackbar>
     </SeePatientStyled>
   );
 }

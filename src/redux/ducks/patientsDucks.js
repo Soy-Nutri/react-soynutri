@@ -5,14 +5,16 @@ const ADD_PATIENT = "ADD_PATIENT";
 const ADD_PATIENT_ERROR = "ADD_PATIENT_ERROR";
 const CLEAR_ERRORS = "CLEAR_ERRORS";
 const GET_PATIENTS = "GET_PATIENTS";
-const DELETE_PATIENT = "DELETE_PATIENT";
 const GET_PATIENT_INFO = "GET_PATIENT_INFO";
+const CLEAR_PATIENT_INFO = "CLEAR_PATIENT_INFO";
+const PATIENT_MODIFIED = "PATIENT_MODIFIED";
 
 const initialState = {
   newPatient: null,
   errors: null,
   patientsData: [],
   patientInfo: null,
+  modifiedPatient: false,
 };
 
 // Reducer
@@ -28,8 +30,10 @@ export default function patientsReducer(state = initialState, action) {
       return { ...state, patientsData: action.payload };
     case GET_PATIENT_INFO:
       return { ...state, patientInfo: action.payload };
-    case DELETE_PATIENT:
-      return { ...state };
+    case CLEAR_PATIENT_INFO:
+      return { ...state, patientInfo: null };
+    case PATIENT_MODIFIED:
+      return { ...state, modifiedPatient: true };
     default:
       return state;
   }
@@ -67,24 +71,31 @@ export const getPatientsList = () => (dispatch) => {
 };
 
 // delete a patient by rut
-export const deletePatient = (rut) => (dispatch) => {
+export const deletePatient = (rut) => async (dispatch) => {
   // delete changes the state to inactive
   axios
     .post("/patients/deletePerfil", rut)
-    .then((res) => {
-      console.log(res);
-      dispatch({ type: DELETE_PATIENT });
-    })
+    .then(() => {})
     .catch((error) => console.log(error.response));
+  await new Promise((r) => setTimeout(r, 2000));
+  window.location.href = "/";
 };
 
 // get all info of a patient by rut (required by the admin)
 export const getPatientInfo = (rut) => (dispatch) => {
+  dispatch({ type: CLEAR_PATIENT_INFO });
   axios
     .get(`/patients/getPerfil/${rut}/admin`)
     .then((res) => {
-      console.log(res.data);
       dispatch({ type: GET_PATIENT_INFO, payload: res.data });
     })
     .catch((error) => console.log(error));
+};
+
+// modify a patient
+export const modifyPatient = (data) => (dispatch) => {
+  axios
+    .post(`/patients/modifyPerfil`, data)
+    .then(() => dispatch({ type: PATIENT_MODIFIED }))
+    .catch((error) => console.log(error.message));
 };
