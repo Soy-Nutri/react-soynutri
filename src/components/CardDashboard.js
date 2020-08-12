@@ -13,6 +13,7 @@ import AddIcCallOutlinedIcon from "@material-ui/icons/AddIcCallOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import { getGeneralInfoAccion } from "../redux/ducks/generalInfoDucks";
 import Footer from "./Footer";
+import Skeleton from "@material-ui/lab/Skeleton";
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -62,7 +63,9 @@ function CardDashboard(props) {
             <Card className={classes.card}>
               <CardMedia
                 className={classes.cardMedia}
-                image="https://firebasestorage.googleapis.com/v0/b/back-f0378.appspot.com/o/117299286_914905595652904_3803091866658917710_n.jpg?alt=media"
+                //image="https://firebasestorage.googleapis.com/v0/b/back-f0378.appspot.com/o/117299286_914905595652904_3803091866658917710_n.jpg?alt=media"
+                //image="https://firebasestorage.googleapis.com/v0/b/back-f0378.appspot.com/o/ppas.jpg?alt=media"
+                image="https://firebasestorage.googleapis.com/v0/b/back-f0378.appspot.com/o/WhatsApp%20Image%202020-08-11%20at%2010.22.10%20PM.jpeg?alt=media"
                 title="Image title"
               />
               <CardContent className={classes.cardContent}>
@@ -72,9 +75,23 @@ function CardDashboard(props) {
                   component="h2"
                   align="center"
                 >
-                  {nutriName}
+                  {nutriName === undefined ? (
+                    <Grid align="center">
+                      <Skeleton width="70%" />
+                    </Grid>
+                  ) : (
+                    nutriName
+                  )}
                 </Typography>
-                <Typography align="center">{academicInfo}</Typography>
+                <Typography align="center">
+                  {academicInfo === undefined ? (
+                    <Grid align="center">
+                      <Skeleton width="33%" />
+                    </Grid>
+                  ) : (
+                    academicInfo
+                  )}
+                </Typography>
               </CardContent>
             </Card>
           </Grid>
@@ -99,14 +116,28 @@ function CardDashboard(props) {
               MENOS DIETAS, MÁS HÁBITOS<br></br>
               <br></br>
               <Link href="https://www.google.cl/maps/place/Cl%C3%ADnica+del+Alma/@-35.4291459,-71.6700028,17z/data=!3m1!4b1!4m5!3m4!1s0x9665c41e238b8ed3:0x61bbabbe093598a9!8m2!3d-35.4291459!4d-71.6678141">
-                <AddLocationOutlinedIcon />
-                {consultAddress}
+                {consultAddress === undefined ? (
+                  <Grid align="center">
+                    <Skeleton width="45%" />
+                  </Grid>
+                ) : (
+                  <div>
+                    <AddLocationOutlinedIcon /> {consultAddress}{" "}
+                  </div>
+                )}
               </Link>
               <br></br>
-              <br></br>
               <Link href={`https://api.whatsapp.com/send?phone=${phoneNumber}`}>
-                <AddIcCallOutlinedIcon />
-                {phoneNumber}
+                {phoneNumber === undefined ? (
+                  <Grid align="center">
+                    <Skeleton width="45%" />
+                  </Grid>
+                ) : (
+                  <div>
+                    {" "}
+                    <AddIcCallOutlinedIcon /> {phoneNumber}
+                  </div>
+                )}
               </Link>
             </Typography>
             <div className={classes.heroButtons}>
