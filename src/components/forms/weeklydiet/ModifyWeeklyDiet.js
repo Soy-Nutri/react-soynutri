@@ -9,21 +9,19 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 
 import WatchLaterIcon from "@material-ui/icons/WatchLater";
-import InputLabel from '@material-ui/core/InputLabel';
+//import InputLabel from '@material-ui/core/InputLabel';
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
-import MenuItem from '@material-ui/core/MenuItem';
+import MenuItem from "@material-ui/core/MenuItem";
 import DateFnsUtils from "@date-io/date-fns";
-import Select from '@material-ui/core/Select';
+import Select from "@material-ui/core/Select";
 
-import Snackbar from "@material-ui/core/Snackbar";
-import MuiAlert from "@material-ui/lab/Alert";
+//import Snackbar from "@material-ui/core/Snackbar";
+//import MuiAlert from "@material-ui/lab/Alert";
 
 //Redux
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { modifyWeeklyDiet } from "../../../redux/ducks/weeklyDietsDucks";
-
-
 
 import {
   MuiPickersUtilsProvider,
@@ -60,23 +58,23 @@ const AddWeeklyDietStyled = styled.div`
     font-size: 3.5em;
     /* color: var(--mainPurple); */
   }
-/*Cambiar estilo en media screen para las minutas */
+  /*Cambiar estilo en media screen para las minutas */
   @media screen and (min-width: 600px) {
     .MuiGrid-root.margin.MuiGrid-item.MuiGrid-grid-md-1,
     .MuiGrid-root.MuiGrid-item.MuiGrid-grid-md-1 {
       display: none;
     }
-    .texto{
-        margin-right:0.2px;
+    .texto {
+      margin-right: 0.2px;
     }
-    .semana{
-        margin-top:15px;
-        margin-left:15px;
+    .semana {
+      margin-top: 15px;
+      margin-left: 15px;
     }
     .lunch-picker {
       margin-right: 0.1px;
     }
-    
+
     .grid-invisible {
       display: none;
     }
@@ -88,47 +86,38 @@ const AddWeeklyDietStyled = styled.div`
   }
 `;
 
-
-
-
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
+// function Alert(props) {
+//   return <MuiAlert elevation={6} variant="filled" {...props} />;
+// }
 
 export default function ModifyWeeklyDiet() {
   const { register, errors, handleSubmit, control } = useForm();
   const dispatch = useDispatch();
-  const [open,setOpen] = React.useState(false);
-  
-  const newPatientWeeklyDiet = useSelector((store)=>store.weeklyDiets.modifyWeeklyDiet)
-  const newPatientWeeklyDietError = useSelector((store)=>store.weeklyDiets.errors)
-  
+  // const [open,setOpen] = React.useState(false);
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
+  // const newPatientWeeklyDiet = useSelector((store)=>store.weeklyDiets.modifyWeeklyDiet)
+  // const newPatientWeeklyDietError = useSelector((store)=>store.weeklyDiets.errors)
 
+  // const handleOpen = () => {
+  //   setOpen(true);
+  // };
 
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpen(false);
-  };
+  // const handleClose = (event, reason) => {
+  //   if (reason === "clickaway") {
+  //     return;
+  //   }
+  //   setOpen(false);
+  // };
 
-  
-  const onSubmit = (data,e) => {
-     /* TENI QUE DEJAR EL DATE A CA AGREGARLO AL JSON data['date']= new Date(); */
+  const onSubmit = (data, e) => {
+    /* TENI QUE DEJAR EL DATE A CA AGREGARLO AL JSON data['date']= new Date(); */
     dispatch(modifyWeeklyDiet(data));
-    handleOpen();
+    //handleOpen();
     e.target.reset();
 
     console.log(data);
-
   };
 
-
-  
   const reqmsg = "Campo obligatorio";
 
   //Cambiar las horas a las dadas por firebase.
@@ -146,9 +135,7 @@ export default function ModifyWeeklyDiet() {
     new Date("2020 January 1 19:30").getTime()
   );
 
-
-  const [dayOfWeek, setDayOfWeek] = React.useState('Dia de la semana');
-
+  const [dayOfWeek, setDayOfWeek] = React.useState("Dia de la semana");
 
   const handleBreakfastTime = (date) => {
     setBreakfastTime(date);
@@ -164,11 +151,8 @@ export default function ModifyWeeklyDiet() {
   };
 
   const handleChangeDay = (event) => {
-
     setDayOfWeek(event.target.value);
   };
-
-
 
   // function prettyTime(date) {
   //   // this function makes de datetype date in a "HH:MM" format
@@ -196,11 +180,8 @@ export default function ModifyWeeklyDiet() {
           </Typography>
         </Grid>
 
-
-    
         <Grid container justify="center" spacing={isMobile ? 0 : 2}>
           <Grid item xs={12} sm={8} md={4} lg={4}>
-          
             <TextField
               name="rut"
               type="number"
@@ -208,14 +189,12 @@ export default function ModifyWeeklyDiet() {
               variant="outlined"
               margin="dense"
               fullWidth
-              
               error={errors.rut}
               helperText={errors.rut ? errors.rut.message : ""}
               inputRef={register({
                 required: { value: true, message: reqmsg },
               })}
             />
-            
           </Grid>
           <Button
             className="form-button"
@@ -225,72 +204,67 @@ export default function ModifyWeeklyDiet() {
           >
             Traer dietas semanales
           </Button>
-
-
         </Grid>
 
-    <br></br>
-        <Grid container justify="center" spacing={isMobile ? 0 : 2}>       
-        <span>Dietas semanales</span>   
-           <Grid item xs={12} sm={8} md={4} lg={4} justify="center" className="semana" >
-                {/*aqui ir la semana*/}
-                    <Controller
-                    as= { <Select
-                            name="day"
-                            value={dayOfWeek}
-                            onChange={handleChangeDay}
-                            >
-                            <MenuItem disabled value="Dia de la semana">
-                                <em> Dia de la semana</em>
-                                <br/>
-                            </MenuItem> 
-                            <MenuItem value={"Lunes"}>Lunes</MenuItem>
-                            <MenuItem value={"Martes"}>Martes</MenuItem>
-                            <MenuItem value={"Miercoles"}>Miércoles</MenuItem>
-                            <MenuItem value={"Jueves"}>Jueves</MenuItem>
-                            <MenuItem value={"Viernes"}>Viernes</MenuItem>
-                            <MenuItem value={"Sabado"}>Sábado</MenuItem>
-                            <MenuItem value={"Domingo"}>Domingo</MenuItem>
-                    
-                        </Select>}
-                        name="day"
-                        defaultValue={dayOfWeek}
-                        control={control}
-                    />
-                    </Grid>
-                <span>Días de la semana</span>
-          
-                <Grid item   justify="center" className="semana" >
-                    <Controller
-                    as= { <Select
-                            name="day"
-                            value={dayOfWeek}
-                            onChange={handleChangeDay}
-                            >
-                            <MenuItem disabled value="Dia de la semana">
-                                <em> Dia de la semana</em>
-                                <br/>
-                            </MenuItem> 
-                            <MenuItem value={"Lunes"}>Lunes</MenuItem>
-                            <MenuItem value={"Martes"}>Martes</MenuItem>
-                            <MenuItem value={"Miercoles"}>Miércoles</MenuItem>
-                            <MenuItem value={"Jueves"}>Jueves</MenuItem>
-                            <MenuItem value={"Viernes"}>Viernes</MenuItem>
-                            <MenuItem value={"Sabado"}>Sábado</MenuItem>
-                            <MenuItem value={"Domingo"}>Domingo</MenuItem>
+        <br></br>
+        <Grid container justify="center" spacing={isMobile ? 0 : 2}>
+          <span>Dietas semanales</span>
+          <Grid
+            item
+            xs={12}
+            sm={8}
+            md={4}
+            lg={4}
+            justify="center"
+            className="semana"
+          >
+            {/*aqui ir la semana*/}
+            <Controller
+              as={
+                <Select name="day" value={dayOfWeek} onChange={handleChangeDay}>
+                  <MenuItem disabled value="Dia de la semana">
+                    <em> Dia de la semana</em>
+                    <br />
+                  </MenuItem>
+                  <MenuItem value={"Lunes"}>Lunes</MenuItem>
+                  <MenuItem value={"Martes"}>Martes</MenuItem>
+                  <MenuItem value={"Miercoles"}>Miércoles</MenuItem>
+                  <MenuItem value={"Jueves"}>Jueves</MenuItem>
+                  <MenuItem value={"Viernes"}>Viernes</MenuItem>
+                  <MenuItem value={"Sabado"}>Sábado</MenuItem>
+                  <MenuItem value={"Domingo"}>Domingo</MenuItem>
+                </Select>
+              }
+              name="day"
+              defaultValue={dayOfWeek}
+              control={control}
+            />
+          </Grid>
+          <span>Días de la semana</span>
 
-                        </Select>}
-                        name="day"
-                        defaultValue={dayOfWeek}
-                        control={control}
-                    />
-                </Grid>
-                        
-                        
-            </Grid>
-
-       
-
+          <Grid item justify="center" className="semana">
+            <Controller
+              as={
+                <Select name="day" value={dayOfWeek} onChange={handleChangeDay}>
+                  <MenuItem disabled value="Dia de la semana">
+                    <em> Dia de la semana</em>
+                    <br />
+                  </MenuItem>
+                  <MenuItem value={"Lunes"}>Lunes</MenuItem>
+                  <MenuItem value={"Martes"}>Martes</MenuItem>
+                  <MenuItem value={"Miercoles"}>Miércoles</MenuItem>
+                  <MenuItem value={"Jueves"}>Jueves</MenuItem>
+                  <MenuItem value={"Viernes"}>Viernes</MenuItem>
+                  <MenuItem value={"Sabado"}>Sábado</MenuItem>
+                  <MenuItem value={"Domingo"}>Domingo</MenuItem>
+                </Select>
+              }
+              name="day"
+              defaultValue={dayOfWeek}
+              control={control}
+            />
+          </Grid>
+        </Grid>
 
         <Grid container justify="center" spacing={isMobile ? 0 : 2}>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -531,8 +505,6 @@ export default function ModifyWeeklyDiet() {
           </Button>
         </Grid>
       </form>
-
-  
     </AddWeeklyDietStyled>
   );
 }
