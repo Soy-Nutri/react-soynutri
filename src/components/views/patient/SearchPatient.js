@@ -18,7 +18,7 @@ import VisibilityIcon from "@material-ui/icons/Visibility";
 
 // redux
 import { useDispatch, useSelector } from "react-redux";
-import { getPatients } from "../../../redux/ducks/patientsDucks";
+import { getPatientsList } from "../../../redux/ducks/patientsDucks";
 
 const SearchPatientStyled = styled.div`
   .paper-input {
@@ -71,12 +71,12 @@ function createRow(rut, names, father_last_name, mother_last_name) {
 export default function SearchPatient() {
   const dispatch = useDispatch();
   const history = useHistory();
-  const patients = useSelector((store) => store.patients.patientsData);
+  const patients = useSelector((state) => state.patients.patientsData);
 
   //const [rowss, setRowss] = React.useState([]);
 
   useEffect(() => {
-    dispatch(getPatients());
+    dispatch(getPatientsList());
   }, [dispatch]);
 
   const [page, setPage] = React.useState(0);

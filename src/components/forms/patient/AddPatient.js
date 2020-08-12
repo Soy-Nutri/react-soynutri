@@ -64,8 +64,8 @@ export default function AddPatient() {
   const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
 
-  const newPatient = useSelector((store) => store.patients.newPatient);
-  const newPatientError = useSelector((store) => store.patients.errors);
+  const newPatient = useSelector((state) => state.patients.newPatient);
+  const newPatientError = useSelector((state) => state.patients.errors);
 
   const handleOpen = () => {
     setOpen(true);

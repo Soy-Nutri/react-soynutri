@@ -5,12 +5,14 @@ const ADD_PATIENT = "ADD_PATIENT";
 const ADD_PATIENT_ERROR = "ADD_PATIENT_ERROR";
 const CLEAR_ERRORS = "CLEAR_ERRORS";
 const GET_PATIENTS = "GET_PATIENTS";
-//const DELETE_PATIENT = "DELETE_PATIENT";
+const DELETE_PATIENT = "DELETE_PATIENT";
+const GET_PATIENT_INFO = "GET_PATIENT_INFO";
 
 const initialState = {
   newPatient: null,
   errors: null,
   patientsData: [],
+  patientInfo: null,
 };
 
 // Reducer
@@ -24,6 +26,10 @@ export default function patientsReducer(state = initialState, action) {
       return { ...state, errors: null };
     case GET_PATIENTS:
       return { ...state, patientsData: action.payload };
+    case GET_PATIENT_INFO:
+      return { ...state, patientInfo: action.payload };
+    case DELETE_PATIENT:
+      return { ...state };
     default:
       return state;
   }
@@ -51,7 +57,7 @@ export const addPatient = (patientData) => (dispatch) => {
 };
 
 // get a list of patient with basic info
-export const getPatients = () => (dispatch) => {
+export const getPatientsList = () => (dispatch) => {
   axios
     .get("/patients/getId")
     .then((res) => {
@@ -64,9 +70,21 @@ export const getPatients = () => (dispatch) => {
 export const deletePatient = (rut) => (dispatch) => {
   // delete changes the state to inactive
   axios
-    .delete("/patients/deletePerfil", rut)
+    .post("/patients/deletePerfil", rut)
     .then((res) => {
       console.log(res);
+      dispatch({ type: DELETE_PATIENT });
     })
     .catch((error) => console.log(error.response));
+};
+
+// get all info of a patient by rut (required by the admin)
+export const getPatientInfo = (rut) => (dispatch) => {
+  axios
+    .get(`/patients/getPerfil/${rut}/admin`)
+    .then((res) => {
+      console.log(res.data);
+      dispatch({ type: GET_PATIENT_INFO, payload: res.data });
+    })
+    .catch((error) => console.log(error));
 };
