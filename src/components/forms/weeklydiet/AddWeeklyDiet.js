@@ -9,18 +9,28 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 
 import WatchLaterIcon from "@material-ui/icons/WatchLater";
-
+import InputLabel from '@material-ui/core/InputLabel';
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
-
+import MenuItem from '@material-ui/core/MenuItem';
 import DateFnsUtils from "@date-io/date-fns";
+import Select from '@material-ui/core/Select';
+
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
+
+//Redux
+import { useDispatch, useSelector } from "react-redux";
+import { addWeeklyDiet } from "../../../redux/ducks/weeklyDietsDucks";
+
+
 
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
 } from "@material-ui/pickers";
 
-const AddDailyDietStyled = styled.div`
+const AddWeeklyDietStyled = styled.div`
   /* Hidde spinner number input Chrome, Safari, Edge, Opera */
   input::-webkit-outer-spin-button,
   input::-webkit-inner-spin-button {
@@ -56,9 +66,17 @@ const AddDailyDietStyled = styled.div`
     .MuiGrid-root.MuiGrid-item.MuiGrid-grid-md-1 {
       display: none;
     }
+    .texto{
+        margin-right:0.2px;
+    }
+    .semana{
+        margin-top:15px;
+        margin-left:15px;
+    }
     .lunch-picker {
       margin-right: 0.1px;
     }
+    
     .grid-invisible {
       display: none;
     }
@@ -70,14 +88,55 @@ const AddDailyDietStyled = styled.div`
   }
 `;
 
-export default function AddDailyDiet() {
+
+
+//mientras cambie el dia y no aprete el boton se vayan cambiando los datos de los formularios
+// os ino tendria que rellenar un dia obligatoriamente ajajedsaxD
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
+export default function AddWeeklyDiet() {
   const { register, errors, handleSubmit, control } = useForm();
-  const onSubmit = (data) => {
-    console.log(data);
-    console.log(errors);
+  const dispatch = useDispatch();
+  const [open,setOpen] = React.useState(false);
+  
+  const newPatientWeeklyDiet = useSelector((store)=>store.weeklyDiets.addWeeklyDiet)
+  const newPatientWeeklyDietError = useSelector((store)=>store.weeklyDiets.errors)
+  
+
+
+  const handleOpen = () => {
+    setOpen(true);
   };
 
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
+  };
+
+  
+  const onSubmit = (data,e) => {
+    const fecha = new Date();
+
+    data['date'] =fecha; 
+
+    dispatch(addWeeklyDiet(data));
+    handleOpen();
+    e.target.reset();
+
+    console.log(data);
+
+  };
+
+
+  
   const reqmsg = "Campo obligatorio";
+
+  //Cambiar las horas a las dadas por firebase.
 
   const [breakfastTime, setBreakfastTime] = React.useState(
     new Date("January 1 2020 09:30").getTime()
@@ -92,18 +151,29 @@ export default function AddDailyDiet() {
     new Date("2020 January 1 19:30").getTime()
   );
 
+  const [dayOfWeek, setDayOfWeek] = React.useState('Dia de la semana');
+
+
   const handleBreakfastTime = (date) => {
-    setBreakfastTime(date);
+    setBreakfastTime(toString(date));
   };
   const handleLunchTime = (date) => {
-    setLunchTime(date);
+    setLunchTime(toString(date));
   };
   const handleCollationTime = (date) => {
-    setCollationTime(date);
+    setCollationTime(toString(date));
   };
   const handleDinnerTime = (date) => {
-    setDinnerTime(date);
+    setDinnerTime(toString(date));
+
   };
+
+  const handleChangeDay = (event) => {
+    console.log("selecionnaste"+event.target.value);
+    setDayOfWeek(event.target.value);
+  };
+
+
 
   // function prettyTime(date) {
   //   // this function makes de datetype date in a "HH:MM" format
@@ -119,7 +189,7 @@ export default function AddDailyDiet() {
   });
 
   return (
-    <AddDailyDietStyled>
+    <AddWeeklyDietStyled>
       <form
         autoComplete="off"
         className="form"
@@ -127,27 +197,63 @@ export default function AddDailyDiet() {
       >
         <Grid container alignItems="center">
           <Typography className="title" variant="h5" color="primary">
-            Agregar pauta diaria
+            Agregar minuta semanal 
           </Typography>
         </Grid>
-        
+
+
+    
         <Grid container justify="center" spacing={isMobile ? 0 : 2}>
           <Grid item xs={12} sm={8} md={4} lg={4}>
+          
             <TextField
               name="rut"
-              type="number"
+              type="text"
               label="Rut (Sin puntos ni guión)"
               variant="outlined"
               margin="dense"
               fullWidth
+              
               error={errors.rut}
               helperText={errors.rut ? errors.rut.message : ""}
               inputRef={register({
                 required: { value: true, message: reqmsg },
               })}
             />
+            
+          </Grid>
+          <Grid item xs={12} sm={8} md={4} lg={4} className="semana" >
+
+           {/*<InputLabel htmlFor="age-native-simple">Día de la semana</InputLabel> */}
+            <Controller
+              as= { <Select
+                    name="day"
+                    value={dayOfWeek}
+                    onChange={handleChangeDay}
+                    >
+                    <MenuItem disabled value="Dia de la semana">
+                        <em> Dia de la semana</em>
+                        <br/>
+                    </MenuItem> 
+                    <MenuItem value={"Lunes"}>Lunes</MenuItem>
+                    <MenuItem value={"Martes"}>Martes</MenuItem>
+                    <MenuItem value={"Miercoles"}>Miércoles</MenuItem>
+                    <MenuItem value={"Jueves"}>Jueves</MenuItem>
+                    <MenuItem value={"Viernes"}>Viernes</MenuItem>
+                    <MenuItem value={"Sabado"}>Sábado</MenuItem>
+                    <MenuItem value={"Domingo"}>Domingo</MenuItem>
+            
+               </Select>}
+                name="day"
+                defaultValue={dayOfWeek}
+                control={control}
+            />
           </Grid>
         </Grid>
+             
+    
+
+
 
         <Grid container justify="center" spacing={isMobile ? 0 : 2}>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -168,7 +274,7 @@ export default function AddDailyDiet() {
                     }}
                   />
                 }
-                name="breakfast_time"
+                name="timeBreakfast"
                 defaultValue={breakfastTime}
                 control={control}
               />
@@ -191,7 +297,7 @@ export default function AddDailyDiet() {
                     }}
                   />
                 }
-                name="lunch_time"
+                name="timeLunch"
                 defaultValue={lunchTime}
                 control={control}
               />
@@ -214,7 +320,7 @@ export default function AddDailyDiet() {
                     }}
                   />
                 }
-                name="collation_time"
+                name="timeSnack"
                 defaultValue={collationTime}
                 control={control}
               />
@@ -237,7 +343,7 @@ export default function AddDailyDiet() {
                     }}
                   />
                 }
-                name="dinner_time"
+                name="timeDinner"
                 defaultValue={dinnerTime}
                 control={control}
               />
@@ -259,10 +365,11 @@ export default function AddDailyDiet() {
               multiline
               rows={5}
               inputProps={{ style: { fontSize: "0.8em" } }}
-              error={errors.breakfast}
+        //
               helperText={errors.breakfast ? errors.breakfast.message : ""}
               inputRef={register({
-                required: { value: true, message: reqmsg },
+                required: { value: false } 
+                
               })}
             />
           </Grid>
@@ -278,10 +385,10 @@ export default function AddDailyDiet() {
               multiline
               rows={5}
               inputProps={{ style: { fontSize: "0.8em" } }}
-              error={errors.lunch}
+             // error={errors.lunch}
               helperText={errors.lunch ? errors.lunch.message : ""}
               inputRef={register({
-                required: { value: true, message: reqmsg },
+                required: { value: false}
               })}
             />
           </Grid>
@@ -291,7 +398,7 @@ export default function AddDailyDiet() {
 
           <Grid item xs={12} sm={8} md={4} lg={4}>
             <TextField
-              name="collation"
+              name="snack"
               type="text"
               label="Colación"
               variant="outlined"
@@ -300,10 +407,8 @@ export default function AddDailyDiet() {
               multiline
               rows={2}
               inputProps={{ style: { fontSize: "0.8em" } }}
-              error={errors.collation}
-              helperText={errors.collation ? errors.collation.message : ""}
               inputRef={register({
-                required: { value: true, message: reqmsg },
+                required: { value:false  }
               })}
             />
           </Grid>
@@ -319,12 +424,12 @@ export default function AddDailyDiet() {
               multiline
               rows={2}
               inputProps={{ style: { fontSize: "0.8em" } }}
-              error={errors.post_training}
+            //  error={errors.post_training}
               helperText={
                 errors.post_training ? errors.post_training.message : ""
               }
               inputRef={register({
-                required: { value: true, message: reqmsg },
+                required: { value: false}
               })}
             />
           </Grid>
@@ -343,10 +448,10 @@ export default function AddDailyDiet() {
               multiline
               rows={5}
               inputProps={{ style: { fontSize: "0.8em" } }}
-              error={errors.dinner}
+              //error={errors.dinner}
               helperText={errors.dinner ? errors.dinner.message : ""}
               inputRef={register({
-                required: { value: true, message: reqmsg },
+                required: { value: false }
               })}
             />
           </Grid>
@@ -360,12 +465,12 @@ export default function AddDailyDiet() {
               margin="dense"
               fullWidth
               multiline
-              rows={5}
+             // rows={5}
               inputProps={{ style: { fontSize: "0.8em" } }}
-              error={errors.goals}
+              //error={errors.goals}
               helperText={errors.goals ? errors.goals.message : ""}
               inputRef={register({
-                required: { value: true, message: reqmsg },
+                required: { value: false}
               })}
             />
           </Grid>
@@ -386,10 +491,28 @@ export default function AddDailyDiet() {
             type="submit"
             color="primary"
           >
-            Agregar pauta diaria
+            Guardar Minuta Semanal
           </Button>
         </Grid>
       </form>
-    </AddDailyDietStyled>
+
+      {newPatientWeeklyDiet ? (
+        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+          <Alert onClose={handleClose} severity="success">
+            La Dieta semanal del paciente {newPatientWeeklyDiet.names} {newPatientWeeklyDiet.father_last_name}{" "}
+            {newPatientWeeklyDiet.mother_last_name} fue agregado exitosamente!{" "}
+          </Alert>
+        </Snackbar>
+      ) : newPatientWeeklyDietError ? (
+        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+          <Alert onClose={handleClose} severity="error">
+            {newPatientWeeklyDietError}
+          </Alert>
+        </Snackbar>
+      ) : (
+        ""
+      )}
+
+    </AddWeeklyDietStyled>
   );
 }
