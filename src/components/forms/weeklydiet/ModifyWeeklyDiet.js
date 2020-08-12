@@ -21,7 +21,7 @@ import MuiAlert from "@material-ui/lab/Alert";
 
 //Redux
 import { useDispatch, useSelector } from "react-redux";
-import { addWeeklyDiet } from "../../../redux/ducks/weeklyDietsDucks";
+import { modifyWeeklyDiet } from "../../../redux/ducks/weeklyDietsDucks";
 
 
 
@@ -60,7 +60,7 @@ const AddWeeklyDietStyled = styled.div`
     font-size: 3.5em;
     /* color: var(--mainPurple); */
   }
-
+/*Cambiar estilo en media screen para las minutas */
   @media screen and (min-width: 600px) {
     .MuiGrid-root.margin.MuiGrid-item.MuiGrid-grid-md-1,
     .MuiGrid-root.MuiGrid-item.MuiGrid-grid-md-1 {
@@ -90,21 +90,19 @@ const AddWeeklyDietStyled = styled.div`
 
 
 
-//mientras cambie el dia y no aprete el boton se vayan cambiando los datos de los formularios
-// os ino tendria que rellenar un dia obligatoriamente ajajedsaxD
+
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-export default function AddWeeklyDiet() {
+export default function ModifyWeeklyDiet() {
   const { register, errors, handleSubmit, control } = useForm();
   const dispatch = useDispatch();
   const [open,setOpen] = React.useState(false);
   
-  const newPatientWeeklyDiet = useSelector((store)=>store.weeklyDiets.addWeeklyDiet)
+  const newPatientWeeklyDiet = useSelector((store)=>store.weeklyDiets.modifyWeeklyDiet)
   const newPatientWeeklyDietError = useSelector((store)=>store.weeklyDiets.errors)
   
-
 
   const handleOpen = () => {
     setOpen(true);
@@ -120,11 +118,7 @@ export default function AddWeeklyDiet() {
 
   
   const onSubmit = (data,e) => {
-    const fecha = new Date();
-
-    data['date'] =fecha; 
-
-    dispatch(addWeeklyDiet(data));
+    dispatch(modifyWeeklyDiet(data));
     handleOpen();
     e.target.reset();
 
@@ -151,25 +145,25 @@ export default function AddWeeklyDiet() {
     new Date("2020 January 1 19:30").getTime()
   );
 
+
   const [dayOfWeek, setDayOfWeek] = React.useState('Dia de la semana');
 
 
   const handleBreakfastTime = (date) => {
-    setBreakfastTime(toString(date));
+    setBreakfastTime(date);
   };
   const handleLunchTime = (date) => {
-    setLunchTime(toString(date));
+    setLunchTime(date);
   };
   const handleCollationTime = (date) => {
-    setCollationTime(toString(date));
+    setCollationTime(date);
   };
   const handleDinnerTime = (date) => {
-    setDinnerTime(toString(date));
-
+    setDinnerTime(date);
   };
 
   const handleChangeDay = (event) => {
-    console.log("selecionnaste"+event.target.value);
+
     setDayOfWeek(event.target.value);
   };
 
@@ -197,7 +191,7 @@ export default function AddWeeklyDiet() {
       >
         <Grid container alignItems="center">
           <Typography className="title" variant="h5" color="primary">
-            Agregar minuta semanal 
+            Modificar minuta semanal
           </Typography>
         </Grid>
 
@@ -208,7 +202,7 @@ export default function AddWeeklyDiet() {
           
             <TextField
               name="rut"
-              type="text"
+              type="number"
               label="Rut (Sin puntos ni guión)"
               variant="outlined"
               margin="dense"
@@ -222,37 +216,79 @@ export default function AddWeeklyDiet() {
             />
             
           </Grid>
-          <Grid item xs={12} sm={8} md={4} lg={4} className="semana" >
+          <Button
+            className="form-button"
+            variant="outlined"
+            type="submit"
+            color="primary"
+          >
+            Traer dietas semanales
+          </Button>
 
-           {/*<InputLabel htmlFor="age-native-simple">Día de la semana</InputLabel> */}
-            <Controller
-              as= { <Select
-                    name="day"
-                    value={dayOfWeek}
-                    onChange={handleChangeDay}
-                    >
-                    <MenuItem disabled value="Dia de la semana">
-                        <em> Dia de la semana</em>
-                        <br/>
-                    </MenuItem> 
-                    <MenuItem value={"Lunes"}>Lunes</MenuItem>
-                    <MenuItem value={"Martes"}>Martes</MenuItem>
-                    <MenuItem value={"Miercoles"}>Miércoles</MenuItem>
-                    <MenuItem value={"Jueves"}>Jueves</MenuItem>
-                    <MenuItem value={"Viernes"}>Viernes</MenuItem>
-                    <MenuItem value={"Sabado"}>Sábado</MenuItem>
-                    <MenuItem value={"Domingo"}>Domingo</MenuItem>
-            
-               </Select>}
-                name="day"
-                defaultValue={dayOfWeek}
-                control={control}
-            />
-          </Grid>
+
         </Grid>
-             
-    
 
+    <br></br>
+        <Grid container justify="center" spacing={isMobile ? 0 : 2}>       
+        <span>Dietas semanales</span>   
+           <Grid item xs={12} sm={8} md={4} lg={4} justify="center" className="semana" >
+                {/*aqui ir la semana*/}
+                    <Controller
+                    as= { <Select
+                            name="day"
+                            value={dayOfWeek}
+                            onChange={handleChangeDay}
+                            >
+                            <MenuItem disabled value="Dia de la semana">
+                                <em> Dia de la semana</em>
+                                <br/>
+                            </MenuItem> 
+                            <MenuItem value={"Lunes"}>Lunes</MenuItem>
+                            <MenuItem value={"Martes"}>Martes</MenuItem>
+                            <MenuItem value={"Miercoles"}>Miércoles</MenuItem>
+                            <MenuItem value={"Jueves"}>Jueves</MenuItem>
+                            <MenuItem value={"Viernes"}>Viernes</MenuItem>
+                            <MenuItem value={"Sabado"}>Sábado</MenuItem>
+                            <MenuItem value={"Domingo"}>Domingo</MenuItem>
+                    
+                        </Select>}
+                        name="day"
+                        defaultValue={dayOfWeek}
+                        control={control}
+                    />
+                    </Grid>
+                <span>Días de la semana</span>
+          
+                <Grid item   justify="center" className="semana" >
+                    <Controller
+                    as= { <Select
+                            name="day"
+                            value={dayOfWeek}
+                            onChange={handleChangeDay}
+                            >
+                            <MenuItem disabled value="Dia de la semana">
+                                <em> Dia de la semana</em>
+                                <br/>
+                            </MenuItem> 
+                            <MenuItem value={"Lunes"}>Lunes</MenuItem>
+                            <MenuItem value={"Martes"}>Martes</MenuItem>
+                            <MenuItem value={"Miercoles"}>Miércoles</MenuItem>
+                            <MenuItem value={"Jueves"}>Jueves</MenuItem>
+                            <MenuItem value={"Viernes"}>Viernes</MenuItem>
+                            <MenuItem value={"Sabado"}>Sábado</MenuItem>
+                            <MenuItem value={"Domingo"}>Domingo</MenuItem>
+
+                        </Select>}
+                        name="day"
+                        defaultValue={dayOfWeek}
+                        control={control}
+                    />
+                </Grid>
+                        
+                        
+            </Grid>
+
+       
 
 
         <Grid container justify="center" spacing={isMobile ? 0 : 2}>
@@ -274,7 +310,7 @@ export default function AddWeeklyDiet() {
                     }}
                   />
                 }
-                name="timeBreakfast"
+                name="breakfast_time"
                 defaultValue={breakfastTime}
                 control={control}
               />
@@ -297,7 +333,7 @@ export default function AddWeeklyDiet() {
                     }}
                   />
                 }
-                name="timeLunch"
+                name="lunch_time"
                 defaultValue={lunchTime}
                 control={control}
               />
@@ -320,7 +356,7 @@ export default function AddWeeklyDiet() {
                     }}
                   />
                 }
-                name="timeSnack"
+                name="collation_time"
                 defaultValue={collationTime}
                 control={control}
               />
@@ -343,7 +379,7 @@ export default function AddWeeklyDiet() {
                     }}
                   />
                 }
-                name="timeDinner"
+                name="dinner_time"
                 defaultValue={dinnerTime}
                 control={control}
               />
@@ -365,11 +401,10 @@ export default function AddWeeklyDiet() {
               multiline
               rows={5}
               inputProps={{ style: { fontSize: "0.8em" } }}
-        //
+              error={errors.breakfast}
               helperText={errors.breakfast ? errors.breakfast.message : ""}
               inputRef={register({
-                required: { value: false } 
-                
+                required: { value: false, message: reqmsg },
               })}
             />
           </Grid>
@@ -385,10 +420,10 @@ export default function AddWeeklyDiet() {
               multiline
               rows={5}
               inputProps={{ style: { fontSize: "0.8em" } }}
-             // error={errors.lunch}
+              error={errors.lunch}
               helperText={errors.lunch ? errors.lunch.message : ""}
               inputRef={register({
-                required: { value: false}
+                required: { value: false, message: reqmsg },
               })}
             />
           </Grid>
@@ -408,7 +443,7 @@ export default function AddWeeklyDiet() {
               rows={2}
               inputProps={{ style: { fontSize: "0.8em" } }}
               inputRef={register({
-                required: { value:false  }
+                required: { value: false, message: reqmsg },
               })}
             />
           </Grid>
@@ -424,12 +459,12 @@ export default function AddWeeklyDiet() {
               multiline
               rows={2}
               inputProps={{ style: { fontSize: "0.8em" } }}
-            //  error={errors.post_training}
+              error={errors.post_training}
               helperText={
                 errors.post_training ? errors.post_training.message : ""
               }
               inputRef={register({
-                required: { value: false}
+                required: { value: false, message: reqmsg },
               })}
             />
           </Grid>
@@ -448,10 +483,10 @@ export default function AddWeeklyDiet() {
               multiline
               rows={5}
               inputProps={{ style: { fontSize: "0.8em" } }}
-              //error={errors.dinner}
+              error={errors.dinner}
               helperText={errors.dinner ? errors.dinner.message : ""}
               inputRef={register({
-                required: { value: false }
+                required: { value: false, message: reqmsg },
               })}
             />
           </Grid>
@@ -465,12 +500,12 @@ export default function AddWeeklyDiet() {
               margin="dense"
               fullWidth
               multiline
-             // rows={5}
+              rows={5}
               inputProps={{ style: { fontSize: "0.8em" } }}
-              //error={errors.goals}
+              error={errors.goals}
               helperText={errors.goals ? errors.goals.message : ""}
               inputRef={register({
-                required: { value: false}
+                required: { value: false, message: reqmsg },
               })}
             />
           </Grid>
@@ -496,23 +531,7 @@ export default function AddWeeklyDiet() {
         </Grid>
       </form>
 
-      {newPatientWeeklyDiet ? (
-        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-          <Alert onClose={handleClose} severity="success">
-            La Dieta semanal del paciente {newPatientWeeklyDiet.names} {newPatientWeeklyDiet.father_last_name}{" "}
-            {newPatientWeeklyDiet.mother_last_name} fue agregado exitosamente!{" "}
-          </Alert>
-        </Snackbar>
-      ) : newPatientWeeklyDietError ? (
-        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-          <Alert onClose={handleClose} severity="error">
-            {newPatientWeeklyDietError}
-          </Alert>
-        </Snackbar>
-      ) : (
-        ""
-      )}
-
+  
     </AddWeeklyDietStyled>
   );
 }
