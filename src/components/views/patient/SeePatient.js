@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import { useHistory } from "react-router-dom";
 
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
@@ -17,10 +16,15 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import MenuItem from "@material-ui/core/MenuItem";
+import Menu from "@material-ui/core/Menu";
 
 //redux
-import { deletePatient } from "../../../redux/ducks/patientsDucks";
-import { useDispatch } from "react-redux";
+import {
+  getPatientInfo,
+  deletePatient,
+} from "../../../redux/ducks/patientsDucks";
+import { useDispatch, useSelector } from "react-redux";
 
 const SeePatientStyled = styled.div`
   /* .card {
@@ -34,18 +38,41 @@ const SeePatientStyled = styled.div`
     border: 1px solid grey;
   }
 `;
+function getDate(date) {
+  let newDate = new Date(date);
+  let month = newDate.getMonth().toString();
+  let day = (newDate.getDate() + 1).toString();
+  let year = newDate.getFullYear().toString();
+  let dayS = day.length > 1 ? day : `0${day}`;
+  let monthS = month.length > 1 ? month : `0${month}`;
+  return `${dayS}/${monthS}/${year}`;
+}
 
-export default function SeePatient() {
-  const history = useHistory();
-  const [open, setOpen] = React.useState(false);
+export default function SeePatient({ match, history }) {
   const dispatch = useDispatch();
+  const [open, setOpen] = React.useState(false);
+  //const [patientInfo, setPatientInfo] = React.useState({});
+  const patientInfo = useSelector((state) => state.patients.patientInfo);
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleDocClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleDocClose = () => {
+    setAnchorEl(null);
+  };
 
   const handleClose = () => {
     setOpen(false);
   };
 
+  React.useEffect(() => {
+    dispatch(getPatientInfo(match.params.rut));
+  }, [dispatch, match.params.rut]);
+
   const handleModifyClick = (rut) => {
-    console.log(history.location);
     history.push(`/modificar_paciente/${rut}`);
   };
   const handleOpen = () => {
@@ -53,41 +80,63 @@ export default function SeePatient() {
   };
 
   const handleDelete = () => {
-    dispatch(deletePatient({ rut: "19473994" }));
+    dispatch(deletePatient({ rut: match.params.rut }));
     handleClose();
   };
-
   return (
     <SeePatientStyled>
       <Container maxWidth="sm">
         <Card>
           <CardContent>
-            <Typography variant="h5">
-              Nicolas Patricio Navarrete Maldonado
-            </Typography>
-            <hr />
             {/* <Typography color="textSecondary">adjective</Typography> */}
-            <Typography style={{ lineHeight: "2" }}>
-              &bull; <strong>Rut:</strong> 19.697.438-5 <br />
-              &bull; <strong>Ciudad:</strong> Talca <br />
-              &bull; <strong>Estado:</strong> activo <br />
-              &bull; <strong>Fecha de ingreso:</strong> 19/02/2021 <br />
-              &bull; <strong>Email:</strong> email@email.com <br />
-              &bull; <strong>Telefono:</strong> 345645654 <br />
-              &bull; <strong>Fecha de nacimiento:</strong> 19/02/2021 <br />
-              &bull; <strong>Sexo:</strong> masculino <br />
-              &bull; <strong>Tipo de alimentación:</strong> omnivoro <br />
-            </Typography>
+            {patientInfo && (
+              <div style={{ lineHeight: "2" }}>
+                <Typography variant="h5">
+                  {patientInfo.names} {patientInfo.father_last_name}{" "}
+                  {patientInfo.mother_last_name}
+                </Typography>
+                <hr />
+                &bull; <strong>Rut:</strong> {patientInfo.rut} <br />
+                &bull; <strong>Ciudad:</strong> {patientInfo.city} <br />
+                &bull; <strong>Estado:</strong> {patientInfo.state} <br />
+                &bull; <strong>Fecha de ingreso:</strong>{" "}
+                {getDate(patientInfo.in_date)} <br />
+                &bull; <strong>Email:</strong> {patientInfo.email} <br />
+                &bull; <strong>Telefono:</strong> {patientInfo.phone} <br />
+                &bull; <strong>Fecha de nacimiento:</strong>{" "}
+                {getDate(patientInfo.birth_date)} <br />
+                &bull; <strong>Sexo:</strong> {patientInfo.sex} <br />
+                &bull; <strong>Tipo de alimentación:</strong>{" "}
+                {patientInfo.alimentation} <br />
+              </div>
+            )}
           </CardContent>
           <CardActions style={{ marginLeft: "5px", marginRight: "5px" }}>
-            <Button startIcon={<VisibilityIcon />} size="small">
+            <Button
+              startIcon={<VisibilityIcon />}
+              size="small"
+              onClick={handleDocClick}
+            >
               Documentos nutricionales
             </Button>
+
+            <Menu
+              id="simple-menu"
+              anchorEl={anchorEl}
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={handleDocClose}
+            >
+              <MenuItem onClick={handleDocClose}>Controles</MenuItem>
+              <MenuItem onClick={handleDocClose}>Pautas Diarias</MenuItem>
+              <MenuItem onClick={handleDocClose}>Minutas Semanales</MenuItem>
+            </Menu>
+
             <Tooltip title="Modificar paciente" placement="top">
               <Button
                 style={{ marginLeft: "auto" }}
                 size="small"
-                onClick={() => handleModifyClick("111")}
+                onClick={() => handleModifyClick(match.params.rut)}
               >
                 <CreateIcon />
               </Button>
@@ -111,7 +160,8 @@ export default function SeePatient() {
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Nicolas Patricio Navarrete Maldonado será eliminado permanentemente
+            {patientInfo &&
+              `${patientInfo.names} ${patientInfo.father_last_name} ${patientInfo.mother_last_name} será eliminado`}
           </DialogContentText>
         </DialogContent>
         <DialogActions>

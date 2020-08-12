@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
 
 function getFecha(date) {
   let newDate = new Date(date);
-  let month = newDate.getMonth().toString();
+  let month = (newDate.getMonth() + 1).toString();
   let day = (newDate.getDate() + 1).toString();
   let year = newDate.getFullYear().toString();
   let dayS = day.length > 1 ? day : `0${day}`;
