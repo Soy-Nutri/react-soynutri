@@ -11,7 +11,6 @@ const PATIENT_MODIFIED = "PATIENT_MODIFIED";
 const GET_PATIENT_INFO_PATIENT = "GET_PATIENT_INFO_PATIENT";
 const MODIFY_PASSWORD = "MODIFY_PASSWORD";
 
-
 const initialState = {
   newPatient: null,
   errors: null,
@@ -40,8 +39,6 @@ export default function patientsReducer(state = initialState, action) {
       return { ...state, modifiedPatient: true };
     case GET_PATIENT_INFO_PATIENT:
       return { ...state, patientInfo: action.payload };
-    case DELETE_PATIENT:
-      return { ...state };
     case MODIFY_PASSWORD:
       return { ...state, passwordModified: true };
     default:
@@ -102,13 +99,13 @@ export const getPatientInfo = (rut) => (dispatch) => {
     .catch((error) => console.log(error));
 };
 
-
 // modify a patient
 export const modifyPatient = (data) => (dispatch) => {
   axios
     .post(`/patients/modifyPerfil`, data)
     .then(() => dispatch({ type: PATIENT_MODIFIED }))
     .catch((error) => console.log(error.message));
+};
 
 // get all info of a patient by rut (required by the patient)
 export const getPatientInfoPatient = (rut) => (dispatch) => {
