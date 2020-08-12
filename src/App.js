@@ -50,6 +50,9 @@ import { Provider } from "react-redux";
 import generateStore from "./redux/store";
 import { logoutUser } from "./redux/ducks/authDucks";
 
+// profile
+import Profile from "./components/patients/Profile";
+
 axios.defaults.baseURL =
   "https://us-central1-back-f0378.cloudfunctions.net/api";
 //axios.defaults.baseURL = "https://pokeapi.co/api/v2";
@@ -153,6 +156,7 @@ function App() {
               exact
               component={PatientWeeklyDiets}
             />
+            <Route path="/perfil" exact component={Profile} />
 
             <Route path="/agregar_minuta_semanal" exact component = {WeeklyDiet} />
             <Route path="/modificar_minuta_semanal" exact component = {ModifyWeeklyDiet} />

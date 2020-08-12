@@ -7,12 +7,15 @@ const CLEAR_ERRORS = "CLEAR_ERRORS";
 const GET_PATIENTS = "GET_PATIENTS";
 const DELETE_PATIENT = "DELETE_PATIENT";
 const GET_PATIENT_INFO = "GET_PATIENT_INFO";
+const GET_PATIENT_INFO_PATIENT = "GET_PATIENT_INFO_PATIENT";
+const MODIFY_PASSWORD = "MODIFY_PASSWORD";
 
 const initialState = {
   newPatient: null,
   errors: null,
   patientsData: [],
   patientInfo: null,
+  passwordModified: false,
 };
 
 // Reducer
@@ -28,8 +31,12 @@ export default function patientsReducer(state = initialState, action) {
       return { ...state, patientsData: action.payload };
     case GET_PATIENT_INFO:
       return { ...state, patientInfo: action.payload };
+    case GET_PATIENT_INFO_PATIENT:
+      return { ...state, patientInfo: action.payload };
     case DELETE_PATIENT:
       return { ...state };
+    case MODIFY_PASSWORD:
+      return { ...state, passwordModified: true };
     default:
       return state;
   }
@@ -85,6 +92,28 @@ export const getPatientInfo = (rut) => (dispatch) => {
     .then((res) => {
       console.log(res.data);
       dispatch({ type: GET_PATIENT_INFO, payload: res.data });
+    })
+    .catch((error) => console.log(error));
+};
+
+// get all info of a patient by rut (required by the patient)
+export const getPatientInfoPatient = (rut) => (dispatch) => {
+  axios
+    .get(`/patients/getPerfil/${rut}/patient`)
+    .then((res) => {
+      console.log(res.data);
+      dispatch({ type: GET_PATIENT_INFO_PATIENT, payload: res.data });
+    })
+    .catch((error) => console.log(error));
+};
+
+// Modify password patient
+
+export const modifyPassword = (data) => (dispatch) => {
+  axios
+    .post("/patientsAuth/changePassword", data)
+    .then((res) => {
+      dispatch({ type: MODIFY_PASSWORD });
     })
     .catch((error) => console.log(error));
 };
