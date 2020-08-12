@@ -58,8 +58,7 @@ export default function ModifyPatient({ match }) {
 
   const onSubmit = (data, e) => {
     e.preventDefault();
-    console.log(data);
-    console.log(errors);
+
     data["rut"] = match.params.rut;
     console.log(data);
     dispatch(modifyPatient(data));
