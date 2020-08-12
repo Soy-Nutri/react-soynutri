@@ -184,7 +184,7 @@ function Profile() {
                     type="submit"
                     color="primary"
                   >
-                    Agregar control
+                    Modificar contraseña
                   </Button>
                 </Grid>
               </form>
