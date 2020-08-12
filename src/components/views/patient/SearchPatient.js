@@ -16,9 +16,12 @@ import TableRow from "@material-ui/core/TableRow";
 import SearchIcon from "@material-ui/icons/Search";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 
+import Skeleton from "@material-ui/lab/Skeleton";
+
 // redux
 import { useDispatch, useSelector } from "react-redux";
 import { getPatientsList } from "../../../redux/ducks/patientsDucks";
+import Container from "@material-ui/core/Container";
 
 const SearchPatientStyled = styled.div`
   .paper-input {
@@ -91,8 +94,6 @@ export default function SearchPatient() {
     setPage(0);
   };
 
-  console.log(patients);
-
   const rowss = patients.map((patient) => {
     return createRow(
       patient.rut,
@@ -105,7 +106,6 @@ export default function SearchPatient() {
   const handleClick = (rut) => {
     history.push(`/ver_paciente/${rut}`);
   };
-
   return (
     <SearchPatientStyled>
       <Grid container justify="center">
@@ -119,86 +119,104 @@ export default function SearchPatient() {
         </Grid>
       </Grid>
 
-      {/* TABLE */}
-      <Grid container justify="center" className="table">
-        <Grid item xs={11} md={9} lg={6}>
-          <Paper className="paper-table">
-            <TableContainer className="table-container">
-              <Table stickyHeader aria-label="sticky table" size="small">
-                <TableHead>
-                  <TableRow>
-                    {columns.map((column) => (
-                      <TableCell
-                        key={column.id}
-                        align={column.align}
-                        style={{ minWidth: column.minWidth }}
-                      >
-                        {column.label}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                </TableHead>
+      {rowss.length === 0 ? (
+        <Container maxWidth="md" style={{ marginTop: "50px" }}>
+          <Skeleton
+            variant="rect"
+            height={300}
+            style={{ borderRadius: "5px" }}
+          />
+        </Container>
+      ) : (
+        <React.Fragment>
+          {/* TABLE */}
+          <Grid container justify="center" className="table">
+            <Grid item xs={11} md={9} lg={6}>
+              <Paper className="paper-table">
+                <TableContainer className="table-container">
+                  <Table stickyHeader aria-label="sticky table" size="small">
+                    <TableHead>
+                      <TableRow>
+                        {columns.map((column) => (
+                          <TableCell
+                            key={column.id}
+                            align={column.align}
+                            style={{ minWidth: column.minWidth }}
+                          >
+                            {column.label}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    </TableHead>
 
-                <TableBody>
-                  {rowss
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row) => {
-                      return (
-                        <TableRow
-                          hover
-                          role="checkbox"
-                          tabIndex={-1}
-                          key={row.rut}
-                        >
-                          {columns.map((column) => {
-                            const value = row[column.id];
-                            return (
-                              <TableCell key={column.id} align={column.align}>
-                                {column.id === "rut" ? (
-                                  <span
-                                    style={{
-                                      whiteSpace: "nowrap",
-                                      overflow: "hidden",
-                                      width: "150px",
-                                      display: "block",
-                                    }}
+                    <TableBody>
+                      {rowss
+                        .slice(
+                          page * rowsPerPage,
+                          page * rowsPerPage + rowsPerPage
+                        )
+                        .map((row) => {
+                          return (
+                            <TableRow
+                              hover
+                              role="checkbox"
+                              tabIndex={-1}
+                              key={row.rut}
+                            >
+                              {columns.map((column) => {
+                                const value = row[column.id];
+                                return (
+                                  <TableCell
+                                    key={column.id}
+                                    align={column.align}
                                   >
-                                    {value}
-                                  </span>
-                                ) : column.id !== "see_icon" ? (
-                                  value
-                                ) : (
-                                  <VisibilityIcon
-                                    className="view-patient"
-                                    onClick={() => handleClick(row.rut)}
-                                  />
-                                )}
-                              </TableCell>
-                            );
-                          })}
-                        </TableRow>
-                      );
-                    })}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <TablePagination
-              rowsPerPageOptions={[10, 25, 100]}
-              component="div"
-              count={rowss.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onChangePage={handleChangePage}
-              onChangeRowsPerPage={handleChangeRowsPerPage}
-              labelDisplayedRows={({ from, to, count }) =>
-                `${from}-${to} de ${count}`
-              }
-              labelRowsPerPage="Filas por página:"
-              nextIconButtonText="Próxima página"
-            />
-          </Paper>
-        </Grid>
-      </Grid>
+                                    {column.id === "rut" ? (
+                                      <span
+                                        style={{
+                                          whiteSpace: "nowrap",
+                                          overflow: "hidden",
+                                          width: "150px",
+                                          display: "block",
+                                        }}
+                                      >
+                                        {value}
+                                      </span>
+                                    ) : column.id !== "see_icon" ? (
+                                      value
+                                    ) : (
+                                      <VisibilityIcon
+                                        className="view-patient"
+                                        onClick={() => handleClick(row.rut)}
+                                      />
+                                    )}
+                                  </TableCell>
+                                );
+                              })}
+                            </TableRow>
+                          );
+                        })}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+                <TablePagination
+                  rowsPerPageOptions={[10, 25, 100]}
+                  component="div"
+                  count={rowss.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onChangePage={handleChangePage}
+                  onChangeRowsPerPage={handleChangeRowsPerPage}
+                  labelDisplayedRows={({ from, to, count }) =>
+                    `${from}-${to} de ${count}`
+                  }
+                  labelRowsPerPage="Filas por página:"
+                  nextIconButtonText="Próxima página"
+                />
+              </Paper>
+            </Grid>
+          </Grid>
+        </React.Fragment>
+      )}
     </SearchPatientStyled>
   );
 }
