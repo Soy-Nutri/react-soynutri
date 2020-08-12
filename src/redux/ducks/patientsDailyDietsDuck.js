@@ -22,7 +22,11 @@ export const getDailyDiets = (rut) => (dispatch) => {
   axios
     .get(`/patientsDailyDiets/getDailyDiet/patient/${rut}`)
     .then((res) => {
-      dispatch({ type: GET_DAILY_DIETS, payload: res.data.daily_diets });
+      if (res.data.daily_diets.length === 0) {
+        dispatch({ type: GET_DAILY_DIETS, payload: ["error"] });
+      } else {
+        dispatch({ type: GET_DAILY_DIETS, payload: res.data.daily_diets });
+      }
     })
     .catch((error) => {
       console.log(error);

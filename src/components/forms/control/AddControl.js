@@ -11,6 +11,17 @@ import Grid from "@material-ui/core/Grid";
 import { useTheme } from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 
+// redux
+import { useDispatch, useSelector } from "react-redux";
+import { addControl } from "../../../redux/ducks/controlDucks";
+
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 const AddControlStyled = styled.div`
   /* Hidde spinner number input Chrome, Safari, Edge, Opera */
   input::-webkit-outer-spin-button,
@@ -46,10 +57,29 @@ const AddControlStyled = styled.div`
 `;
 
 export default function AddControl() {
+  const dispatch = useDispatch();
+  const control = useSelector((state) => state.control.control);
+  const controlErrors = useSelector((state) => state.control.errors);
+
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
+  };
+
   const { register, errors, handleSubmit } = useForm();
-  const onSubmit = (data) => {
+  const onSubmit = (data, e) => {
     console.log(data);
     console.log(errors);
+    dispatch(addControl(data));
+    handleOpen();
+    e.target.reset();
   };
 
   const reqmsg = "Campo obligatorio";
@@ -79,7 +109,6 @@ export default function AddControl() {
             <Grid item xs={12} sm={5} md={4} lg={3} xl={2}>
               <TextField
                 name="rut"
-                type="number"
                 label="Rut (Sin puntos ni guión)"
                 variant="outlined"
                 margin="dense"
@@ -456,6 +485,21 @@ export default function AddControl() {
           </Button>
         </Grid>
       </form>
+      {controlErrors ? (
+        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+          <Alert onClose={handleClose} severity="error">
+            Ha ocurrido un error, intente otra vez.
+          </Alert>
+        </Snackbar>
+      ) : control ? (
+        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+          <Alert onClose={handleClose} severity="success">
+            Control agregado con éxito.
+          </Alert>
+        </Snackbar>
+      ) : (
+        ""
+      )}
     </AddControlStyled>
   );
 }
