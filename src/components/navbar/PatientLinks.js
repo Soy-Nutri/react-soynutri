@@ -14,6 +14,7 @@ const PatientLinksStyled = styled.div`
   .item-button {
     margin-left: 1em;
     margin-right: 1em;
+    color: white;
   }
 `;
 

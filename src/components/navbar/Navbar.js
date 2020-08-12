@@ -10,6 +10,7 @@ import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 
 import { Link } from "react-router-dom";
 
@@ -189,23 +190,17 @@ export default function Navbar(props) {
               {localStorage.getItem("rol") === "/soynutri-adm"
                 ? "Administrador"
                 : localStorage.getItem("rol") === "/patient"
-                ? "paciente"
+                ? localStorage.name
                 : "invitado"}
-            </Typography>
-            <Typography color="textSecondary">adjective</Typography>
-            <Typography variant="body2" component="p">
-              well meaning and kindly.
-              <br />
-              {'"a benevolent smile"'}
             </Typography>
           </CardContent>
           <CardActions>
             <Button
-              style={{ marginLeft: "auto" }}
+              style={{ margin: "auto" }}
               size="small"
               onClick={() => dispatch(logoutUser())}
             >
-              Cerrar sesión
+              <ExitToAppIcon /> Cerrar sesión
             </Button>
           </CardActions>
         </Card>
