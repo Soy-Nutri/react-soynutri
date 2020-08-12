@@ -3,7 +3,10 @@ import styled from "styled-components";
 
 // redux
 import { useDispatch, useSelector } from "react-redux";
-import { getControl, getBiochemical } from "../../redux/ducks/carnet";
+import {
+  getControl,
+  getBiochemical,
+} from "../../redux/ducks/patientsCarnetDucks";
 
 //Table
 import TableC from "./Control/tableControl";

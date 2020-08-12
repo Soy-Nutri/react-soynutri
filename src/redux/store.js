@@ -3,9 +3,9 @@ import thunk from "redux-thunk";
 
 import authReducer from "./ducks/authDucks";
 import patientsReducer from "./ducks/patientsDucks";
-import carnetReducer from "./ducks/carnet";
-import dailyDietsReducer from "./ducks/dailyDiets";
-import weeklyDiets from "./ducks/dailyDiets";
+import carnetReducer from "./ducks/patientsCarnetDucks";
+import dailyDietsReducer from "./ducks/patientsDailyDietsDuck";
+import patientWeeklyDietsReducer from "./ducks/patientsWeeklyDietsDucks";
 import generalInfoReducer from "./ducks/generalInfoDucks";
 
 const rootReducer = combineReducers({
@@ -13,7 +13,7 @@ const rootReducer = combineReducers({
   patients: patientsReducer,
   carnet: carnetReducer,
   dailyDiets: dailyDietsReducer,
-  weeklyDiets: weeklyDiets,
+  patientWeeklyDiets: patientWeeklyDietsReducer,
   generalInfo: generalInfoReducer,
 });
 

@@ -26,7 +26,11 @@ export const getControl = (rut) => (dispatch) => {
   axios
     .get(`/patientsCarnet/getCarnet/patient/${rut}`)
     .then((res) => {
-      dispatch({ type: GET_CONTROL, payload: res.data.carnet });
+      if (res.data.carnet.length === 0) {
+        dispatch({ type: GET_CONTROL, payload: ["error"] });
+      } else {
+        dispatch({ type: GET_CONTROL, payload: res.data.carnet });
+      }
     })
     .catch((error) => {
       console.log(error);
@@ -38,7 +42,11 @@ export const getBiochemical = (rut) => (dispatch) => {
   axios
     .get(`/patientsCarnet/getBiochemical/patient/${rut}`)
     .then((res) => {
-      dispatch({ type: GET_BIOCHEMICAL, payload: res.data.biochemicals });
+      if (res.data.biochemicals.length === 0) {
+        dispatch({ type: GET_BIOCHEMICAL, payload: ["error"] });
+      } else {
+        dispatch({ type: GET_BIOCHEMICAL, payload: res.data.biochemicals });
+      }
     })
     .catch((error) => {
       console.log(error);
