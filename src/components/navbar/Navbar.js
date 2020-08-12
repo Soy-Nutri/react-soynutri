@@ -11,6 +11,7 @@ import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import PersonOutlineIcon from "@material-ui/icons/PersonOutline";
 
 import { Link } from "react-router-dom";
 
@@ -190,6 +191,18 @@ export default function Navbar(props) {
                 : "invitado"}
             </Typography>
           </CardContent>
+          {localStorage.rol === "/patient" && (
+            <CardActions>
+              <Button
+                style={{ margin: "auto" }}
+                size="small"
+                component={Link}
+                to="/perfil"
+              >
+                <PersonOutlineIcon /> Ver mi perfil
+              </Button>
+            </CardActions>
+          )}
           <CardActions>
             <Button
               style={{ margin: "auto" }}
