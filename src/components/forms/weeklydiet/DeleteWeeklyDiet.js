@@ -27,7 +27,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 //Redux
 import { useDispatch, useSelector } from "react-redux";
-import { deleteWeeklyDiet } from "../../../redux/ducks/weeklyDietsDucks";
+import { deleteWeeklyDiet, getWeeklyDiets } from "../../../redux/ducks/weeklyDietsDucks";
 
 const DeleteWeeklyDietStyled = styled.div`
   /* Hidde spinner number input Chrome, Safari, Edge, Opera */
@@ -72,6 +72,9 @@ const DeleteWeeklyDietStyled = styled.div`
       margin-top: 15px;
       margin-left: 15px;
     }
+    .hola{
+      margin-left: 0px
+    }
     .lunch-picker {
       margin-right: 0.1px;
     }
@@ -107,13 +110,15 @@ export default function DeleteWeeklyDiet() {
   const { register, errors, handleSubmit, control } = useForm();
   const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
+  const [rut, setRut] = React.useState("");
 
   const [dayOfWeek, setDayOfWeek] = React.useState("Dia de la semana");
 
-  const newPatientWeeklyDiet = useSelector(
-    (store) => store.weeklyDiets.addWeeklyDiet
+  const newWeeklyDiet = useSelector(
+    (store) => store.weeklyDiets.patientWeeklyDiets
   );
-  const newPatientWeeklyDietError = useSelector(
+  
+  const newWeeklyDietError = useSelector(
     (store) => store.weeklyDiets.errors
   );
 
@@ -146,14 +151,17 @@ export default function DeleteWeeklyDiet() {
 
   const onSubmit = (data, e) => {
     const fecha = new Date();
-
     data["date"] = fecha;
-
     dispatch(deleteWeeklyDiet(data));
     handleOpen();
     e.target.reset();
 
     console.log(data);
+  };
+
+
+  const searchPatientsWeekly = () => {
+    dispatch(getWeeklyDiets(rut));
   };
 
   const handleChangeDay = (event) => {
@@ -200,6 +208,7 @@ export default function DeleteWeeklyDiet() {
 
         <Grid container justify="center" spacing={isMobile ? 0 : 2}>
           <Grid item xs={12} sm={8} md={4} lg={4}>
+          <br></br>
             <TextField
               name="rut"
               type="text"
@@ -219,6 +228,7 @@ export default function DeleteWeeklyDiet() {
             variant="outlined"
             type="submit"
             color="primary"
+            onClick={() => searchPatientsWeekly()}
           >
             Traer dietas semanales
           </Button>
@@ -234,33 +244,9 @@ export default function DeleteWeeklyDiet() {
             justify="center"
             className="semana"
           >
-            {/*aqui ir la semana*/}
-            <Controller
-              as={
-                <Select name="day" value={dayOfWeek} onChange={handleChangeDay}>
-                  <MenuItem disabled value="Dia de la semana">
-                    <em> Dia de la semana</em>
-                    <br />
-                  </MenuItem>
-                  <MenuItem value={"Lunes"}>Lunes</MenuItem>
-                  <MenuItem value={"Martes"}>Martes</MenuItem>
-                  <MenuItem value={"Miercoles"}>Miércoles</MenuItem>
-                  <MenuItem value={"Jueves"}>Jueves</MenuItem>
-                  <MenuItem value={"Viernes"}>Viernes</MenuItem>
-                  <MenuItem value={"Sabado"}>Sábado</MenuItem>
-                  <MenuItem value={"Domingo"}>Domingo</MenuItem>
-                </Select>
-              }
-              name="day"
-              defaultValue={dayOfWeek}
-              control={control}
-            />
-          </Grid>
-        </Grid>
-
-        <Grid container justify="center">
-          <Grid container spacing={2}>
-            <List dense className={classes.root}>
+        
+            
+           <List dense >
               {[0, 1, 2, 3].map((value) => {
                 const labelId = `checkbox-list-secondary-label-${value}`;
                 return (
@@ -283,7 +269,9 @@ export default function DeleteWeeklyDiet() {
               })}
             </List>
           </Grid>
+        </Grid>
 
+        <Grid container justify="center">
           <Button
             className="form-button"
             variant="outlined"
@@ -295,23 +283,24 @@ export default function DeleteWeeklyDiet() {
         </Grid>
       </form>
 
-      {newPatientWeeklyDiet ? (
+      {newWeeklyDiet ? (
         <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
           <Alert onClose={handleClose} severity="success">
-            La Dieta semanal del paciente {newPatientWeeklyDiet.names}{" "}
-            {newPatientWeeklyDiet.father_last_name}{" "}
-            {newPatientWeeklyDiet.mother_last_name} fue agregado exitosamente!{" "}
+            La Dieta semanal del paciente {newWeeklyDiet.names}{" "}
+            {newWeeklyDiet.father_last_name}{" "}
+            {newWeeklyDiet.mother_last_name} fue agregado exitosamente!{" "}
           </Alert>
         </Snackbar>
-      ) : newPatientWeeklyDietError ? (
+      ) : newWeeklyDietError ? (
         <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
           <Alert onClose={handleClose} severity="error">
-            {newPatientWeeklyDietError}
+            {newWeeklyDietError}
           </Alert>
         </Snackbar>
       ) : (
         ""
       )}
+
     </DeleteWeeklyDietStyled>
   );
 }

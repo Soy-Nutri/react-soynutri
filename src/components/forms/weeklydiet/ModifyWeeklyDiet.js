@@ -15,14 +15,12 @@ import { useTheme } from "@material-ui/core/styles";
 import MenuItem from "@material-ui/core/MenuItem";
 import DateFnsUtils from "@date-io/date-fns";
 import Select from "@material-ui/core/Select";
-
-//import Snackbar from "@material-ui/core/Snackbar";
-//import MuiAlert from "@material-ui/lab/Alert";
+import Snackbar from "@material-ui/core/Snackbar";
+import Alert from "@material-ui/lab/Alert";
 
 //Redux
-import { useDispatch } from "react-redux";
-import { modifyWeeklyDiet } from "../../../redux/ducks/weeklyDietsDucks";
-
+import { useDispatch , useSelector } from "react-redux";
+import { modifyWeeklyDiet , getWeeklyDiets } from "../../../redux/ducks/weeklyDietsDucks";
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
@@ -58,6 +56,12 @@ const AddWeeklyDietStyled = styled.div`
     font-size: 3.5em;
     /* color: var(--mainPurple); */
   }
+  .semana {
+      margin-top: px;
+      margin-left: 25px;
+      
+    }
+
   /*Cambiar estilo en media screen para las minutas */
   @media screen and (min-width: 600px) {
     .MuiGrid-root.margin.MuiGrid-item.MuiGrid-grid-md-1,
@@ -68,8 +72,8 @@ const AddWeeklyDietStyled = styled.div`
       margin-right: 0.2px;
     }
     .semana {
-      margin-top: 15px;
-      margin-left: 15px;
+      margin-top: px;
+      margin-left: px;
     }
     .lunch-picker {
       margin-right: 0.1px;
@@ -86,41 +90,146 @@ const AddWeeklyDietStyled = styled.div`
   }
 `;
 
+
+
+function getFecha(date) {
+  let newDate = new Date(date);
+  let month = (newDate.getMonth() + 1).toString();
+  let day = (newDate.getDate() + 1).toString();
+  let year = newDate.getFullYear().toString();
+  let dayS = day.length > 1 ? day : `0${day}`;
+  let monthS = month.length > 1 ? month : `0${month}`;
+  return `${dayS}/${monthS}/${year}`;
+}
+
 // function Alert(props) {
 //   return <MuiAlert elevation={6} variant="filled" {...props} />;
 // }
 
 export default function ModifyWeeklyDiet() {
   const { register, errors, handleSubmit, control } = useForm();
+ 
+ 
+
+ 
+  const [open,setOpen] = React.useState(false);
+
+
   const dispatch = useDispatch();
-  // const [open,setOpen] = React.useState(false);
+  const weeklyDiets = useSelector((store)=>store.weeklyDiets.getweeklyDiets);
+  const weeklyDietsError = useSelector((store)=>store.weeklyDiets.errors);
 
-  // const newPatientWeeklyDiet = useSelector((store)=>store.weeklyDiets.modifyWeeklyDiet)
-  // const newPatientWeeklyDietError = useSelector((store)=>store.weeklyDiets.errors)
+  
+  const [rut, setRut] = React.useState("");
+  const [openSnackbar, setOpenSnackbar] = React.useState(false);
+  
 
-  // const handleOpen = () => {
-  //   setOpen(true);
-  // };
-
-  // const handleClose = (event, reason) => {
-  //   if (reason === "clickaway") {
-  //     return;
-  //   }
-  //   setOpen(false);
-  // };
-
-  const onSubmit = (data, e) => {
-    /* TENI QUE DEJAR EL DATE A CA AGREGARLO AL JSON data['date']= new Date(); */
-    dispatch(modifyWeeklyDiet(data));
-    //handleOpen();
-    e.target.reset();
-
-    console.log(data);
+  const handleOpen = () => {
+    setOpen(true);
   };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+       return;
+    }
+     setOpen(false);
+   };
 
   const reqmsg = "Campo obligatorio";
 
   //Cambiar las horas a las dadas por firebase.
+
+
+  const searchPatientsWeekly = () => {
+    dispatch(getWeeklyDiets(rut));
+    setOpenSnackbar(true);
+  };
+
+  const [date, setDate] = React.useState("");
+  const [newDate, setNewDate] = React.useState("Lunes");
+
+
+
+  const [weeklyPatient, setWeeklyPatient] = React.useState({
+    date: "",
+    lunes:{"breakfast":" ",
+      "timeBreakfast":"",
+      "lunch": "",
+      "timeLunch":  "",
+      "snack": "",
+      "timeSnack": "",
+      "post_training": "",
+      "dinner":"",
+      "timeDinner": ""},
+    martes:{"breakfast":" ",
+    "timeBreakfast":"",
+    "lunch": "",
+    "timeLunch":  "",
+    "snack": "",
+    "timeSnack": "",
+    "post_training": "",
+    "dinner":"",
+    "timeDinner": ""},
+    miercoles:{"breakfast":" ",
+    "timeBreakfast":"",
+    "lunch": "",
+    "timeLunch":  "",
+    "snack": "",
+    "timeSnack": "",
+    "post_training": "",
+    "dinner":"",
+    "timeDinner": ""},
+    jueves:{"breakfast":" ",
+    "timeBreakfast":"",
+    "lunch": "",
+    "timeLunch":  "",
+    "snack": "",
+    "timeSnack": "",
+    "post_training": "",
+    "dinner":"",
+    "timeDinner": ""},
+    viernes:{"breakfast":" ",
+    "timeBreakfast":"",
+    "lunch": "",
+    "timeLunch":  "",
+    "snack": "",
+    "timeSnack": "",
+    "post_training": "",
+    "dinner":"",
+    "timeDinner": ""},
+    sabado:{"breakfast":" ",
+    "timeBreakfast":"",
+    "lunch": "",
+    "timeLunch":  "",
+    "snack": "",
+    "timeSnack": "",
+    "post_training": "",
+    "dinner":"",
+    "timeDinner": ""},
+    domingo:{"breakfast":" ",
+    "timeBreakfast":"",
+    "lunch": "",
+    "timeLunch":  "",
+    "snack": "",
+    "timeSnack": "",
+    "post_training": "",
+    "dinner":"",
+    "timeDinner": ""},
+  });
+  
+  const handleClickDelete = () => {
+    setWeeklyPatient({
+      date:"",
+      lunes:{},
+      martes:{},
+      miercoles:{},
+      jueves:{},
+      viernes:{},
+      sabado:{},
+      domingo:{},
+    });
+  };
+
 
   const [breakfastTime, setBreakfastTime] = React.useState(
     new Date("January 1 2020 09:30").getTime()
@@ -135,7 +244,58 @@ export default function ModifyWeeklyDiet() {
     new Date("2020 January 1 19:30").getTime()
   );
 
-  const [dayOfWeek, setDayOfWeek] = React.useState("Dia de la semana");
+  const [dayOfWeek, setDayOfWeek] = React.useState("lunes");
+
+  const mapeoDeWeeklyDietsLLegadas = weeklyDiets.map((item) => (item.date ) );
+
+  React.useEffect(() => {
+   
+      if(document.getElementById("breakfast") == null && document.getElementById("dinner")== null&&
+          document.getElementById("lunch") == null   &&
+          document.getElementById("post_training") == null&&
+          document.getElementById("snack") == null&&   
+          document.getElementById("breakfast_time") == null&&
+          document.getElementById("dinner_time") == null&&
+          document.getElementById("lunch_time") == null &&
+          document.getElementById("collation_time") == null ){
+      }
+      else{
+        //variables
+        var breakf = document.getElementById("breakfast");
+        var dinn = document.getElementById("dinner");
+        var lunc =  document.getElementById("lunch");
+        var pstraining = document.getElementById("post_training");
+        var snac =  document.getElementById("snack");
+        //los tiempos
+        var brkfast =  document.getElementById("breakfast_time");
+        var timdinn =  document.getElementById("dinner_time");
+        var timlunc = document.getElementById("lunch_time");
+        var timsnac = document.getElementById("collation_time");
+
+        var aux = weeklyDiets[mapeoDeWeeklyDietsLLegadas.indexOf(weeklyPatient.date)];
+  
+
+        aux = aux[dayOfWeek]
+    
+        if(aux=== undefined ){
+          console.log("El dia no existe asi que tiene que meterlo igual")
+        }
+        else{
+          breakf.value= aux.breakfast;
+          snac.value =  aux.snack;
+          dinn.value=aux.dinner;
+          lunc.value =  aux.lunch;
+          pstraining.value=aux.post_training;
+          brkfast.value = aux.timeBreakfast;
+          timdinn.value = aux.timeDinner;
+          timlunc.value = aux.timeLunch;
+          timsnac.value = aux.timeSnack;
+        }
+ 
+      }
+  });
+
+
 
   const handleBreakfastTime = (date) => {
     setBreakfastTime(date);
@@ -154,6 +314,60 @@ export default function ModifyWeeklyDiet() {
     setDayOfWeek(event.target.value);
   };
 
+  const handleChangeRut = (event) =>{
+    setRut(event.target.value);
+  };
+ 
+
+  const handleChange = (event) => {
+    setDate(event.target.value);
+    setWeeklyPatient(event.target.value);
+    setNewDate(event.target.value);
+    //console.log(event.target.value);
+  };
+
+ const handleModifyDay = (event)=>{
+  
+        //variables
+      var breakf = document.getElementById("breakfast").value;
+      var dinn = document.getElementById("dinner").value;
+      var lunc =  document.getElementById("lunch").value;
+      var pstraining = document.getElementById("post_training").value;
+      var snac =  document.getElementById("snack").value;
+      //los tiempos
+      var brkfast =  document.getElementById("breakfast_time").value;
+      var timdinn =  document.getElementById("dinner_time").value;
+      var timlunc = document.getElementById("lunch_time").value;
+      var timsnac = document.getElementById("collation_time").value;
+
+      weeklyPatient[dayOfWeek] = {  
+        breakfast: breakf,
+        timeBreakfast: brkfast,
+        lunch: lunc,
+        timeLunch:  timlunc,
+        snack: snac,
+        timeSnack: timsnac,
+        post_training: pstraining,
+        dinner:dinn,
+        timeDinner: timdinn,
+       };
+     //actual  weeklyDiets
+
+      console.log(weeklyPatient)
+ };
+
+ const sendModify = (event) =>{ 
+    console.log("AHI LE VA AL MODIFY");
+    console.log(weeklyPatient);
+    let aux = weeklyDiets[mapeoDeWeeklyDietsLLegadas.indexOf(weeklyPatient.date)];
+
+    
+
+    dispatch(modifyWeeklyDiet(weeklyPatient));
+    //handleOpen();
+
+ };
+
   // function prettyTime(date) {
   //   // this function makes de datetype date in a "HH:MM" format
   //   return date.toLocaleTimeString(navigator.language, {
@@ -169,11 +383,7 @@ export default function ModifyWeeklyDiet() {
 
   return (
     <AddWeeklyDietStyled>
-      <form
-        autoComplete="off"
-        className="form"
-        onSubmit={handleSubmit(onSubmit)}
-      >
+     
         <Grid container alignItems="center">
           <Typography className="title" variant="h5" color="primary">
             Modificar minuta semanal
@@ -183,91 +393,115 @@ export default function ModifyWeeklyDiet() {
         <Grid container justify="center" spacing={isMobile ? 0 : 2}>
           <Grid item xs={12} sm={8} md={4} lg={4}>
             <TextField
+              value={rut}
               name="rut"
-              type="number"
+              type="text"
               label="Rut (Sin puntos ni guión)"
               variant="outlined"
               margin="dense"
               fullWidth
+              onChange={handleChangeRut}
               error={errors.rut}
               helperText={errors.rut ? errors.rut.message : ""}
               inputRef={register({
                 required: { value: true, message: reqmsg },
               })}
             />
+            <Button
+                className="form-button"
+                variant="outlined"
+                type="submit"
+                color="primary"
+                onClick={() => searchPatientsWeekly()}
+              >
+                Buscar
+            </Button>
           </Grid>
-          <Button
-            className="form-button"
-            variant="outlined"
-            type="submit"
-            color="primary"
-          >
-            Traer dietas semanales
-          </Button>
+         
         </Grid>
 
         <br></br>
+      
+        {  weeklyDiets && weeklyDiets.length > 0 && weeklyPatient.date === "" &&(
+         
         <Grid container justify="center" spacing={isMobile ? 0 : 2}>
-          <span>Dietas semanales</span>
-          <Grid
-            item
-            xs={12}
-            sm={8}
-            md={4}
-            lg={4}
-            justify="center"
-            className="semana"
-          >
-            {/*aqui ir la semana*/}
-            <Controller
-              as={
-                <Select name="day" value={dayOfWeek} onChange={handleChangeDay}>
-                  <MenuItem disabled value="Dia de la semana">
-                    <em> Dia de la semana</em>
-                    <br />
-                  </MenuItem>
-                  <MenuItem value={"Lunes"}>Lunes</MenuItem>
-                  <MenuItem value={"Martes"}>Martes</MenuItem>
-                  <MenuItem value={"Miercoles"}>Miércoles</MenuItem>
-                  <MenuItem value={"Jueves"}>Jueves</MenuItem>
-                  <MenuItem value={"Viernes"}>Viernes</MenuItem>
-                  <MenuItem value={"Sabado"}>Sábado</MenuItem>
-                  <MenuItem value={"Domingo"}>Domingo</MenuItem>
-                </Select>
-              }
-              name="day"
-              defaultValue={dayOfWeek}
-              control={control}
-            />
-          </Grid>
-          <span>Días de la semana</span>
+   
+            <Grid container justify="center"  >
+        
+          
+                <Grid item xs={12} sm={4} md={2} lg={2} className="semana" >
+                  <span>Selecciona una de las dietas semanales para editar</span> <br></br>
+                    
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={date}
+                      onChange={handleChange}>
+                      {weeklyDiets.map((item) => (
+                      <MenuItem value={item} key={item.date}>
+                        {getFecha(item.date)}
+                      </MenuItem>
+                    ))}
 
-          <Grid item justify="center" className="semana">
-            <Controller
-              as={
-                <Select name="day" value={dayOfWeek} onChange={handleChangeDay}>
-                  <MenuItem disabled value="Dia de la semana">
-                    <em> Dia de la semana</em>
-                    <br />
-                  </MenuItem>
-                  <MenuItem value={"Lunes"}>Lunes</MenuItem>
-                  <MenuItem value={"Martes"}>Martes</MenuItem>
-                  <MenuItem value={"Miercoles"}>Miércoles</MenuItem>
-                  <MenuItem value={"Jueves"}>Jueves</MenuItem>
-                  <MenuItem value={"Viernes"}>Viernes</MenuItem>
-                  <MenuItem value={"Sabado"}>Sábado</MenuItem>
-                  <MenuItem value={"Domingo"}>Domingo</MenuItem>
-                </Select>
-              }
-              name="day"
-              defaultValue={dayOfWeek}
-              control={control}
-            />
-          </Grid>
+                      </Select>
+                  
+                </Grid>
+            
+
+                
+            </Grid>
         </Grid>
+        )}
+        {weeklyPatient.date !== "" &&  ( <div id="holax">        
+  
+       
+          <br></br>
+          <Grid container justify="center" spacing={isMobile ? 0 : 2} className="semana">
+          <span>Seleccione el día de la semana editar</span> 
+          </Grid>
+
+          <Grid container justify="center" spacing={isMobile ? 0 : 2} className="semana">
+          <br></br> 
+       
+            <Select name="day" id="hola" value={dayOfWeek} onChange={handleChangeDay}>
+              <MenuItem disabled value="Dia de la semana">
+                <em> Dia de la semana</em>
+                <br />
+              </MenuItem>
+              <MenuItem value={"lunes"}>Lunes</MenuItem>
+              <MenuItem value={"martes"}>Martes</MenuItem>
+              <MenuItem value={"miercoles"}>Miércoles</MenuItem>
+              <MenuItem value={"jueves"}>Jueves</MenuItem>
+              <MenuItem value={"viernes"}>Viernes</MenuItem>
+              <MenuItem value={"sabado"}>Sábado</MenuItem>
+              <MenuItem value={"domingo"}>Domingo</MenuItem>
+            </Select>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    
+            <Button
+              className="form-button "
+              variant="outlined"
+              type="submit"
+              color="primary"
+              onClick={handleModifyDay}
+            >
+              Cambiar el dia seleccionado
+            </Button>
+          </Grid>
+
+       
+            
+        
+          <br></br>
+       
+
+   
 
         <Grid container justify="center" spacing={isMobile ? 0 : 2}>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            
+     
+            
+            
             <Grid item xs={12} sm={4} md={2} lg={2}>
               <Controller
                 as={
@@ -285,6 +519,7 @@ export default function ModifyWeeklyDiet() {
                     }}
                   />
                 }
+        
                 name="breakfast_time"
                 defaultValue={breakfastTime}
                 control={control}
@@ -367,6 +602,9 @@ export default function ModifyWeeklyDiet() {
 
           <Grid item xs={12} sm={8} md={4} lg={4}>
             <TextField
+
+              defaultValue="Ejemplo"  
+              id="breakfast"
               name="breakfast"
               type="text"
               label="Desayuno"
@@ -386,6 +624,8 @@ export default function ModifyWeeklyDiet() {
 
           <Grid item xs={12} sm={8} md={4} lg={4}>
             <TextField
+              defaultValue="Ejemplo"  
+              id="lunch"
               name="lunch"
               type="text"
               label="Almuerzo"
@@ -408,6 +648,8 @@ export default function ModifyWeeklyDiet() {
 
           <Grid item xs={12} sm={8} md={4} lg={4}>
             <TextField
+              defaultValue="ejemplo"  
+              id = "snack"
               name="snack"
               type="text"
               label="Colación"
@@ -425,6 +667,8 @@ export default function ModifyWeeklyDiet() {
 
           <Grid item xs={12} sm={8} md={4} lg={4}>
             <TextField
+             defaultValue="Ejemplo" 
+             id = "post_training" 
               name="post_training"
               type="text"
               label="Post entreno"
@@ -449,6 +693,8 @@ export default function ModifyWeeklyDiet() {
 
           <Grid item xs={12} sm={8} md={4} lg={4}>
             <TextField
+              defaultValue="Ejemplo" 
+              id = "dinner" 
               name="dinner"
               type="text"
               label="Cena"
@@ -468,6 +714,8 @@ export default function ModifyWeeklyDiet() {
 
           <Grid item xs={12} sm={8} md={4} lg={4}>
             <TextField
+              defaultValue="Ejemplo"  
+              id = "goals" 
               name="goals"
               type="text"
               label="Metas"
@@ -494,17 +742,56 @@ export default function ModifyWeeklyDiet() {
             className="grid-invisible"
           ></Grid>
         </Grid>
+
         <Grid container justify="center">
           <Button
             className="form-button"
             variant="outlined"
             type="submit"
             color="primary"
+            onClick={sendModify}
           >
-            Guardar Minuta Semanal
+            Enviar Minuta Semanal
           </Button>
         </Grid>
-      </form>
+
+        <Grid container justify="center">
+            <Button
+              className="form-button"
+              variant="outlined"
+              type="submit"
+              color="primary"
+              onClick={handleClickDelete}
+            >
+              Cancelar
+            </Button>
+          </Grid>  
+    
+      </div>
+      
+      ) 
+      }
+      <div>
+
+        {weeklyDietsError ? (
+          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+            <Alert onClose={handleClose} severity="error">
+              Ha ocurrido un error, intente otra vez.
+            </Alert>
+          </Snackbar>
+        ) : weeklyDiets ? (
+          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+            <Alert onClose={handleClose} severity="success">
+              La Dieta semanal del paciente con rut
+              {weeklyDiets} fue agregado exitosamente!{" "}
+            </Alert>
+          </Snackbar>
+        ) : (
+          ""
+        )}
+
+      </div>
+ 
     </AddWeeklyDietStyled>
   );
 }

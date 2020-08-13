@@ -40,7 +40,7 @@ import ModifyDailyDiet from "./components/forms/dailydiet/ModifyDailyDiet";
 import WeeklyDiet from "./components/forms/weeklydiet/AddWeeklyDiet";
 import ModifyWeeklyDiet from "./components/forms/weeklydiet/ModifyWeeklyDiet";
 import DeleteWeeklyDiet from "./components/forms/weeklydiet/DeleteWeeklyDiet";
-
+import SeeWeeklyDiet from "./components/forms/weeklydiet/SeeWeeklyDiet";
 
 // axios
 import axios from "axios";
@@ -171,3 +171,5 @@ function App() {
 }
 
 export default App;
+
+//<Route path="/ver_minuta_semanal" exact component = {SeeWeeklyDiet} />

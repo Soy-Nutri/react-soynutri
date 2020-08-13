@@ -95,25 +95,26 @@ function Alert(props) {
 export default function AddWeeklyDiet() {
   const { register, errors, handleSubmit, control } = useForm();
   const dispatch = useDispatch();
-  const [open, setOpen] = React.useState(false);
 
-  const newPatientWeeklyDiet = useSelector(
-    (store) => store.weeklyDiets.addWeeklyDiet
+  const [openSnackbar, setOpenSnackbar] = React.useState(false);
+  
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
+
+
+  const weeklyDiet = useSelector(
+    (store) => store.weeklyDiets.weeklyDiets
   );
-  const newPatientWeeklyDietError = useSelector(
+
+  const weeklyDietError = useSelector(
     (store) => store.weeklyDiets.errors
   );
+  console.log("weeklydiet");
+  console.log(weeklyDiet);
+  console.log("Erro");
+  console.log(weeklyDietError);
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpen(false);
-  };
 
   const onSubmit = (data, e) => {
     const fecha = new Date();
@@ -121,7 +122,8 @@ export default function AddWeeklyDiet() {
     data["date"] = fecha;
 
     dispatch(addWeeklyDiet(data));
-    handleOpen();
+    console.log(errors);
+    setOpenSnackbar(true);
     e.target.reset();
 
     console.log(data);
@@ -144,7 +146,7 @@ export default function AddWeeklyDiet() {
     new Date("2020 January 1 19:30").getTime()
   );
 
-  const [dayOfWeek, setDayOfWeek] = React.useState("Dia de la semana");
+  const [dayOfWeek, setDayOfWeek] = React.useState("Lunes");
 
   const handleBreakfastTime = (date) => {
     setBreakfastTime(toString(date));
@@ -160,18 +162,14 @@ export default function AddWeeklyDiet() {
   };
 
   const handleChangeDay = (event) => {
-    console.log("selecionnaste" + event.target.value);
-    setDayOfWeek(event.target.value);
+    if(event.target.value==="Dia de la semana"){
+      console.log("selecionnaste" + event.target.value);
+    }else{
+      setDayOfWeek(event.target.value);
+    }
+
   };
-
-  // function prettyTime(date) {
-  //   // this function makes de datetype date in a "HH:MM" format
-  //   return date.toLocaleTimeString(navigator.language, {
-  //     hour: "2-digit",
-  //     minute: "2-digit",
-  //   });
-  // }
-
+  
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"), {
     defaultMatches: true,
@@ -469,25 +467,35 @@ export default function AddWeeklyDiet() {
             Guardar Minuta Semanal
           </Button>
         </Grid>
+        
+
       </form>
 
-      {newPatientWeeklyDiet ? (
-        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-          <Alert onClose={handleClose} severity="success">
-            La Dieta semanal del paciente {newPatientWeeklyDiet.names}{" "}
-            {newPatientWeeklyDiet.father_last_name}{" "}
-            {newPatientWeeklyDiet.mother_last_name} fue agregado exitosamente!{" "}
+
+      {weeklyDietError? (
+        <Snackbar
+          open={openSnackbar}
+          autoHideDuration={6000}
+          onClose={handleCloseSnackbar}
+        >
+          <Alert onClose={handleCloseSnackbar} severity="error">
+            Ha ocurrido un error, verifique los datos antes de continuar.
           </Alert>
         </Snackbar>
-      ) : newPatientWeeklyDietError ? (
-        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-          <Alert onClose={handleClose} severity="error">
-            {newPatientWeeklyDietError}
+      ) : weeklyDiet && weeklyDiet.error === undefined ? (
+        <Snackbar
+          open={openSnackbar}
+          autoHideDuration={6000}
+          onClose={handleCloseSnackbar}
+        >
+          <Alert onClose={handleCloseSnackbar} severity="success">
+            Control modificado con éxito.
           </Alert>
         </Snackbar>
       ) : (
         ""
       )}
+
     </AddWeeklyDietStyled>
   );
 }
