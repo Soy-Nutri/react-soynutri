@@ -7,6 +7,16 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
+/*
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+
+import Snackbar from "@material-ui/core/Snackbar";
+import Alert from "@material-ui/lab/Alert";
+*/
 
 import WatchLaterIcon from "@material-ui/icons/WatchLater";
 //import InputLabel from '@material-ui/core/InputLabel';
@@ -15,8 +25,6 @@ import { useTheme } from "@material-ui/core/styles";
 import MenuItem from "@material-ui/core/MenuItem";
 import DateFnsUtils from "@date-io/date-fns";
 import Select from "@material-ui/core/Select";
-import Snackbar from "@material-ui/core/Snackbar";
-import Alert from "@material-ui/lab/Alert";
 
 //Redux
 import { useDispatch , useSelector } from "react-redux";
@@ -107,22 +115,29 @@ function getFecha(date) {
 // }
 
 export default function ModifyWeeklyDiet() {
-  const { register, errors, handleSubmit, control } = useForm();
+  const { register, errors,  control } = useForm();
  
  
+  const theme = useTheme();
+
 
  
-  const [open,setOpen] = React.useState(false);
-
-
   const dispatch = useDispatch();
-  const weeklyDiets = useSelector((store)=>store.weeklyDiets.getweeklyDiets);
-  const weeklyDietsError = useSelector((store)=>store.weeklyDiets.errors);
-
   
   const [rut, setRut] = React.useState("");
-  const [openSnackbar, setOpenSnackbar] = React.useState(false);
+  const weeklyDiets = useSelector((store)=>store.weeklyDiets.getweeklyDiets);
   
+  /*
+  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const [open,setOpen] = React.useState(false);
+  const weeklyDietsError = useSelector((store)=>store.weeklyDiets.errors);
+  const [openSnackbar, setOpenSnackbar] = React.useState(false);
+
+  
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
 
   const handleOpen = () => {
     setOpen(true);
@@ -133,7 +148,16 @@ export default function ModifyWeeklyDiet() {
        return;
     }
      setOpen(false);
+    };
+    
+   const handleClickOpen = () => {
+     // console.log("errores", errors.weight);
+     // por alguna razon errors es siempre indefinido
+     if (errors.lenght === 0) {
+       setOpen(true);
+     }
    };
+    */
 
   const reqmsg = "Campo obligatorio";
 
@@ -141,16 +165,25 @@ export default function ModifyWeeklyDiet() {
 
 
   const searchPatientsWeekly = () => {
-    dispatch(getWeeklyDiets(rut));
-    setOpenSnackbar(true);
+
+    if(rut===""){
+      
+      alert("Hacer esta comprobacion bonita cigual que la otra xd")
+    }
+    else{
+      dispatch(getWeeklyDiets(rut));
+    }
+   // setOpenSnackbar(true);
+
   };
 
   const [date, setDate] = React.useState("");
-  const [newDate, setNewDate] = React.useState("Lunes");
+  //const [newDate, setNewDate] = React.useState("Lunes");
 
 
 
   const [weeklyPatient, setWeeklyPatient] = React.useState({
+    rut:"",
     date: "",
     lunes:{"breakfast":" ",
       "timeBreakfast":"",
@@ -258,6 +291,8 @@ export default function ModifyWeeklyDiet() {
           document.getElementById("dinner_time") == null&&
           document.getElementById("lunch_time") == null &&
           document.getElementById("collation_time") == null ){
+
+            
       }
       else{
         //variables
@@ -316,13 +351,14 @@ export default function ModifyWeeklyDiet() {
 
   const handleChangeRut = (event) =>{
     setRut(event.target.value);
+
   };
  
 
   const handleChange = (event) => {
     setDate(event.target.value);
     setWeeklyPatient(event.target.value);
-    setNewDate(event.target.value);
+   // setNewDatesetNewDate(event.target.value);
     //console.log(event.target.value);
   };
 
@@ -339,6 +375,7 @@ export default function ModifyWeeklyDiet() {
       var timdinn =  document.getElementById("dinner_time").value;
       var timlunc = document.getElementById("lunch_time").value;
       var timsnac = document.getElementById("collation_time").value;
+      weeklyPatient["rut"]=rut;
 
       weeklyPatient[dayOfWeek] = {  
         breakfast: breakf,
@@ -352,14 +389,14 @@ export default function ModifyWeeklyDiet() {
         timeDinner: timdinn,
        };
      //actual  weeklyDiets
-
+       
       console.log(weeklyPatient)
  };
 
  const sendModify = (event) =>{ 
     console.log("AHI LE VA AL MODIFY");
     console.log(weeklyPatient);
-    let aux = weeklyDiets[mapeoDeWeeklyDietsLLegadas.indexOf(weeklyPatient.date)];
+   // let aux = weeklyDiets[mapeoDeWeeklyDietsLLegadas.indexOf(weeklyPatient.date)];
 
     
 
@@ -376,7 +413,7 @@ export default function ModifyWeeklyDiet() {
   //   });
   // }
 
-  const theme = useTheme();
+
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"), {
     defaultMatches: true,
   });
@@ -412,7 +449,7 @@ export default function ModifyWeeklyDiet() {
                 variant="outlined"
                 type="submit"
                 color="primary"
-                onClick={() => searchPatientsWeekly()}
+                onClick={() =>{ ;searchPatientsWeekly();}}
               >
                 Buscar
             </Button>
@@ -428,9 +465,9 @@ export default function ModifyWeeklyDiet() {
    
             <Grid container justify="center"  >
         
-          
+            <h4>Selecciona una de las dietas semanales para editar</h4> <br></br>
                 <Grid item xs={12} sm={4} md={2} lg={2} className="semana" >
-                  <span>Selecciona una de las dietas semanales para editar</span> <br></br>
+                
                     
                     <Select
                       labelId="demo-simple-select-label"
@@ -457,7 +494,7 @@ export default function ModifyWeeklyDiet() {
        
           <br></br>
           <Grid container justify="center" spacing={isMobile ? 0 : 2} className="semana">
-          <span>Seleccione el día de la semana editar</span> 
+          <h4>Selecciona una de las dietas semanales para editar</h4> <br></br>
           </Grid>
 
           <Grid container justify="center" spacing={isMobile ? 0 : 2} className="semana">
@@ -486,22 +523,10 @@ export default function ModifyWeeklyDiet() {
             >
               Cambiar el dia seleccionado
             </Button>
-          </Grid>
-
-       
-            
-        
+          </Grid>   
           <br></br>
-       
-
-   
-
         <Grid container justify="center" spacing={isMobile ? 0 : 2}>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            
-     
-            
-            
             <Grid item xs={12} sm={4} md={2} lg={2}>
               <Controller
                 as={
@@ -519,7 +544,6 @@ export default function ModifyWeeklyDiet() {
                     }}
                   />
                 }
-        
                 name="breakfast_time"
                 defaultValue={breakfastTime}
                 control={control}
@@ -749,10 +773,11 @@ export default function ModifyWeeklyDiet() {
             variant="outlined"
             type="submit"
             color="primary"
-            onClick={sendModify}
+            onClick={ ()=> {sendModify();/* handleClickOpen();*/ }}
           >
-            Enviar Minuta Semanal
+            Enviar Cambios de Minuta Semanal
           </Button>
+
         </Grid>
 
         <Grid container justify="center">
@@ -772,16 +797,41 @@ export default function ModifyWeeklyDiet() {
       ) 
       }
       <div>
+      {/*
+      <Dialog
+          fullScreen={fullScreen}
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="responsive-dialog-title"
+        >
+          <DialogTitle id="responsive-dialog-title">
+            {"¿Realmente desea guardar los cambios?"}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              El control de {"{nombre}"} con fecha {"{fecha}"} será modificado
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button autoFocus onClick={handleClose} color="primary">
+              Cancelar
+            </Button>
+            <Button onClick={handleClose} color="primary" autoFocus>
+              Guardar
+            </Button>
+          </DialogActions>
+        </Dialog>
+    
 
-        {weeklyDietsError ? (
-          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-            <Alert onClose={handleClose} severity="error">
+       { weeklyDietsError ? (
+          <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+            <Alert onClose={handleCloseSnackbar} severity="error">
               Ha ocurrido un error, intente otra vez.
             </Alert>
           </Snackbar>
         ) : weeklyDiets ? (
-          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-            <Alert onClose={handleClose} severity="success">
+          <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+            <Alert onClose={handleCloseSnackbar} severity="success">
               La Dieta semanal del paciente con rut
               {weeklyDiets} fue agregado exitosamente!{" "}
             </Alert>
@@ -789,7 +839,7 @@ export default function ModifyWeeklyDiet() {
         ) : (
           ""
         )}
-
+        */}
       </div>
  
     </AddWeeklyDietStyled>
