@@ -35,13 +35,6 @@ function getFecha(date) {
 export default function SimpleAccordion({ weeklyDiets }) {
   const classes = useStyles();
 
-
-
-   // dispatch(deleteWeeklyDiet());
-
-
-  console.log(weeklyDiets[0].date);
-
   return (
     <div className={classes.root}>
       {weeklyDiets.map((item) =>

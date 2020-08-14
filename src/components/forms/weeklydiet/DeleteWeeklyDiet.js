@@ -11,12 +11,14 @@ import Grid from "@material-ui/core/Grid";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 
-/*
+
+
+
 import MenuItem from "@material-ui/core/MenuItem";
 
 import Select from "@material-ui/core/Select";
 import { makeStyles } from "@material-ui/core/styles";
-*/
+
 
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
@@ -101,18 +103,28 @@ function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
+
+function getFecha(date) {
+  let newDate = new Date(date);
+  let month = (newDate.getMonth() + 1).toString();
+  let day = (newDate.getDate() + 1).toString();
+  let year = newDate.getFullYear().toString();
+  let dayS = day.length > 1 ? day : `0${day}`;
+  let monthS = month.length > 1 ? month : `0${month}`;
+  return `${dayS}/${monthS}/${year}`;
+}
+
 export default function DeleteWeeklyDiet() {
   const { register, errors, handleSubmit } = useForm();
   const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
   const [rut, setRut] = React.useState("");
-
+  const [date, setDate] = React.useState("");
 
   const weeklyDiets = useSelector((store)=>store.weeklyDiets.getweeklyDiets);
   
   const weeklyDietError = useSelector((store) => store.weeklyDiets.errors);
 
-  console.log(weeklyDiets);
 
   const [checked, setChecked] = React.useState([1]);
 
@@ -149,6 +161,24 @@ export default function DeleteWeeklyDiet() {
 
   const handleChangeRut = (event) =>{
     setRut(event.target.value);
+
+  };
+
+
+  const handleChange = (event) => {
+    setDate(event.target.value);
+   // console.log("soy el dia" + event.target.value.date );
+   // dispatch(deleteWeeklyDiet( ))
+
+  };
+
+  const EliminarFecha =()=>{
+
+    var data = {};
+    data["rut"]=rut;
+    data["date"]=date.date;
+    console.log("estos son los datos a enviar desde delete" +data);
+    dispatch(deleteWeeklyDiet(data));
 
   };
 
@@ -233,40 +263,52 @@ export default function DeleteWeeklyDiet() {
 
       {  weeklyDiets && weeklyDiets.length > 0 &&( 
 
+        <div>
+            <Grid container justify="center"  >
 
-           <Table weeklyDiets={weeklyDiets} ></Table>
-               
+                <h4>Selecciona una de las dietas semanales para eliminar</h4> <br></br>
+                    <Grid item xs={12} sm={4} md={2} lg={2} className="semana" >
+                    
+                        
+                        <Select
+                          labelId="demo-simple-select-label"
+                          id="Prueba"
+                          value={date}
+                          onChange={handleChange}>
+                          {weeklyDiets.map((item) => (
+                          <MenuItem value={item} key={item.date}>
+                            {getFecha(item.date)}
+                          </MenuItem>
+                        ))}
+
+                          </Select>
+                        
+                      
+                    
+                    </Grid>
+                    <Button
+                          className="form-button"
+                          variant="outlined"
+                          type="submit"
+                          color="primary"
+                          onClick={EliminarFecha}
+                        >
+                          Eliminar minuta semanal
+                        </Button>
+                        
+          </Grid>
+                
+          <br></br>    <br></br>
+          <Table weeklyDiets={weeklyDiets} ></Table>
+    
+          </div>
 
          )}
 
-
-
         
-           <List dense >
+     
            
 
-
-              {[0, 1, 2, 3].map((value) => {
-                const labelId = `checkbox-list-secondary-label-${value}`;
-                return (
-                  <ListItem key={value} button>
-                  
-                    <ListItemText
-                      id={labelId}
-                      primary={`Line item ${value + 1}`}
-                    />
-                    <ListItemSecondaryAction>
-                      <Checkbox
-                        edge="end"
-                        onChange={handleToggle(value)}
-                        checked={checked.indexOf(value) !== -1}
-                        inputProps={{ "aria-labelledby": labelId }}
-                      />
-                    </ListItemSecondaryAction>
-                  </ListItem>
-                );
-              })}
-            </List>
           </Grid>
         </Grid>
       </div>

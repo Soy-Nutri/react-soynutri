@@ -161,6 +161,7 @@ function App() {
             <Route path="/agregar_minuta_semanal" exact component = {WeeklyDiet} />
             <Route path="/modificar_minuta_semanal" exact component = {ModifyWeeklyDiet} />
             <Route path="/eliminar_minuta_semanal" exact component = {DeleteWeeklyDiet} />
+            <Route path="/ver_minuta_semanal" exact component = {SeeWeeklyDiet} />
 
             <Route component={Error}></Route>
           </Switch>

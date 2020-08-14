@@ -122,7 +122,10 @@ export const modifyWeeklyDiet = (weeklyDiets) => (dispatch) => {
 
 export const deleteWeeklyDiet = (weeklyDiets) => (dispatch) => {
   // delete changes the state to inactive
+  console.log("soy los datos q van al eliminar",weeklyDiets.date +"   " + weeklyDiets.rut);
+  console.log(typeof weeklyDiets);
   axios
+
     .delete("/patientsWeeklyDiets/deleteWeekOfWeeklyDiets", weeklyDiets)
     .then((res) => {
       console.log(res);

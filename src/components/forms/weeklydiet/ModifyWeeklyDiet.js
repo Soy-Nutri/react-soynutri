@@ -126,7 +126,9 @@ export default function ModifyWeeklyDiet() {
   
   const [rut, setRut] = React.useState("");
   const weeklyDiets = useSelector((store)=>store.weeklyDiets.getweeklyDiets);
+  const [diasdelasemana,setDiasdelasemana]=React.useState([]);
   
+  console.log(diasdelasemana);
   /*
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [open,setOpen] = React.useState(false);
@@ -180,8 +182,22 @@ export default function ModifyWeeklyDiet() {
   const [date, setDate] = React.useState("");
   //const [newDate, setNewDate] = React.useState("Lunes");
 
-
-
+  const [weeklyPatient, setWeeklyPatient] = React.useState({
+    rut:"",
+    date: "",
+    "day":"",
+    "breakfast":"",
+    "timeBreakfast":"",
+    "lunch": "",
+    "timeLunch":  "",
+    "snack": "",
+    "timeSnack": "",
+    "post_training": "",
+    "dinner":"",
+    "timeDinner": "",
+  });
+  
+/* Caso que se quiera modificar la api
   const [weeklyPatient, setWeeklyPatient] = React.useState({
     rut:"",
     date: "",
@@ -249,17 +265,19 @@ export default function ModifyWeeklyDiet() {
     "dinner":"",
     "timeDinner": ""},
   });
-  
+  */
   const handleClickDelete = () => {
     setWeeklyPatient({
-      date:"",
-      lunes:{},
-      martes:{},
-      miercoles:{},
-      jueves:{},
-      viernes:{},
-      sabado:{},
-      domingo:{},
+      "day":"",
+      "breakfast":"",
+      "timeBreakfast":"",
+      "lunch": "",
+      "timeLunch":  "",
+      "snack": "",
+      "timeSnack": "",
+      "post_training": "",
+      "dinner":"",
+      "timeDinner": "",
     });
   };
 
@@ -281,6 +299,7 @@ export default function ModifyWeeklyDiet() {
 
   const mapeoDeWeeklyDietsLLegadas = weeklyDiets.map((item) => (item.date ) );
 
+  /*
   React.useEffect(() => {
    
       if(document.getElementById("breakfast") == null && document.getElementById("dinner")== null&&
@@ -330,7 +349,7 @@ export default function ModifyWeeklyDiet() {
       }
   });
 
-
+*/
 
   const handleBreakfastTime = (date) => {
     setBreakfastTime(date);
@@ -358,10 +377,65 @@ export default function ModifyWeeklyDiet() {
   const handleChange = (event) => {
     setDate(event.target.value);
     setWeeklyPatient(event.target.value);
-   // setNewDatesetNewDate(event.target.value);
-    //console.log(event.target.value);
+
+    let a = event.target.value;
+    let posicion = mapeoDeWeeklyDietsLLegadas.indexOf(a.date);
+    let x = Object.keys(weeklyDiets[posicion]);
+    delete x.date;
+    let c = [];
+    for (let [key, value] of Object.entries(x)) {
+      if(x[key]==="date"){
+        console.log("SOY EL DATE");
+
+      }
+      else{
+         c.push(value);
+      }
+    }
+    console.log(c);
+    setDiasdelasemana(c);
+
   };
 
+  const handleModifyDay = (event)=>{
+  
+    //variables
+  let breakf = document.getElementById("breakfast").value;
+  let dinn = document.getElementById("dinner").value;
+  let lunc =  document.getElementById("lunch").value;
+  let pstraining = document.getElementById("post_training").value;
+  let snac =  document.getElementById("snack").value;
+  //los tiempos
+  let brkfast =  document.getElementById("breakfast_time").value;
+  let timdinn =  document.getElementById("dinner_time").value;
+  let timlunc = document.getElementById("lunch_time").value;
+  let timsnac = document.getElementById("collation_time").value;
+  let weklypatient2={};
+
+  weklypatient2["date"]=weeklyPatient.date;
+  weklypatient2["rut"]=rut;
+  console.log("este es el day of week"+dayOfWeek);
+  weklypatient2["day"]=dayOfWeek;
+
+  weklypatient2["breakfast"]= breakf;
+  weklypatient2["timeBreakfast"]= brkfast;
+  weklypatient2["lunch"]  = lunc;
+  weklypatient2["timeLunch"]=  timlunc;
+  weklypatient2["snack"]= snac;
+  weklypatient2["timeSnack"]= timsnac;
+  weklypatient2["post_training"]= pstraining;
+  weklypatient2["dinner"]=dinn;
+  weklypatient2["timeDinner"]= timdinn;
+
+  dispatch(modifyWeeklyDiet(weklypatient2));
+ //actual  weeklyDiets
+   
+  console.log(weklypatient2);
+};
+
+
+
+/* Caso que se quiera modificar todos los dias a la vez cambiar en api
  const handleModifyDay = (event)=>{
   
         //variables
@@ -376,7 +450,6 @@ export default function ModifyWeeklyDiet() {
       var timlunc = document.getElementById("lunch_time").value;
       var timsnac = document.getElementById("collation_time").value;
       weeklyPatient["rut"]=rut;
-
       weeklyPatient[dayOfWeek] = {  
         breakfast: breakf,
         timeBreakfast: brkfast,
@@ -396,15 +469,15 @@ export default function ModifyWeeklyDiet() {
  const sendModify = (event) =>{ 
     console.log("AHI LE VA AL MODIFY");
     console.log(weeklyPatient);
-   // let aux = weeklyDiets[mapeoDeWeeklyDietsLLegadas.indexOf(weeklyPatient.date)];
-
+   // 
+   
     
 
     dispatch(modifyWeeklyDiet(weeklyPatient));
     //handleOpen();
 
  };
-
+*/
   // function prettyTime(date) {
   //   // this function makes de datetype date in a "HH:MM" format
   //   return date.toLocaleTimeString(navigator.language, {
@@ -501,19 +574,16 @@ export default function ModifyWeeklyDiet() {
           <br></br> 
        
             <Select name="day" id="hola" value={dayOfWeek} onChange={handleChangeDay}>
-              <MenuItem disabled value="Dia de la semana">
-                <em> Dia de la semana</em>
-                <br />
-              </MenuItem>
-              <MenuItem value={"lunes"}>Lunes</MenuItem>
-              <MenuItem value={"martes"}>Martes</MenuItem>
-              <MenuItem value={"miercoles"}>Miércoles</MenuItem>
-              <MenuItem value={"jueves"}>Jueves</MenuItem>
-              <MenuItem value={"viernes"}>Viernes</MenuItem>
-              <MenuItem value={"sabado"}>Sábado</MenuItem>
-              <MenuItem value={"domingo"}>Domingo</MenuItem>
+             
+            {diasdelasemana.map((item) => (
+                          <MenuItem value={item} key={item}>
+                            {item}
+                          </MenuItem>
+                        ))}
             </Select>
+            
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    
+            {/*
             <Button
               className="form-button "
               variant="outlined"
@@ -522,7 +592,7 @@ export default function ModifyWeeklyDiet() {
               onClick={handleModifyDay}
             >
               Cambiar el dia seleccionado
-            </Button>
+            </Button>*/}
           </Grid>   
           <br></br>
         <Grid container justify="center" spacing={isMobile ? 0 : 2}>
@@ -773,9 +843,9 @@ export default function ModifyWeeklyDiet() {
             variant="outlined"
             type="submit"
             color="primary"
-            onClick={ ()=> {sendModify();/* handleClickOpen();*/ }}
+             onClick={handleModifyDay}
           >
-            Enviar Cambios de Minuta Semanal
+            Cambiar el dia seleccionado
           </Button>
 
         </Grid>
@@ -788,7 +858,7 @@ export default function ModifyWeeklyDiet() {
               color="primary"
               onClick={handleClickDelete}
             >
-              Cancelar
+              Cambiar otra minuta semanal
             </Button>
           </Grid>  
     
