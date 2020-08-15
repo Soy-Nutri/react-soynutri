@@ -64,7 +64,7 @@ export default function ControlItem(props) {
             onClick={props.handleDrawerClose}
             className={classes.nested}
             component={Link}
-            to="/ver_control"
+            to="/buscar_control"
           >
             <ListItemIcon>
               <VisibilityIcon />

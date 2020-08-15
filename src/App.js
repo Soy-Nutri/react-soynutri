@@ -30,6 +30,8 @@ import PatientWeeklyDiets from "./components/patients/WeeklyDiets";
 // controls
 import AddControl from "./components/forms/control/AddControl";
 import ModifyControl from "./components/forms/control/ModifyControl";
+import SearchControl from "./components/forms/control/SearchControl";
+import ShowControl from "./components/forms/control/ShowControl";
 
 // daily diets
 import AddDailyDiet from "./components/forms/dailydiet/AddDailyDiet";
@@ -40,7 +42,6 @@ import ModifyDailyDiet from "./components/forms/dailydiet/ModifyDailyDiet";
 import WeeklyDiet from "./components/forms/weeklydiet/AddWeeklyDiet";
 import ModifyWeeklyDiet from "./components/forms/weeklydiet/ModifyWeeklyDiet";
 import DeleteWeeklyDiet from "./components/forms/weeklydiet/DeleteWeeklyDiet";
-
 
 // axios
 import axios from "axios";
@@ -138,6 +139,8 @@ function App() {
 
             <Route path="/agregar_control" exact component={AddControl} />
             <Route path="/modificar_control" exact component={ModifyControl} />
+            <Route path="/buscar_control" exact component={SearchControl} />
+            <Route path="/buscar_control/:rut" exact component={ShowControl} />
 
             <Route
               path="/agregar_pauta_diaria"
@@ -158,9 +161,21 @@ function App() {
             />
             <Route path="/perfil" exact component={Profile} />
 
-            <Route path="/agregar_minuta_semanal" exact component = {WeeklyDiet} />
-            <Route path="/modificar_minuta_semanal" exact component = {ModifyWeeklyDiet} />
-            <Route path="/eliminar_minuta_semanal" exact component = {DeleteWeeklyDiet} />
+            <Route
+              path="/agregar_minuta_semanal"
+              exact
+              component={WeeklyDiet}
+            />
+            <Route
+              path="/modificar_minuta_semanal"
+              exact
+              component={ModifyWeeklyDiet}
+            />
+            <Route
+              path="/eliminar_minuta_semanal"
+              exact
+              component={DeleteWeeklyDiet}
+            />
 
             <Route component={Error}></Route>
           </Switch>

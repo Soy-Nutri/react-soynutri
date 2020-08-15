@@ -109,7 +109,7 @@ export default function UserMenu() {
                     className="menu-item"
                     onClick={handleClose}
                     component={Link}
-                    to="/ver_control"
+                    to="/buscar_control"
                   >
                     Ver control
                   </MenuItem>
