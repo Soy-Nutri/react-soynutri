@@ -10,9 +10,10 @@ import Grid from "@material-ui/core/Grid";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
+
+import BackButton from "../../../utils/BackButton";
 
 import { useTheme } from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
@@ -59,7 +60,7 @@ function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-export default function AddPatient() {
+export default function AddPatient({ history }) {
   const { register, errors, handleSubmit } = useForm();
   const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
@@ -104,6 +105,14 @@ export default function AddPatient() {
           </Typography>
         </Grid>
         <Grid container justify="center">
+          <Grid item container spacing={isMobile ? 0 : 2}>
+            <Grid item xs={false} sm={2} md={3} lg={4}></Grid>
+            <Grid item xs={12} sm={4} md={3} lg={2}>
+              <BackButton his={history} />
+            </Grid>
+            <Grid item xs={false} sm={2} md={3} lg={4}></Grid>
+          </Grid>
+
           <Grid item container spacing={isMobile ? 0 : 2}>
             <Grid item xs={false} sm={2} md={3} lg={4}></Grid>
             <Grid item xs={12} sm={4} md={3} lg={2}>

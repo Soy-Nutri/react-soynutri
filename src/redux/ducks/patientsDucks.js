@@ -10,17 +10,19 @@ const CLEAR_PATIENT_INFO = "CLEAR_PATIENT_INFO";
 const PATIENT_MODIFIED = "PATIENT_MODIFIED";
 const GET_PATIENT_INFO_PATIENT = "GET_PATIENT_INFO_PATIENT";
 const MODIFY_PASSWORD = "MODIFY_PASSWORD";
+const FILTER_PATIENT = "FILTER_PATIENT";
 
 const initialState = {
   newPatient: null,
   errors: null,
   patientsData: [],
+  patientsDataFiltered: [],
   patientInfo: null,
   modifiedPatient: false,
   passwordModified: false,
 };
 
-// Reducer
+/* REDUCER */
 export default function patientsReducer(state = initialState, action) {
   switch (action.type) {
     case ADD_PATIENT:
@@ -41,6 +43,17 @@ export default function patientsReducer(state = initialState, action) {
       return { ...state, patientInfo: action.payload };
     case MODIFY_PASSWORD:
       return { ...state, passwordModified: true };
+    case FILTER_PATIENT:
+      let list = state.patientsData;
+      const patientsDataFiltered = list.filter((patient) =>
+        patient.names
+          .concat(patient.father_last_name)
+          .concat(patient.mother_last_name)
+          .concat(patient.rut)
+          .toLowerCase()
+          .includes(action.payload.toLowerCase())
+      );
+      return { ...state, patientsDataFiltered };
     default:
       return state;
   }
@@ -126,4 +139,8 @@ export const modifyPassword = (data) => (dispatch) => {
       dispatch({ type: MODIFY_PASSWORD });
     })
     .catch((error) => console.log(error));
+};
+
+export const filterPatient = (data) => (dispatch) => {
+  dispatch({ type: FILTER_PATIENT, payload: data });
 };
