@@ -64,7 +64,7 @@ export default function PatientItem(props) {
             onClick={props.handleDrawerClose}
             className={classes.nested}
             component={Link}
-            to="/buscar_paciente"
+            to="/buscar_paciente/ver"
           >
             <ListItemIcon>
               <VisibilityIcon />
@@ -76,7 +76,7 @@ export default function PatientItem(props) {
             onClick={props.handleDrawerClose}
             className={classes.nested}
             component={Link}
-            to="/modificar_paciente"
+            to="/buscar_paciente/modificar"
           >
             <ListItemIcon>
               <CreateIcon />
@@ -88,7 +88,7 @@ export default function PatientItem(props) {
             onClick={props.handleDrawerClose}
             className={classes.nested}
             component={Link}
-            to="/borrar_paciente"
+            to="/buscar_paciente/eliminar"
           >
             <ListItemIcon>
               <DeleteIcon />

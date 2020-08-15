@@ -128,8 +128,16 @@ function App() {
             <Route path="/login" component={Login} />
 
             <Route path="/agregar_paciente" exact component={AddPatient} />
-            <Route path="/buscar_paciente" exact component={SearchPatient} />
-            <Route path="/ver_paciente/:rut" exact component={SeePatient} />
+            <Route
+              path="/buscar_paciente/:action"
+              exact
+              component={SearchPatient}
+            />
+            <Route
+              path="/ver_paciente/:rut/:elim"
+              exact
+              component={SeePatient}
+            />
             <Route
               path="/modificar_paciente/:rut"
               exact

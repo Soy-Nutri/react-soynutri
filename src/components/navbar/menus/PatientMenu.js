@@ -41,7 +41,6 @@ export default function PatientMenu() {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
     }
-
     setOpen(false);
   };
 
@@ -109,7 +108,7 @@ export default function PatientMenu() {
                     className="menu-item see"
                     onClick={handleClose}
                     component={Link}
-                    to="/buscar_paciente"
+                    to="/buscar_paciente/ver"
                   >
                     Ver paciente
                   </MenuItem>
@@ -117,7 +116,7 @@ export default function PatientMenu() {
                     className="menu-item mod"
                     onClick={handleClose}
                     component={Link}
-                    to="/modificar_paciente"
+                    to="/buscar_paciente/modificar"
                   >
                     Modificar paciente
                   </MenuItem>
@@ -125,7 +124,7 @@ export default function PatientMenu() {
                     className="menu-item del"
                     onClick={handleClose}
                     component={Link}
-                    to="/borrar_paciente"
+                    to="/buscar_paciente/eliminar"
                   >
                     Eliminar paciente
                   </MenuItem>

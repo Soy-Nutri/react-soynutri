@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getGeneralInfoAccion } from "../redux/ducks/generalInfoDucks";
 import Footer from "./Footer";
 import Skeleton from "@material-ui/lab/Skeleton";
+import InstagramIcon from "@material-ui/icons/Instagram";
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -39,11 +40,19 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: "56.25%", // 16:9
   },
   cardContent: {
-    flexGrow: 1,
+    //flexGrow: 1,
+  },
+  title: {
+    padding: "10px",
+    margin: "0",
+    display: "flex",
+    justifyContent: "center",
+    color: "var(--lightPurple)",
+    fontFamily: "yellowtail",
   },
 }));
 
-function CardDashboard(props) {
+function CardDashboard() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const info = useSelector((store) => store.generalInfo.infoNutri);
@@ -97,9 +106,13 @@ function CardDashboard(props) {
           </Grid>
 
           <Grid item xs={12} sm={6} md={6}>
+            <Typography variant="h2" className={classes.title}>
+              SOYNUTRI
+            </Typography>
+
             <Typography
-              component="h3"
-              variant="h3"
+              component="h5"
+              variant="h5"
               align="center"
               color="textPrimary"
               gutterBottom
@@ -147,6 +160,7 @@ function CardDashboard(props) {
                     variant="contained"
                     color="primary"
                     href={instagramProfile}
+                    startIcon={<InstagramIcon />}
                   >
                     Instagram
                   </Button>
