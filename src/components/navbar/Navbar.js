@@ -161,7 +161,7 @@ export default function Navbar(props) {
               </div>
             ) : (
               <Link to="/login" style={{ textDecoration: "none" }}>
-                <Button variant="text" color="default" size="small">
+                <Button variant="text" style={{ color: "white" }} size="small">
                   Iniciar sesión
                 </Button>
               </Link>

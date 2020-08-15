@@ -41,7 +41,6 @@ import WeeklyDiet from "./components/forms/weeklydiet/AddWeeklyDiet";
 import ModifyWeeklyDiet from "./components/forms/weeklydiet/ModifyWeeklyDiet";
 import DeleteWeeklyDiet from "./components/forms/weeklydiet/DeleteWeeklyDiet";
 
-
 // axios
 import axios from "axios";
 
@@ -127,8 +126,16 @@ function App() {
             <Route path="/login" component={Login} />
 
             <Route path="/agregar_paciente" exact component={AddPatient} />
-            <Route path="/buscar_paciente" exact component={SearchPatient} />
-            <Route path="/ver_paciente/:rut" exact component={SeePatient} />
+            <Route
+              path="/buscar_paciente/:action"
+              exact
+              component={SearchPatient}
+            />
+            <Route
+              path="/ver_paciente/:rut/:elim"
+              exact
+              component={SeePatient}
+            />
             <Route
               path="/modificar_paciente/:rut"
               exact
@@ -158,9 +165,21 @@ function App() {
             />
             <Route path="/perfil" exact component={Profile} />
 
-            <Route path="/agregar_minuta_semanal" exact component = {WeeklyDiet} />
-            <Route path="/modificar_minuta_semanal" exact component = {ModifyWeeklyDiet} />
-            <Route path="/eliminar_minuta_semanal" exact component = {DeleteWeeklyDiet} />
+            <Route
+              path="/agregar_minuta_semanal"
+              exact
+              component={WeeklyDiet}
+            />
+            <Route
+              path="/modificar_minuta_semanal"
+              exact
+              component={ModifyWeeklyDiet}
+            />
+            <Route
+              path="/eliminar_minuta_semanal"
+              exact
+              component={DeleteWeeklyDiet}
+            />
 
             <Route component={Error}></Route>
           </Switch>

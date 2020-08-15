@@ -57,7 +57,9 @@ function Alert(props) {
 
 export default function SeePatient({ match, history }) {
   const dispatch = useDispatch();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(
+    match.params.elim === "elim" ? true : false
+  );
   const [openSnack, setOpenSnack] = React.useState(false);
   //const [patientInfo, setPatientInfo] = React.useState({});
   const patientInfo = useSelector((state) => state.patients.patientInfo);
@@ -74,6 +76,12 @@ export default function SeePatient({ match, history }) {
 
   const handleClose = () => {
     setOpen(false);
+  };
+  const handleCancel = () => {
+    setOpen(false);
+    if (match.params.elim === "elim") {
+      history.goBack();
+    }
   };
 
   const handleOpen = () => {
@@ -186,12 +194,15 @@ export default function SeePatient({ match, history }) {
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            {patientInfo &&
-              `${patientInfo.names} ${patientInfo.father_last_name} ${patientInfo.mother_last_name} será eliminado`}
+            {patientInfo ? (
+              `${patientInfo.names} ${patientInfo.father_last_name} ${patientInfo.mother_last_name} será eliminado`
+            ) : (
+              <Skeleton variant="text" style={{ borderRadius: "5px" }} />
+            )}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={() => handleCancel()} color="primary">
             Cancelar
           </Button>
           <Button onClick={() => handleDelete()} color="primary" autoFocus>
