@@ -15,12 +15,19 @@ import TableRow from "@material-ui/core/TableRow";
 
 import SearchIcon from "@material-ui/icons/Search";
 import VisibilityIcon from "@material-ui/icons/Visibility";
+import CreateIcon from "@material-ui/icons/Create";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 import Skeleton from "@material-ui/lab/Skeleton";
 
+//import Error from "../../Error";
+
 // redux
 import { useDispatch, useSelector } from "react-redux";
-import { getPatientsList } from "../../../redux/ducks/patientsDucks";
+import {
+  getPatientsList,
+  filterPatient,
+} from "../../../redux/ducks/patientsDucks";
 import Container from "@material-ui/core/Container";
 
 const SearchPatientStyled = styled.div`
@@ -64,22 +71,29 @@ const columns = [
   { id: "names", label: "Nombres", minWidth: 150 },
   { id: "father_last_name", label: "Apellido paterno", minWidth: 100 },
   { id: "mother_last_name", label: "Apellido materno", minWidth: 100 },
-  { id: "see_icon", label: "Ver detalles", minWidth: 50, align: "center" },
+  { id: "icon", label: "Acción", minWidth: 50, align: "center" },
 ];
 
 function createRow(rut, names, father_last_name, mother_last_name) {
   return { rut, names, father_last_name, mother_last_name };
 }
 
-export default function SearchPatient() {
+export default function SearchPatient({ match }) {
   const dispatch = useDispatch();
   const history = useHistory();
-  const patients = useSelector((state) => state.patients.patientsData);
+  //const patients = useSelector((state) => state.patients.patientsData);
+  const patients = useSelector((state) => {
+    if (state.patients.patientsDataFiltered.length > 0) {
+      return state.patients.patientsDataFiltered;
+    }
+    return state.patients.patientsData;
+  });
 
   //const [rowss, setRowss] = React.useState([]);
 
   useEffect(() => {
     dispatch(getPatientsList());
+    dispatch(filterPatient(""));
   }, [dispatch]);
 
   const [page, setPage] = React.useState(0);
@@ -104,16 +118,33 @@ export default function SearchPatient() {
   });
 
   const handleClick = (rut) => {
-    history.push(`/ver_paciente/${rut}`);
+    if (match.params.action === "ver") {
+      history.push(`/ver_paciente/${rut}/v`);
+    } else if (match.params.action === "modificar") {
+      history.push(`/modificar_paciente/${rut}`);
+    } else if (match.params.action === "eliminar") {
+      history.push(`/ver_paciente/${rut}/elim`);
+    }
+  };
+
+  const handleFilterPatient = (e) => {
+    dispatch(filterPatient(e.target.value));
   };
   return (
+    // TODO: ver como mostrar 404 cuando no se cumple esta condicion:
+    // match.params.action === "ver" || match.params.action === "modificar" || match.params.action === "eliminar"
+
     <SearchPatientStyled>
       <Grid container justify="center">
         <Grid item xs={10} sm={6} md={5} lg={4}>
           <form>
             <Paper className="paper-input">
               <SearchIcon />
-              <InputBase className="input" placeholder="Buscar pacientes..." />
+              <InputBase
+                className="input"
+                placeholder="Buscar pacientes..."
+                onChange={handleFilterPatient}
+              />
             </Paper>
           </form>
         </Grid>
@@ -181,13 +212,25 @@ export default function SearchPatient() {
                                       >
                                         {value}
                                       </span>
-                                    ) : column.id !== "see_icon" ? (
+                                    ) : column.id !== "icon" ? (
                                       value
-                                    ) : (
+                                    ) : match.params.action === "ver" ? (
                                       <VisibilityIcon
                                         className="view-patient"
                                         onClick={() => handleClick(row.rut)}
                                       />
+                                    ) : match.params.action === "modificar" ? (
+                                      <CreateIcon
+                                        className="view-patient"
+                                        onClick={() => handleClick(row.rut)}
+                                      />
+                                    ) : match.params.action === "eliminar" ? (
+                                      <DeleteIcon
+                                        className="view-patient"
+                                        onClick={() => handleClick(row.rut)}
+                                      />
+                                    ) : (
+                                      ""
                                     )}
                                   </TableCell>
                                 );

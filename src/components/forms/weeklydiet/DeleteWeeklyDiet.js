@@ -20,8 +20,8 @@ import Select from "@material-ui/core/Select";
 import { makeStyles } from "@material-ui/core/styles";
 
 
-import Snackbar from "@material-ui/core/Snackbar";
-import MuiAlert from "@material-ui/lab/Alert";
+// import Snackbar from "@material-ui/core/Snackbar";
+// import MuiAlert from "@material-ui/lab/Alert";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 
@@ -36,6 +36,7 @@ import Table from "./TableWeekly";
 //Redux
 import { useDispatch, useSelector } from "react-redux";
 import { deleteWeeklyDiet, getWeeklyDiets } from "../../../redux/ducks/weeklyDietsDucks";
+
 
 const DeleteWeeklyDietStyled = styled.div`
   /* Hidde spinner number input Chrome, Safari, Edge, Opera */
@@ -103,6 +104,24 @@ function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
+const useStyles = makeStyles((theme) => ({
+  //falta hacerlo responsive
+  root: {
+    marginLeft: 350,
+    marginTop: 20,
+    width: "100%",
+    maxWidth: 1000,
+  },
+}));
+
+//mientras cambie el dia y no aprete el boton se vayan cambiando los datos de los formularios
+// os ino tendria que rellenar un dia obligatoriamente ajajedsaxD
+
+// function Alert(props) {
+//   return <MuiAlert elevation={6} variant="filled" {...props} />;
+// }
+
+
 
 function getFecha(date) {
   let newDate = new Date(date);
@@ -115,15 +134,24 @@ function getFecha(date) {
 }
 
 export default function DeleteWeeklyDiet() {
-  const { register, errors, handleSubmit } = useForm();
+  const { register, errors, handleSubmit } = use
+  ();
   const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
   const [rut, setRut] = React.useState("");
   const [date, setDate] = React.useState("");
 
+
   const weeklyDiets = useSelector((store)=>store.weeklyDiets.getweeklyDiets);
   
   const weeklyDietError = useSelector((store) => store.weeklyDiets.errors);
+
+  // const newPatientWeeklyDiet = useSelector(
+  //   (store) => store.weeklyDiets.addWeeklyDiet
+  // );
+  // const newPatientWeeklyDietError = useSelector(
+  //   (store) => store.weeklyDiets.errors
+  // );
 
 
   const [checked, setChecked] = React.useState([1]);
@@ -141,17 +169,16 @@ export default function DeleteWeeklyDiet() {
     setChecked(newChecked);
   };
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
+  // const handleOpen = () => {
+  //   setOpen(true);
+  // };
 
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpen(false);
-  };
-
+  // const handleClose = (event, reason) => {
+  //   if (reason === "clickaway") {
+  //     return;
+  //   }
+  //   setOpen(false);
+  // };
 
 
   const searchPatientsWeekly = () => {
@@ -161,6 +188,7 @@ export default function DeleteWeeklyDiet() {
 
   const handleChangeRut = (event) =>{
     setRut(event.target.value);
+
 
   };
 
@@ -304,11 +332,6 @@ export default function DeleteWeeklyDiet() {
           </div>
 
          )}
-
-        
-     
-           
-
           </Grid>
         </Grid>
       </div>

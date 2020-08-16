@@ -30,6 +30,9 @@ import PatientWeeklyDiets from "./components/patients/WeeklyDiets";
 // controls
 import AddControl from "./components/forms/control/AddControl";
 import ModifyControl from "./components/forms/control/ModifyControl";
+import SearchControl from "./components/forms/control/SearchControl";
+import ShowControl from "./components/forms/control/ShowControl";
+import DeleteControl from "./components/forms/control/DeleteControl";
 
 // daily diets
 import AddDailyDiet from "./components/forms/dailydiet/AddDailyDiet";
@@ -41,6 +44,7 @@ import WeeklyDiet from "./components/forms/weeklydiet/AddWeeklyDiet";
 import ModifyWeeklyDiet from "./components/forms/weeklydiet/ModifyWeeklyDiet";
 import DeleteWeeklyDiet from "./components/forms/weeklydiet/DeleteWeeklyDiet";
 import SeeWeeklyDiet from "./components/forms/weeklydiet/SeeWeeklyDiet";
+
 
 // axios
 import axios from "axios";
@@ -127,8 +131,16 @@ function App() {
             <Route path="/login" component={Login} />
 
             <Route path="/agregar_paciente" exact component={AddPatient} />
-            <Route path="/buscar_paciente" exact component={SearchPatient} />
-            <Route path="/ver_paciente/:rut" exact component={SeePatient} />
+            <Route
+              path="/buscar_paciente/:action"
+              exact
+              component={SearchPatient}
+            />
+            <Route
+              path="/ver_paciente/:rut/:elim"
+              exact
+              component={SeePatient}
+            />
             <Route
               path="/modificar_paciente/:rut"
               exact
@@ -136,8 +148,23 @@ function App() {
             />
             <Route path="/borrar_paciente" exact component={DeletePatient} />
 
-            <Route path="/agregar_control" exact component={AddControl} />
-            <Route path="/modificar_control" exact component={ModifyControl} />
+            <Route path="/agregar_control/:rut" exact component={AddControl} />
+            <Route
+              path="/modificar_control/:rut"
+              exact
+              component={ModifyControl}
+            />
+            <Route
+              path="/eliminar_control/:rut"
+              exact
+              component={DeleteControl}
+            />
+            <Route
+              path="/buscar_control/:action"
+              exact
+              component={SearchControl}
+            />
+            <Route path="/ver_control/:rut" exact component={ShowControl} />
 
             <Route
               path="/agregar_pauta_diaria"
@@ -157,11 +184,11 @@ function App() {
               component={PatientWeeklyDiets}
             />
             <Route path="/perfil" exact component={Profile} />
-
             <Route path="/agregar_minuta_semanal" exact component = {WeeklyDiet} />
             <Route path="/modificar_minuta_semanal" exact component = {ModifyWeeklyDiet} />
             <Route path="/eliminar_minuta_semanal" exact component = {DeleteWeeklyDiet} />
             <Route path="/ver_minuta_semanal" exact component = {SeeWeeklyDiet} />
+
 
             <Route component={Error}></Route>
           </Switch>

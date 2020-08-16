@@ -2,24 +2,29 @@ import React from "react";
 import styled from "styled-components";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
-import CardDashboard from "./CardDashboard";
+
+import GuestDashboard from "./GuestDashboard";
+import AdminDashboard from "./AdminDashboard";
+import PatientDashboard from "./PatientDashboard";
 
 const HomeDashboardStyled = styled.div``;
 
-export const GeneralInfo = () => {
-  return (
-    <React.Fragment>
-      <Container>
-        <Grid container>
-          <Grid item md={12}>
-            <CardDashboard />
-          </Grid>
-        </Grid>
-      </Container>
-    </React.Fragment>
-  );
-};
-
 export default function HomeDashboard() {
-  return <HomeDashboardStyled>{GeneralInfo()}</HomeDashboardStyled>;
+  return (
+    <HomeDashboardStyled>
+      {localStorage.getItem("rol") === "/soynutri-adm" ? (
+        <AdminDashboard />
+      ) : localStorage.getItem("rol") === "/patient" ? (
+        <PatientDashboard />
+      ) : (
+        <Container>
+          <Grid container>
+            <Grid item md={12}>
+              <GuestDashboard />
+            </Grid>
+          </Grid>
+        </Container>
+      )}
+    </HomeDashboardStyled>
+  );
 }

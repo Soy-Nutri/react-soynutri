@@ -8,17 +8,12 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { useTheme } from "@material-ui/core/styles";
-
 // redux
 import { useDispatch, useSelector } from "react-redux";
 import { getControls, modifyControl } from "../../../redux/ducks/controlDucks";
+import { getPatientInfo } from "../../../redux/ducks/patientsDucks";
+
+import Skeleton from "@material-ui/lab/Skeleton";
 
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
@@ -28,6 +23,48 @@ import Select from "@material-ui/core/Select";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
+function formateaRut(rut) {
+  var actual = rut.replace(/^0+/, "");
+  if (actual !== "" && actual.length > 1) {
+    var sinPuntos = actual.replace(/\./g, "");
+    var actualLimpio = sinPuntos.replace(/-/g, "");
+    var inicio = actualLimpio.substring(0, actualLimpio.length - 1);
+    var rutPuntos = "";
+    var i = 0;
+    var j = 1;
+    for (i = inicio.length - 1; i >= 0; i--) {
+      var letra = inicio.charAt(i);
+      rutPuntos = letra + rutPuntos;
+      if (j % 3 === 0 && j <= inicio.length - 1) {
+        rutPuntos = "." + rutPuntos;
+      }
+      j++;
+    }
+    var dv = actualLimpio.substring(actualLimpio.length - 1);
+    rutPuntos = rutPuntos + "-" + dv;
+  }
+  return rutPuntos;
+}
+
+function Edad(FechaNacimiento) {
+  var fechaNace = new Date(FechaNacimiento);
+  var fechaActual = new Date();
+
+  var mes = fechaActual.getMonth();
+  var dia = fechaActual.getDate();
+  var año = fechaActual.getFullYear();
+
+  fechaActual.setDate(dia);
+  fechaActual.setMonth(mes);
+  fechaActual.setFullYear(año);
+
+  let edad = Math.floor(
+    (fechaActual - fechaNace) / (1000 * 60 * 60 * 24) / 365
+  );
+
+  return edad;
 }
 
 const ModifyControlStyled = styled.div`
@@ -50,6 +87,14 @@ const ModifyControlStyled = styled.div`
     font-size: 3.5em;
     /* color: var(--mainPurple); */
   }
+
+  .name {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1em;
+    font-size: 1em;
+    /* color: var(--mainPurple); */
+  }
 `;
 
 function getFecha(date) {
@@ -62,7 +107,7 @@ function getFecha(date) {
   return `${dayS}/${monthS}/${year}`;
 }
 
-export default function ModifyControl() {
+export default function ModifyControl({ match }) {
   const { register, errors, handleSubmit } = useForm();
 
   const onSubmit = (data, e) => {
@@ -70,24 +115,15 @@ export default function ModifyControl() {
     // console.log(errors);
     dispatch(modifyControl(data, rut, newDate.date));
     setOpenSnackbar(true);
+    handleClickDelete();
+    e.target.reset();
   };
 
   const reqmsg = "Campo obligatorio";
 
-  const [open, setOpen] = useState(false);
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
-
   const handleClickOpen = () => {
     // console.log("errores", errors.weight);
     // por alguna razon errors es siempre indefinido
-    if (errors.lenght === 0) {
-      setOpen(true);
-    }
-  };
-
-  const handleClose = () => {
-    setOpen(false);
   };
 
   const dispatch = useDispatch();
@@ -101,14 +137,11 @@ export default function ModifyControl() {
     setOpenSnackbar(false);
   };
 
-  const searchPatients = () => {
-    dispatch(getControls(rut));
-    setOpenSnackbar(true);
-  };
-
-  const handleChangeRut = (event) => {
-    setRut(event.target.value);
-  };
+  React.useEffect(() => {
+    setRut(match.params.rut);
+    dispatch(getControls(match.params.rut));
+    dispatch(getPatientInfo(match.params.rut));
+  }, [dispatch, match]);
 
   const [date, setDate] = React.useState("");
   const [newDate, setNewDate] = React.useState("");
@@ -141,6 +174,7 @@ export default function ModifyControl() {
   };
 
   const handleClickDelete = () => {
+    setDate("");
     setControlPatient({
       abdominal_fold: "",
       biological_age: "",
@@ -162,6 +196,7 @@ export default function ModifyControl() {
       weight: "",
     });
   };
+  const patientInfo = useSelector((state) => state.patients.patientInfo);
 
   return (
     <ModifyControlStyled>
@@ -171,57 +206,64 @@ export default function ModifyControl() {
         </Typography>
       </Grid>
 
-      <Grid item container spacing={2} justify="center">
-        <Grid item xs={12} sm={5} md={4} lg={3} xl={2}>
-          <TextField
-            value={rut}
-            onChange={handleChangeRut}
-            name="rut"
-            label="Ingrese el rut del paciente"
-            type="text"
-            variant="outlined"
-            margin="dense"
-            className="input"
-            fullWidth
-          />
-        </Grid>
-      </Grid>
-
-      <Grid container alignItems="center">
-        <Button
-          className="form-button"
-          variant="outlined"
-          type="submit"
-          color="primary"
-          onClick={() => searchPatients()}
-        >
-          Buscar
-        </Button>
-      </Grid>
-
-      {control && control.length > 0 && controlPatient.weight === "" && (
-        <Grid item container spacing={2} justify="center">
-          <Grid item xs={false} sm={1} md={2} lg={3} xl={4}></Grid>
-
-          <Grid item xs={12} sm={5} md={4} lg={3} xl={2}>
-            <h3>Selecione una fecha para editar</h3>
+      {patientInfo && patientInfo.names ? (
+        <Grid container alignItems="center">
+          <Grid item xs={12} container justify="center">
+            <Typography className="name" variant="h5">
+              <div>
+                <h1>
+                  {patientInfo.names} {patientInfo.father_last_name}{" "}
+                  {patientInfo.mother_last_name}
+                </h1>
+                <h2>
+                  Rut: {formateaRut(patientInfo.rut)} Edad:{" "}
+                  {Edad(patientInfo.birth_date)} años
+                </h2>
+              </div>
+            </Typography>
           </Grid>
-          <Grid item xs={12} sm={5} md={4} lg={3} xl={2}>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={date}
-              onChange={handleChange}
-            >
-              {control.map((item) => (
-                <MenuItem value={item} key={item.date}>
-                  {getFecha(item.date)}
-                </MenuItem>
-              ))}
-            </Select>
-          </Grid>
-          <Grid item xs={false} sm={1} md={2} lg={3} xl={4}></Grid>
         </Grid>
+      ) : (
+        <Grid container justify="center">
+          <Grid item container>
+            <Grid item xs={false} sm={3}></Grid>
+
+            <Grid item xs={12} sm={6}>
+              <Skeleton
+                variant="rect"
+                height={100}
+                style={{ borderRadius: "5px" }}
+              />
+            </Grid>
+            <Grid item xs={false} sm={3}></Grid>
+          </Grid>
+        </Grid>
+      )}
+
+      {controlErrors && controlErrors.length > 0 ? (
+        <Grid container direction="row" justify="center" alignItems="center">
+          <h3>Este usuario no tiene controles aún.</h3>
+        </Grid>
+      ) : control && control.length > 0 && controlPatient.weight === "" ? (
+        <Grid container direction="row" justify="center" alignItems="center">
+          <h3>Selecione una fecha para editar</h3>
+
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={date}
+            onChange={handleChange}
+            style={{ marginLeft: 20 }}
+          >
+            {control.map((item) => (
+              <MenuItem value={item} key={item.date}>
+                {getFecha(item.date)}
+              </MenuItem>
+            ))}
+          </Select>
+        </Grid>
+      ) : (
+        ""
       )}
       {controlPatient.weight !== "" && (
         <form
@@ -230,6 +272,7 @@ export default function ModifyControl() {
           onSubmit={handleSubmit(onSubmit)}
         >
           <Grid container justify="center">
+            <h1>Fecha del control {getFecha(newDate.date)}</h1>
             <Grid item container spacing={2}>
               <Grid item xs={false} sm={1} md={2} lg={3} xl={4}></Grid>
 
@@ -620,31 +663,6 @@ export default function ModifyControl() {
           </Grid>
         </form>
       )}
-      <div>
-        <Dialog
-          fullScreen={fullScreen}
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="responsive-dialog-title"
-        >
-          <DialogTitle id="responsive-dialog-title">
-            {"¿Realmente desea guardar los cambios?"}
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              El control de {"{nombre}"} con fecha {"{fecha}"} será modificado
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button autoFocus onClick={handleClose} color="primary">
-              Cancelar
-            </Button>
-            <Button onClick={handleClose} color="primary" autoFocus>
-              Guardar
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </div>
       {controlErrors ? (
         <Snackbar
           open={openSnackbar}
@@ -655,7 +673,7 @@ export default function ModifyControl() {
             Ha ocurrido un error, verifique los datos antes de continuar.
           </Alert>
         </Snackbar>
-      ) : control && control.message === "Change data." ? (
+      ) : (
         <Snackbar
           open={openSnackbar}
           autoHideDuration={6000}
@@ -665,8 +683,6 @@ export default function ModifyControl() {
             Control modificado con éxito.
           </Alert>
         </Snackbar>
-      ) : (
-        ""
       )}
     </ModifyControlStyled>
   );

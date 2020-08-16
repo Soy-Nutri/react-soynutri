@@ -16,11 +16,11 @@ import MenuItem from "@material-ui/core/MenuItem";
 import DateFnsUtils from "@date-io/date-fns";
 import Select from "@material-ui/core/Select";
 
-import Snackbar from "@material-ui/core/Snackbar";
-import MuiAlert from "@material-ui/lab/Alert";
+//import Snackbar from "@material-ui/core/Snackbar";
+//import MuiAlert from "@material-ui/lab/Alert";
 
 //Redux
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { addWeeklyDiet } from "../../../redux/ducks/weeklyDietsDucks";
 
 import {
@@ -88,9 +88,10 @@ const AddWeeklyDietStyled = styled.div`
 
 //mientras cambie el dia y no aprete el boton se vayan cambiando los datos de los formularios
 // os ino tendria que rellenar un dia obligatoriamente ajajedsaxD
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
+
+// function Alert(props) {
+//   return <MuiAlert elevation={6} variant="filled" {...props} />;
+// }
 
 export default function AddWeeklyDiet() {
   const { register, errors, handleSubmit, control } = useForm();
@@ -125,7 +126,6 @@ export default function AddWeeklyDiet() {
     console.log(errors);
     setOpenSnackbar(true);
     e.target.reset();
-
     console.log(data);
   };
 
@@ -470,8 +470,6 @@ export default function AddWeeklyDiet() {
         
 
       </form>
-
-
       {weeklyDietError? (
         <Snackbar
           open={openSnackbar}

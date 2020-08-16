@@ -56,7 +56,7 @@ const AddControlStyled = styled.div`
   }
 `;
 
-export default function AddControl() {
+export default function AddControl({ match }) {
   const dispatch = useDispatch();
   const control = useSelector((state) => state.control.control);
   const controlErrors = useSelector((state) => state.control.errors);
@@ -108,6 +108,8 @@ export default function AddControl() {
 
             <Grid item xs={12} sm={5} md={4} lg={3} xl={2}>
               <TextField
+                defaultValue={match.params.rut}
+                disabled
                 name="rut"
                 label="Rut (Sin puntos ni guión)"
                 variant="outlined"
