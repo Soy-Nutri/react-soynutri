@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function CardDashboard() {
+export default function GuestDashboard() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const info = useSelector((store) => store.generalInfo.infoNutri);
@@ -176,5 +176,3 @@ function CardDashboard() {
     </React.Fragment>
   );
 }
-
-export default CardDashboard;
