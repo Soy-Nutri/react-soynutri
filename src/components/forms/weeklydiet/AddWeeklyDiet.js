@@ -16,11 +16,11 @@ import MenuItem from "@material-ui/core/MenuItem";
 import DateFnsUtils from "@date-io/date-fns";
 import Select from "@material-ui/core/Select";
 
-//import Snackbar from "@material-ui/core/Snackbar";
-//import MuiAlert from "@material-ui/lab/Alert";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
 
 //Redux
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addWeeklyDiet } from "../../../redux/ducks/weeklyDietsDucks";
 
 import {
@@ -89,33 +89,27 @@ const AddWeeklyDietStyled = styled.div`
 //mientras cambie el dia y no aprete el boton se vayan cambiando los datos de los formularios
 // os ino tendria que rellenar un dia obligatoriamente ajajedsaxD
 
-// function Alert(props) {
-//   return <MuiAlert elevation={6} variant="filled" {...props} />;
-// }
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 export default function AddWeeklyDiet() {
   const { register, errors, handleSubmit, control } = useForm();
   const dispatch = useDispatch();
 
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
-  
+
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
   };
 
+  const weeklyDiet = useSelector((store) => store.weeklyDiets.weeklyDiets);
 
-  const weeklyDiet = useSelector(
-    (store) => store.weeklyDiets.weeklyDiets
-  );
-
-  const weeklyDietError = useSelector(
-    (store) => store.weeklyDiets.errors
-  );
+  const weeklyDietError = useSelector((store) => store.weeklyDiets.errors);
   console.log("weeklydiet");
   console.log(weeklyDiet);
   console.log("Erro");
   console.log(weeklyDietError);
-
 
   const onSubmit = (data, e) => {
     const fecha = new Date();
@@ -162,14 +156,13 @@ export default function AddWeeklyDiet() {
   };
 
   const handleChangeDay = (event) => {
-    if(event.target.value==="Dia de la semana"){
+    if (event.target.value === "Dia de la semana") {
       console.log("selecionnaste" + event.target.value);
-    }else{
+    } else {
       setDayOfWeek(event.target.value);
     }
-
   };
-  
+
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"), {
     defaultMatches: true,
@@ -467,10 +460,8 @@ export default function AddWeeklyDiet() {
             Guardar Minuta Semanal
           </Button>
         </Grid>
-        
-
       </form>
-      {weeklyDietError? (
+      {weeklyDietError ? (
         <Snackbar
           open={openSnackbar}
           autoHideDuration={6000}
@@ -493,7 +484,6 @@ export default function AddWeeklyDiet() {
       ) : (
         ""
       )}
-
     </AddWeeklyDietStyled>
   );
 }
