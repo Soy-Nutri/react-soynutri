@@ -17,6 +17,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import CreateIcon from "@material-ui/icons/Create";
 import DeleteIcon from "@material-ui/icons/Delete";
+import AssignmentIcon from "@material-ui/icons/Assignment";
 
 import Skeleton from "@material-ui/lab/Skeleton";
 
@@ -123,6 +124,8 @@ export default function SearchPatient({ match }) {
       history.push(`/modificar_paciente/${rut}`);
     } else if (match.params.action === "eliminar") {
       history.push(`/ver_paciente/${rut}/elim`);
+    } else if (match.params.action === "add_pd") {
+      history.push(`/agregar_pauta_diaria/${rut}`);
     }
   };
 
@@ -225,6 +228,11 @@ export default function SearchPatient({ match }) {
                                       />
                                     ) : match.params.action === "eliminar" ? (
                                       <DeleteIcon
+                                        className="view-patient"
+                                        onClick={() => handleClick(row.rut)}
+                                      />
+                                    ) : match.params.action === "add_pd" ? (
+                                      <AssignmentIcon
                                         className="view-patient"
                                         onClick={() => handleClick(row.rut)}
                                       />

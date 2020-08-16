@@ -20,6 +20,15 @@ import {
   KeyboardTimePicker,
 } from "@material-ui/pickers";
 
+import { useDispatch, useSelector } from "react-redux";
+import { addDailyDiet } from "../../../redux/ducks/patientsDailyDietsDuck";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 const AddDailyDietStyled = styled.div`
   /* Hidde spinner number input Chrome, Safari, Edge, Opera */
   input::-webkit-outer-spin-button,
@@ -70,11 +79,29 @@ const AddDailyDietStyled = styled.div`
   }
 `;
 
-export default function AddDailyDiet() {
+export default function AddDailyDiet({ match }) {
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const [open, setOpen] = React.useState(false);
   const { register, errors, handleSubmit, control } = useForm();
-  const onSubmit = (data) => {
+  const message = useSelector((state) => state.dailyDiets.newDailyDiet);
+  console.log(message);
+  const dispatch = useDispatch();
+  const onSubmit = (data, e) => {
+    data["date"] = new Date();
+    dispatch(addDailyDiet(data));
+    handleOpen();
+    e.target.reset();
     console.log(data);
-    console.log(errors);
   };
 
   const reqmsg = "Campo obligatorio";
@@ -117,7 +144,6 @@ export default function AddDailyDiet() {
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"), {
     defaultMatches: true,
   });
-
   return (
     <AddDailyDietStyled>
       <form
@@ -130,12 +156,14 @@ export default function AddDailyDiet() {
             Agregar pauta diaria
           </Typography>
         </Grid>
-        
+
         <Grid container justify="center" spacing={isMobile ? 0 : 2}>
           <Grid item xs={12} sm={8} md={4} lg={4}>
             <TextField
+              defaultValue={match.params.rut}
+              disabled
               name="rut"
-              type="number"
+              type="text"
               label="Rut (Sin puntos ni guión)"
               variant="outlined"
               margin="dense"
@@ -201,7 +229,7 @@ export default function AddDailyDiet() {
               <Controller
                 as={
                   <KeyboardTimePicker
-                    id="collation_time"
+                    id="snack_time"
                     label="Hora de colación"
                     inputVariant="outlined"
                     keyboardIcon={<WatchLaterIcon />}
@@ -214,7 +242,7 @@ export default function AddDailyDiet() {
                     }}
                   />
                 }
-                name="collation_time"
+                name="snack_time"
                 defaultValue={collationTime}
                 control={control}
               />
@@ -291,7 +319,7 @@ export default function AddDailyDiet() {
 
           <Grid item xs={12} sm={8} md={4} lg={4}>
             <TextField
-              name="collation"
+              name="snack"
               type="text"
               label="Colación"
               variant="outlined"
@@ -378,6 +406,72 @@ export default function AddDailyDiet() {
             lg={2}
             className="grid-invisible"
           ></Grid>
+
+          <Grid item xs={false} md={2} lg={2} className="grid-invisible"></Grid>
+
+          <Grid item xs={12} sm={8} md={4} lg={4}>
+            <TextField
+              name="calories"
+              type="text"
+              label="Calorias de la dieta (Kcal)"
+              variant="outlined"
+              margin="dense"
+              fullWidth
+              inputProps={{ style: { fontSize: "0.8em" } }}
+              error={errors.dinner}
+              helperText={errors.dinner ? errors.dinner.message : ""}
+              inputRef={register({
+                required: { value: true, message: reqmsg },
+              })}
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={8} md={4} lg={4}>
+            <TextField
+              name="proteins"
+              type="text"
+              label="Proteina de la dieta (gr/prot/d)"
+              variant="outlined"
+              margin="dense"
+              fullWidth
+              inputProps={{ style: { fontSize: "0.8em" } }}
+              error={errors.goals}
+              helperText={errors.goals ? errors.goals.message : ""}
+              inputRef={register({
+                required: { value: true, message: reqmsg },
+              })}
+            />
+          </Grid>
+
+          <Grid
+            item
+            xs={false}
+            sm={false}
+            md={2}
+            lg={2}
+            className="grid-invisible"
+          ></Grid>
+
+          <Grid item xs={12} sm={8} md={4} lg={4}>
+            <TextField
+              name="extra_info"
+              type="text"
+              label="Motivación"
+              variant="outlined"
+              margin="dense"
+              fullWidth
+              multiline
+              rows={2}
+              inputProps={{ style: { fontSize: "0.8em" } }}
+              error={errors.post_training}
+              helperText={
+                errors.post_training ? errors.post_training.message : ""
+              }
+              inputRef={register({
+                required: { value: true, message: reqmsg },
+              })}
+            />
+          </Grid>
         </Grid>
         <Grid container justify="center">
           <Button
@@ -390,6 +484,15 @@ export default function AddDailyDiet() {
           </Button>
         </Grid>
       </form>
+      {message ? (
+        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+          <Alert onClose={handleClose} severity="success">
+            {message}
+          </Alert>
+        </Snackbar>
+      ) : (
+        ""
+      )}
     </AddDailyDietStyled>
   );
 }

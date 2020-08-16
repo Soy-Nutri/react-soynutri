@@ -147,7 +147,7 @@ function App() {
             <Route path="/modificar_control" exact component={ModifyControl} />
 
             <Route
-              path="/agregar_pauta_diaria"
+              path="/agregar_pauta_diaria/:rut"
               exact
               component={AddDailyDiet}
             />

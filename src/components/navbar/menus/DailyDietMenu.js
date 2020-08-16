@@ -101,7 +101,7 @@ export default function UserMenu() {
                     className="menu-item"
                     onClick={handleClose}
                     component={Link}
-                    to="agregar_pauta_diaria"
+                    to="/buscar_paciente/add_pd"
                   >
                     Agregar pauta diaria
                   </MenuItem>
@@ -109,7 +109,7 @@ export default function UserMenu() {
                     className="menu-item"
                     onClick={handleClose}
                     component={Link}
-                    to="ver_pauta_diaria"
+                    to="/ver_pauta_diaria"
                   >
                     Ver pauta diaria
                   </MenuItem>
@@ -117,7 +117,7 @@ export default function UserMenu() {
                     className="menu-item"
                     onClick={handleClose}
                     component={Link}
-                    to="modificar_pauta_diaria"
+                    to="/modificar_pauta_diaria"
                   >
                     Modificar pauta diaria
                   </MenuItem>
@@ -125,7 +125,7 @@ export default function UserMenu() {
                     className="menu-item"
                     onClick={handleClose}
                     component={Link}
-                    to="eliminar_pauta_diaria"
+                    to="/eliminar_pauta_diaria"
                   >
                     Eliminar pauta diaria
                   </MenuItem>
