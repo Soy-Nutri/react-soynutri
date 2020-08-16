@@ -43,6 +43,8 @@ import ModifyDailyDiet from "./components/forms/dailydiet/ModifyDailyDiet";
 import WeeklyDiet from "./components/forms/weeklydiet/AddWeeklyDiet";
 import ModifyWeeklyDiet from "./components/forms/weeklydiet/ModifyWeeklyDiet";
 import DeleteWeeklyDiet from "./components/forms/weeklydiet/DeleteWeeklyDiet";
+import SeeWeeklyDiet from "./components/forms/weeklydiet/SeeWeeklyDiet";
+
 
 // axios
 import axios from "axios";
@@ -182,22 +184,11 @@ function App() {
               component={PatientWeeklyDiets}
             />
             <Route path="/perfil" exact component={Profile} />
+            <Route path="/agregar_minuta_semanal" exact component = {WeeklyDiet} />
+            <Route path="/modificar_minuta_semanal" exact component = {ModifyWeeklyDiet} />
+            <Route path="/eliminar_minuta_semanal" exact component = {DeleteWeeklyDiet} />
+            <Route path="/ver_minuta_semanal" exact component = {SeeWeeklyDiet} />
 
-            <Route
-              path="/agregar_minuta_semanal"
-              exact
-              component={WeeklyDiet}
-            />
-            <Route
-              path="/modificar_minuta_semanal"
-              exact
-              component={ModifyWeeklyDiet}
-            />
-            <Route
-              path="/eliminar_minuta_semanal"
-              exact
-              component={DeleteWeeklyDiet}
-            />
 
             <Route component={Error}></Route>
           </Switch>
@@ -208,3 +199,5 @@ function App() {
 }
 
 export default App;
+
+//<Route path="/ver_minuta_semanal" exact component = {SeeWeeklyDiet} />

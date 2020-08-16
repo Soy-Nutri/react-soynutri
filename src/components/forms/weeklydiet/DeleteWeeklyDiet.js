@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { useForm, Controller } from "react-hook-form";
+import { useForm} from "react-hook-form";
 
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
@@ -10,24 +10,33 @@ import Grid from "@material-ui/core/Grid";
 
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
+
+
+
+
 import MenuItem from "@material-ui/core/MenuItem";
 
 import Select from "@material-ui/core/Select";
+import { makeStyles } from "@material-ui/core/styles";
+
 
 // import Snackbar from "@material-ui/core/Snackbar";
 // import MuiAlert from "@material-ui/lab/Alert";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+
 //import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import ListItemText from "@material-ui/core/ListItemText";
 import Checkbox from "@material-ui/core/Checkbox";
-import { makeStyles } from "@material-ui/core/styles";
+
+
+import Table from "./TableWeekly";
 
 //Redux
-import { useDispatch } from "react-redux";
-import { deleteWeeklyDiet } from "../../../redux/ducks/weeklyDietsDucks";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteWeeklyDiet, getWeeklyDiets } from "../../../redux/ducks/weeklyDietsDucks";
+
 
 const DeleteWeeklyDietStyled = styled.div`
   /* Hidde spinner number input Chrome, Safari, Edge, Opera */
@@ -72,6 +81,9 @@ const DeleteWeeklyDietStyled = styled.div`
       margin-top: 15px;
       margin-left: 15px;
     }
+    .hola{
+      margin-left: 0px
+    }
     .lunch-picker {
       margin-right: 0.1px;
     }
@@ -86,6 +98,11 @@ const DeleteWeeklyDietStyled = styled.div`
     }
   }
 `;
+
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const useStyles = makeStyles((theme) => ({
   //falta hacerlo responsive
@@ -104,12 +121,30 @@ const useStyles = makeStyles((theme) => ({
 //   return <MuiAlert elevation={6} variant="filled" {...props} />;
 // }
 
-export default function DeleteWeeklyDiet() {
-  const { register, errors, handleSubmit, control } = useForm();
-  const dispatch = useDispatch();
-  // const [open, setOpen] = React.useState(false);
 
-  const [dayOfWeek, setDayOfWeek] = React.useState("Dia de la semana");
+
+function getFecha(date) {
+  let newDate = new Date(date);
+  let month = (newDate.getMonth() + 1).toString();
+  let day = (newDate.getDate() + 1).toString();
+  let year = newDate.getFullYear().toString();
+  let dayS = day.length > 1 ? day : `0${day}`;
+  let monthS = month.length > 1 ? month : `0${month}`;
+  return `${dayS}/${monthS}/${year}`;
+}
+
+export default function DeleteWeeklyDiet() {
+  const { register, errors, handleSubmit } = use
+  ();
+  const dispatch = useDispatch();
+  const [open, setOpen] = React.useState(false);
+  const [rut, setRut] = React.useState("");
+  const [date, setDate] = React.useState("");
+
+
+  const weeklyDiets = useSelector((store)=>store.weeklyDiets.getweeklyDiets);
+  
+  const weeklyDietError = useSelector((store) => store.weeklyDiets.errors);
 
   // const newPatientWeeklyDiet = useSelector(
   //   (store) => store.weeklyDiets.addWeeklyDiet
@@ -118,7 +153,7 @@ export default function DeleteWeeklyDiet() {
   //   (store) => store.weeklyDiets.errors
   // );
 
-  const classes = useStyles();
+
   const [checked, setChecked] = React.useState([1]);
 
   const handleToggle = (value) => () => {
@@ -145,22 +180,37 @@ export default function DeleteWeeklyDiet() {
   //   setOpen(false);
   // };
 
-  const onSubmit = (data, e) => {
-    const fecha = new Date();
 
-    data["date"] = fecha;
+  const searchPatientsWeekly = () => {
+    dispatch(getWeeklyDiets(rut));
+    
+  };
 
+  const handleChangeRut = (event) =>{
+    setRut(event.target.value);
+
+
+  };
+
+
+  const handleChange = (event) => {
+    setDate(event.target.value);
+   // console.log("soy el dia" + event.target.value.date );
+   // dispatch(deleteWeeklyDiet( ))
+
+  };
+
+  const EliminarFecha =()=>{
+
+    var data = {};
+    data["rut"]=rut;
+    data["date"]=date.date;
+    console.log("estos son los datos a enviar desde delete" +data);
     dispatch(deleteWeeklyDiet(data));
-    //handleOpen();
-    e.target.reset();
 
-    console.log(data);
   };
 
-  const handleChangeDay = (event) => {
-    console.log("selecionnaste" + event.target.value);
-    setDayOfWeek(event.target.value);
-  };
+
 
   const reqmsg = "Campo obligatorio";
 
@@ -188,12 +238,8 @@ export default function DeleteWeeklyDiet() {
 
   return (
     <DeleteWeeklyDietStyled>
-      <form
-        autoComplete="off"
-        className="form"
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <Grid container alignItems="center">
+      <div>
+        <Grid container justify="center">
           <Typography className="title" variant="h5" color="primary">
             Eliminar minuta semanal
           </Typography>
@@ -202,117 +248,94 @@ export default function DeleteWeeklyDiet() {
         <Grid container justify="center" spacing={isMobile ? 0 : 2}>
           <Grid item xs={12} sm={8} md={4} lg={4}>
             <TextField
+              value={rut}
               name="rut"
               type="text"
               label="Rut (Sin puntos ni guión)"
               variant="outlined"
               margin="dense"
               fullWidth
+              onChange={handleChangeRut}
               error={errors.rut}
               helperText={errors.rut ? errors.rut.message : ""}
               inputRef={register({
                 required: { value: true, message: reqmsg },
               })}
             />
+            <Button
+                className="form-button"
+                variant="outlined"
+                type="submit"
+                color="primary"
+                onClick={() => searchPatientsWeekly()}
+              >
+                Buscar
+            </Button>
           </Grid>
-          <Button
-            className="form-button"
-            variant="outlined"
-            type="submit"
-            color="primary"
-          >
-            Traer dietas semanales
-          </Button>
-          <Grid></Grid>
+         
         </Grid>
+
+        <br></br>
+
+        
         <Grid container justify="center" spacing={isMobile ? 0 : 2}>
           <Grid
             item
-            xs={12}
-            sm={8}
-            md={4}
-            lg={4}
-            justify="center"
+            xs={25}
+            sm={6}
+            md={40}
+            lg={40}
+            
             className="semana"
           >
-            {/*aqui ir la semana*/}
-            <Controller
-              as={
-                <Select name="day" value={dayOfWeek} onChange={handleChangeDay}>
-                  <MenuItem disabled value="Dia de la semana">
-                    <em> Dia de la semana</em>
-                    <br />
-                  </MenuItem>
-                  <MenuItem value={"Lunes"}>Lunes</MenuItem>
-                  <MenuItem value={"Martes"}>Martes</MenuItem>
-                  <MenuItem value={"Miercoles"}>Miércoles</MenuItem>
-                  <MenuItem value={"Jueves"}>Jueves</MenuItem>
-                  <MenuItem value={"Viernes"}>Viernes</MenuItem>
-                  <MenuItem value={"Sabado"}>Sábado</MenuItem>
-                  <MenuItem value={"Domingo"}>Domingo</MenuItem>
-                </Select>
-              }
-              name="day"
-              defaultValue={dayOfWeek}
-              control={control}
-            />
+
+      {  weeklyDiets && weeklyDiets.length > 0 &&( 
+
+        <div>
+            <Grid container justify="center"  >
+
+                <h4>Selecciona una de las dietas semanales para eliminar</h4> <br></br>
+                    <Grid item xs={12} sm={4} md={2} lg={2} className="semana" >
+                    
+                        
+                        <Select
+                          labelId="demo-simple-select-label"
+                          id="Prueba"
+                          value={date}
+                          onChange={handleChange}>
+                          {weeklyDiets.map((item) => (
+                          <MenuItem value={item} key={item.date}>
+                            {getFecha(item.date)}
+                          </MenuItem>
+                        ))}
+
+                          </Select>
+                        
+                      
+                    
+                    </Grid>
+                    <Button
+                          className="form-button"
+                          variant="outlined"
+                          type="submit"
+                          color="primary"
+                          onClick={EliminarFecha}
+                        >
+                          Eliminar minuta semanal
+                        </Button>
+                        
+          </Grid>
+                
+          <br></br>    <br></br>
+          <Table weeklyDiets={weeklyDiets} ></Table>
+    
+          </div>
+
+         )}
           </Grid>
         </Grid>
+      </div>
 
-        <Grid container justify="center">
-          <Grid container spacing={2}>
-            <List dense className={classes.root}>
-              {[0, 1, 2, 3].map((value) => {
-                const labelId = `checkbox-list-secondary-label-${value}`;
-                return (
-                  <ListItem key={value} button>
-                    <ListItemAvatar></ListItemAvatar>
-                    <ListItemText
-                      id={labelId}
-                      primary={`Line item ${value + 1}`}
-                    />
-                    <ListItemSecondaryAction>
-                      <Checkbox
-                        edge="end"
-                        onChange={handleToggle(value)}
-                        checked={checked.indexOf(value) !== -1}
-                        inputProps={{ "aria-labelledby": labelId }}
-                      />
-                    </ListItemSecondaryAction>
-                  </ListItem>
-                );
-              })}
-            </List>
-          </Grid>
-
-          <Button
-            className="form-button"
-            variant="outlined"
-            type="submit"
-            color="primary"
-          >
-            Borrar
-          </Button>
-        </Grid>
-      </form>
-
-      {/* {newPatientWeeklyDiet ? (
-        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-          <Alert onClose={handleClose} severity="success">
-            La Dieta semanal del paciente {newPatientWeeklyDiet.names}{" "}
-            {newPatientWeeklyDiet.father_last_name}{" "}
-            {newPatientWeeklyDiet.mother_last_name} fue agregado exitosamente!{" "}
-          </Alert>
-        </Snackbar>
-      ) : newPatientWeeklyDietError ? (
-        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-          <Alert onClose={handleClose} severity="error">
-            {newPatientWeeklyDietError}
-          </Alert>
-        </Snackbar>
-      ) : (
-        ""
-      )} */}
     </DeleteWeeklyDietStyled>
   );
 }
