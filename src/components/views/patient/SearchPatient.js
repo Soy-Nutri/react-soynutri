@@ -93,6 +93,7 @@ export default function SearchPatient({ match }) {
 
   useEffect(() => {
     dispatch(getPatientsList());
+    dispatch(filterPatient(""));
   }, [dispatch]);
 
   const [page, setPage] = React.useState(0);
