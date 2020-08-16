@@ -9,13 +9,15 @@ import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 
 const AdminDashboardStyled = styled.div`
-  .chartjs-render-monitor {
-    min-height: 250px;
-  }
   .chart-title {
     text-align: center;
     margin-top: 20px;
     margin-bottom: 10px;
+  }
+  @media screen and (min-width: 975px) {
+    .chartjs-render-monitor {
+      min-width: 550px;
+    }
   }
 `;
 
@@ -25,16 +27,15 @@ function getColors(stops) {
     let c = i / stops;
     let randomColor = rainbowStop(c, 1, 0.5);
     //while (colors.includes(randomColor)) randomColor = rainbowStop(c, 1, 0.5);
-    //while (colors.includes("#ffffff")) randomColor = rainbowStop(c, 1, 0.5);
+    if (colors.includes("#ffffff")) randomColor = rainbowStop(c, 1, 0.5);
     colors.push(randomColor);
   }
-  console.log(colors);
   return colors;
 }
 
 function rainbowStop(h) {
   let f = (n, k = (n + h * 12) % 12) =>
-    0.5 - 0.5 * Math.max(Math.min(k - 3, 4 - k, 1), -1);
+    0.5 - 0.5 * Math.max(Math.min(k - 2, 4 - k, 1), -1);
   let rgb2hex = (r, g, b) =>
     "#" +
     [r, g, b]
@@ -63,7 +64,7 @@ export default function AdminDashboard() {
               <Typography
                 variant="h2"
                 color="primary"
-                style={{ fontFamily: "yellowtail" }}
+                style={{ fontFamily: "yellowtail", textAlign: "center" }}
               >
                 Estadisticas de pacientes
               </Typography>
