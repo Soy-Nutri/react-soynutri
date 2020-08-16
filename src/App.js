@@ -34,6 +34,7 @@ import ModifyControl from "./components/forms/control/ModifyControl";
 // daily diets
 import AddDailyDiet from "./components/forms/dailydiet/AddDailyDiet";
 import ModifyDailyDiet from "./components/forms/dailydiet/ModifyDailyDiet";
+import SeeDailyDiet from "./components/forms/dailydiet/SeeDailyDiet";
 
 //Weekly diets
 
@@ -150,6 +151,11 @@ function App() {
               path="/agregar_pauta_diaria/:rut"
               exact
               component={AddDailyDiet}
+            />
+            <Route
+              path="/ver_pauta_diaria/:rut"
+              exact
+              component={SeeDailyDiet}
             />
             <Route
               path="/modificar_pauta_diaria"

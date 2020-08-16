@@ -79,7 +79,14 @@ const AddDailyDietStyled = styled.div`
   }
 `;
 
+function formatTime(date) {
+  let format = new Date(date).toISOString();
+  let time = format.substring(11, 16);
+  return time.toString();
+}
+
 export default function AddDailyDiet({ match }) {
+  formatTime(new Date("January 1 2020 09:30"));
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -94,10 +101,13 @@ export default function AddDailyDiet({ match }) {
   const [open, setOpen] = React.useState(false);
   const { register, errors, handleSubmit, control } = useForm();
   const message = useSelector((state) => state.dailyDiets.newDailyDiet);
-  console.log(message);
   const dispatch = useDispatch();
   const onSubmit = (data, e) => {
-    data["date"] = new Date();
+    data["date"] = new Date(Date.now()).toISOString().substring(0, 10);
+    data.breakfast_time = formatTime(data.breakfast_time);
+    data.lunch_time = formatTime(data.lunch_time);
+    data.snack_time = formatTime(data.snack_time);
+    data.dinner_time = formatTime(data.dinner_time);
     dispatch(addDailyDiet(data));
     handleOpen();
     e.target.reset();
@@ -121,6 +131,7 @@ export default function AddDailyDiet({ match }) {
 
   const handleBreakfastTime = (date) => {
     setBreakfastTime(date);
+    console.log(date);
   };
   const handleLunchTime = (date) => {
     setLunchTime(date);

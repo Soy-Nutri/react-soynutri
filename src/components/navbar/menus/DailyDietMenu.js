@@ -109,7 +109,8 @@ export default function UserMenu() {
                     className="menu-item"
                     onClick={handleClose}
                     component={Link}
-                    to="/ver_pauta_diaria"
+                    //to="/ver_pauta_diaria"
+                    to="/buscar_paciente/see_pd"
                   >
                     Ver pauta diaria
                   </MenuItem>
