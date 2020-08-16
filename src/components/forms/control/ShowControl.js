@@ -86,7 +86,7 @@ export default function SeeControl({ match, history }) {
 
   return (
     <SeeControlStyled>
-      <Container maxWidth="md">
+      <Container maxWidth="md" style={{ marginBottom: 20 }}>
         {patientInfo ? (
           <div>
             <h1>

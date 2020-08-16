@@ -60,7 +60,6 @@ export const getControlAdmin = (rut) => (dispatch) => {
   axios
     .get(`/patientsCarnet/getCarnet/admin/${rut}`)
     .then((res) => {
-      console.log("Control");
       if (res.data.carnet.length === 0) {
         dispatch({ type: GET_CONTROL, payload: ["error"] });
       } else {

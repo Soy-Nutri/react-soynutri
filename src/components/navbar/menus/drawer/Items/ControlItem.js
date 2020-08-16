@@ -52,7 +52,7 @@ export default function ControlItem(props) {
             onClick={props.handleDrawerClose}
             className={classes.nested}
             component={Link}
-            to="/agregar_control"
+            to="/buscar_control/agregar"
           >
             <ListItemIcon>
               <AddIcon />
@@ -64,7 +64,7 @@ export default function ControlItem(props) {
             onClick={props.handleDrawerClose}
             className={classes.nested}
             component={Link}
-            to="/buscar_control"
+            to="/buscar_control/ver"
           >
             <ListItemIcon>
               <VisibilityIcon />
@@ -76,7 +76,7 @@ export default function ControlItem(props) {
             onClick={props.handleDrawerClose}
             className={classes.nested}
             component={Link}
-            to="/modificar_control"
+            to="/buscar_control/modificar"
           >
             <ListItemIcon>
               <CreateIcon />
@@ -88,7 +88,7 @@ export default function ControlItem(props) {
             onClick={props.handleDrawerClose}
             className={classes.nested}
             component={Link}
-            to="/eliminar_control"
+            to="/buscar_control/eliminar"
           >
             <ListItemIcon>
               <DeleteIcon />

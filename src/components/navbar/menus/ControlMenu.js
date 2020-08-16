@@ -101,7 +101,7 @@ export default function UserMenu() {
                     className="menu-item"
                     onClick={handleClose}
                     component={Link}
-                    to="/agregar_control"
+                    to="/buscar_control/agregar"
                   >
                     Agregar control
                   </MenuItem>
@@ -109,7 +109,7 @@ export default function UserMenu() {
                     className="menu-item"
                     onClick={handleClose}
                     component={Link}
-                    to="/buscar_control"
+                    to="/buscar_control/ver"
                   >
                     Ver control
                   </MenuItem>
@@ -117,7 +117,7 @@ export default function UserMenu() {
                     className="menu-item"
                     onClick={handleClose}
                     component={Link}
-                    to="/modificar_control"
+                    to="/buscar_control/modificar"
                   >
                     Modificar control
                   </MenuItem>
@@ -125,7 +125,7 @@ export default function UserMenu() {
                     className="menu-item"
                     onClick={handleClose}
                     component={Link}
-                    to="/eliminar_control"
+                    to="/buscar_control/eliminar"
                   >
                     Eliminar control
                   </MenuItem>

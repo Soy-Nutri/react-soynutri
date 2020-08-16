@@ -32,6 +32,7 @@ import AddControl from "./components/forms/control/AddControl";
 import ModifyControl from "./components/forms/control/ModifyControl";
 import SearchControl from "./components/forms/control/SearchControl";
 import ShowControl from "./components/forms/control/ShowControl";
+import DeleteControl from "./components/forms/control/DeleteControl";
 
 // daily diets
 import AddDailyDiet from "./components/forms/dailydiet/AddDailyDiet";
@@ -145,10 +146,23 @@ function App() {
             />
             <Route path="/borrar_paciente" exact component={DeletePatient} />
 
-            <Route path="/agregar_control" exact component={AddControl} />
-            <Route path="/modificar_control" exact component={ModifyControl} />
-            <Route path="/buscar_control" exact component={SearchControl} />
-            <Route path="/buscar_control/:rut" exact component={ShowControl} />
+            <Route path="/agregar_control/:rut" exact component={AddControl} />
+            <Route
+              path="/modificar_control/:rut"
+              exact
+              component={ModifyControl}
+            />
+            <Route
+              path="/eliminar_control/:rut"
+              exact
+              component={DeleteControl}
+            />
+            <Route
+              path="/buscar_control/:action"
+              exact
+              component={SearchControl}
+            />
+            <Route path="/ver_control/:rut" exact component={ShowControl} />
 
             <Route
               path="/agregar_pauta_diaria"
