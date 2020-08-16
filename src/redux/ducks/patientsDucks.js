@@ -102,7 +102,7 @@ export const deletePatient = (rut) => async (dispatch) => {
     .then(() => {})
     .catch((error) => console.log(error.response));
   await new Promise((r) => setTimeout(r, 2000));
-  window.location.href = "/";
+  //window.location.href = "/";
 };
 
 // get all info of a patient by rut (required by the admin)

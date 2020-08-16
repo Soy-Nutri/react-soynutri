@@ -60,7 +60,6 @@ export default function ModifyPatient({ match }) {
     e.preventDefault();
 
     data["rut"] = match.params.rut;
-    console.log(data);
     dispatch(modifyPatient(data));
     setOpen(true);
   };
