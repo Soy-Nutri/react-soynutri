@@ -89,6 +89,24 @@ export const getWeeklyDiets = (rut) => (dispatch) => {
     });
 };
 
+export const getAllWeeklyDiets = (rut) => (dispatch) => {
+  dispatch({ type: CLEAR_ERRORS });
+  axios
+    .get(`/patientsWeeklyDiets/getWeeklyDiets/${rut}/${"admin"}`)
+    .then((res) => {
+      if (res.data.Weekly_Diets.length === 0) {
+        dispatch({ type: GET_WEEKLY_DIETS, payload: ["error"] });
+      } else {
+        dispatch({ type: GET_WEEKLY_DIETS, payload: res.data.Weekly_Diets });
+      }
+    })
+    .catch((error) => {
+      dispatch({
+        type: GET_ERROR_WEEKLY_DIETS,
+        payload: "Error inesperado!",
+      });
+    });
+};
 //modificar weeklydiet
 
 export const modifyWeeklyDiet = (weeklyDiets) => (dispatch) => {

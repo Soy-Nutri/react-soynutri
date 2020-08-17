@@ -32,7 +32,7 @@ import Table from "./TableWeekly";
 
 //Redux
 import { useDispatch, useSelector } from "react-redux";
-import { getWeeklyDiets } from "../../../redux/ducks/weeklyDietsDucks";
+import { getAllWeeklyDiets } from "../../../redux/ducks/weeklyDietsDucks";
 
 const SeeWeeklyDietStyled = styled.div`
   /* Hidde spinner number input Chrome, Safari, Edge, Opera */
@@ -138,7 +138,7 @@ export default function SeeWeeklyDiet() {
   };
 
   const searchPatientsWeekly = () => {
-    dispatch(getWeeklyDiets(rut));
+    dispatch(getAllWeeklyDiets(rut));
   };
 
   const handleChangeRut = (event) => {
