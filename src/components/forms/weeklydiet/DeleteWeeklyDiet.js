@@ -1,40 +1,20 @@
 import React from "react";
 import styled from "styled-components";
-
-import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { useTheme } from "@material-ui/core/styles";
-
-import MenuItem from "@material-ui/core/MenuItem";
-
 import Skeleton from "@material-ui/lab/Skeleton";
-
-import Select from "@material-ui/core/Select";
-import { makeStyles } from "@material-ui/core/styles";
 
 // import Snackbar from "@material-ui/core/Snackbar";
 // import MuiAlert from "@material-ui/lab/Alert";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-
 //import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import ListItemText from "@material-ui/core/ListItemText";
-import Checkbox from "@material-ui/core/Checkbox";
-
 import TableDelete from "./TableDeleteWeeklyDiet";
 //Redux
 import { getPatientInfo } from "../../../redux/ducks/patientsDucks";
-
 import { useDispatch, useSelector } from "react-redux";
 import {
-  deleteWeeklyDiet,
+
   getAllWeeklyDiets,
-  getWeeklyDiets,
+
 } from "../../../redux/ducks/weeklyDietsDucks";
 
 import Snackbar from "@material-ui/core/Snackbar";
@@ -108,16 +88,6 @@ const DeleteWeeklyDietStyled = styled.div`
 //   return <MuiAlert elevation={6} variant="filled" {...props} />;
 // }
 
-const useStyles = makeStyles((theme) => ({
-  //falta hacerlo responsive
-  root: {
-    marginLeft: 350,
-    marginTop: 20,
-    width: "100%",
-    maxWidth: 1000,
-  },
-}));
-
 function formateaRut(rut) {
   var actual = rut.replace(/^0+/, "");
   if (actual !== "" && actual.length > 1) {
@@ -179,9 +149,7 @@ function getFecha(date) {
 
 export default function DeleteWeeklyDiet({ match }) {
   const dispatch = useDispatch();
-  const [open, setOpen] = React.useState(false);
 
-  const [date, setDate] = React.useState("");
   const [rowsEmpty, setRowsEmpty] = React.useState(false);
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
 
@@ -195,8 +163,8 @@ export default function DeleteWeeklyDiet({ match }) {
 
   //console.log("soy el weekly diets "+ weeklyDiets.length);
   const weeklyDietError = useSelector((store) => store.weeklyDiets.errors);
-  console.log("Error");
-  console.log(weeklyDietError);
+ // console.log("Error");
+  //console.log(weeklyDietError);
 
   var rows = [];
 
@@ -210,30 +178,8 @@ export default function DeleteWeeklyDiet({ match }) {
     }
   }
 
-  const [checked, setChecked] = React.useState([1]);
 
-  const handleToggle = (value) => () => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
 
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-
-    setChecked(newChecked);
-  };
-
-  const searchPatientsWeekly = () => {
-    dispatch(getAllWeeklyDiets(match.params.rut));
-  };
-
-  const handleChange = (event) => {
-    setDate(event.target.value);
-    // console.log("soy el dia" + event.target.value.date );
-    // dispatch(deleteWeeklyDiet( ))
-  };
 
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
@@ -289,7 +235,7 @@ export default function DeleteWeeklyDiet({ match }) {
           </Grid>
         )}
         {(weeklyDietError && weeklyDietError.length === 0) ||
-        weeklyDiets[0] === "error" ||
+        weeklyDiets[0] === "error" || weeklyDietError==="Error inesperado!" ||
         rowsEmpty ? (
           <Grid container direction="row" justify="center" alignItems="center">
             <h2>Este usuario no tiene minutas aún.</h2>

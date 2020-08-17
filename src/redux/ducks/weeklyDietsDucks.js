@@ -60,7 +60,7 @@ export const addWeeklyDiet = (weeklyDiets) => (dispatch) => {
       dispatch({ type: ADD_WEEKLY_DIET, payload: res.data });
     })
     .catch((error) => {
-      console.log(error);
+
       dispatch({
         type: ADD_ERROR_WEEKLY_DIET,
         payload: "Paciente no encontrado",
@@ -73,7 +73,6 @@ export const addWeeklyDiet = (weeklyDiets) => (dispatch) => {
 export const getWeeklyDiets = (rut) => (dispatch) => {
   dispatch({ type: CLEAR_ERRORS });
   dispatch({ type: GET_WEEKLY_DIETS, payload: [] });
-  console.log("este es el rut" + rut);
   axios
     .get(`/patientsWeeklyDiets/getWeeklyDiets/${rut}/${"admin"}`)
     .then((res) => {
@@ -86,13 +85,13 @@ export const getWeeklyDiets = (rut) => (dispatch) => {
             date = res.data.Weekly_Diets[i];
           }
         }
-        console.log("SOY EL DATE", date);
+  
         dispatch({ type: GET_WEEKLY_DIETS, payload: date });
       }
     })
 
     .catch((error) => {
-      console.log(error);
+  
       dispatch({
         type: GET_ERROR_WEEKLY_DIETS,
         payload: "Error inesperado!",
@@ -103,7 +102,7 @@ export const getWeeklyDiets = (rut) => (dispatch) => {
 export const getAllWeeklyDiets = (rut) => (dispatch) => {
   dispatch({ type: CLEAR_ERRORS });
   dispatch({ type: GET_WEEKLY_DIETS, payload: [] });
-  console.log();
+
   axios
     .get(`/patientsWeeklyDiets/getWeeklyDiets/${rut}/${"admin"}`)
     .then((res) => {
@@ -124,22 +123,19 @@ export const getAllWeeklyDiets = (rut) => (dispatch) => {
 
 export const modifyWeeklyDiet = (weeklyDiets) => (dispatch) => {
   dispatch({ type: CLEAR_ERRORS });
-  console.log("ESTE  WeeklyDiets");
-  console.log(weeklyDiets);
-
   axios
 
     .put("/patientsWeeklyDiets/modifyWeeklyDiets", weeklyDiets)
     .then((res) => {
-      console.log("dsps de modify" + res.data);
       dispatch(getWeeklyDiets(weeklyDiets.rut));
     })
     .catch((error) => {
-      console.log(error);
+     
       dispatch({
         type: ADD_ERROR_WEEKLY_DIET,
         payload: "Paciente no encontrado o minuta no encontrada",
       });
+
     });
 };
 
@@ -148,12 +144,13 @@ export const deleteWeeklyDiet = (rut, fecha) => async (dispatch) => {
   dispatch({ type: CLEAR_DELETE_ERRORS });
   var a = { rut: rut, date: fecha };
 
+
   axios
     .post("/patientsWeeklyDiets/deleteWeekOfWeeklyDiets", a)
     .then((res) => {
-      console.log(res.data);
+ 
       if (res.data.messaje !== "Delete Week.") {
-        console.log("que error es3" + res.data);
+
         dispatch({
           type: DELETE_ERROR,
           PAYLOAD: "Error inesperado!",
@@ -163,7 +160,7 @@ export const deleteWeeklyDiet = (rut, fecha) => async (dispatch) => {
       }
     })
     .catch((error) => {
-      console.log("que error es" + error);
+  
       dispatch({
         type: DELETE_ERROR,
         PAYLOAD: "Error inesperado!",

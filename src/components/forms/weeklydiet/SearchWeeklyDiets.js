@@ -177,13 +177,13 @@ export default function SearchPatient({ match }) {
         <Grid item container justify="center">
           <Typography variant="h6" color="primary">
             {match.params.action === "ver"
-              ? "Ver paciente"
+              ? "Ver minuta a paciente"
               : match.params.action === "modificar"
-              ? "Modificar paciente"
+              ? "Modificar minuta a paciente"
               : match.params.action === "eliminar"
-              ? "Eliminar paciente"
+              ? "Eliminar minuta a paciente"
               : match.params.action === "agregar"
-              ? "Agregar paciente": ""}
+              ? "Agregar minuta a paciente": ""}
 
           </Typography>
         </Grid>
