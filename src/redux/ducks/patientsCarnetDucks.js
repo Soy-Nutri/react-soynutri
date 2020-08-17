@@ -27,7 +27,6 @@ export const getControl = (rut) => (dispatch) => {
   axios
     .get(`/patientsCarnet/getCarnet/patient/${rut}`)
     .then((res) => {
-      console.log("Control");
       if (res.data.carnet.length === 0) {
         dispatch({ type: GET_CONTROL, payload: ["error"] });
       } else {

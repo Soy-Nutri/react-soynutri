@@ -5,12 +5,12 @@ import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getControl,
-  getBiochemical,
+  // getBiochemical,
 } from "../../redux/ducks/patientsCarnetDucks";
 
 //Table
 import TableC from "./Control/tableControl";
-import TableB from "./Control/tableBiochemical";
+// import TableB from "./Control/tableBiochemical";
 
 import Grid from "@material-ui/core/Grid";
 import Skeleton from "@material-ui/lab/Skeleton";
@@ -62,12 +62,12 @@ function Edad(FechaNacimiento) {
 export default function Controls() {
   const dispatch = useDispatch();
   const carnet = useSelector((store) => store.carnet.control);
-  const biochemical = useSelector((store) => store.carnet.biochemical);
+  //const biochemical = useSelector((store) => store.carnet.biochemical);
 
   React.useEffect(() => {
     const getCarnet = () => {
       dispatch(getControl(localStorage.rut));
-      dispatch(getBiochemical(localStorage.rut));
+      //dispatch(getBiochemical(localStorage.rut));
     };
     getCarnet();
   }, [dispatch]);
@@ -89,7 +89,7 @@ export default function Controls() {
       ) : (
         <TableC carnet={carnet} />
       )}
-      <h2>Análisis bioquímicos</h2>
+      {/* <h2>Análisis bioquímicos</h2>
       {biochemical.length === 0 ? (
         <Skeleton variant="rect" height={100} />
       ) : biochemical[0] === "error" ? (
@@ -98,7 +98,7 @@ export default function Controls() {
         </Grid>
       ) : (
         <TableB biochemical={biochemical} />
-      )}
+      )} */}
     </ControlsStyled>
   );
 }
