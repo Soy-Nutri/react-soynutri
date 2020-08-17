@@ -129,6 +129,10 @@ export default function SearchPatient({ match }) {
       history.push(`/agregar_pauta_diaria/${rut}`);
     } else if (match.params.action === "see_pd") {
       history.push(`/ver_pauta_diaria/${rut}`);
+    } else if (match.params.action === "modify_pd") {
+      history.push(`/modificar_pauta_diaria/${rut}`);
+    } else if (match.params.action === "remove_pd") {
+      history.push(`/eliminar_pauta_diaria/${rut}`);
     }
   };
 
@@ -225,12 +229,14 @@ export default function SearchPatient({ match }) {
                                         className="view-patient"
                                         onClick={() => handleClick(row.rut)}
                                       />
-                                    ) : match.params.action === "modificar" ? (
+                                    ) : match.params.action === "modificar" ||
+                                      match.params.action === "modify_pd" ? (
                                       <CreateIcon
                                         className="view-patient"
                                         onClick={() => handleClick(row.rut)}
                                       />
-                                    ) : match.params.action === "eliminar" ? (
+                                    ) : match.params.action === "eliminar" ||
+                                      match.params.action === "remove_pd" ? (
                                       <DeleteIcon
                                         className="view-patient"
                                         onClick={() => handleClick(row.rut)}

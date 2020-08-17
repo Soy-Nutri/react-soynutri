@@ -86,7 +86,6 @@ function formatTime(date) {
 }
 
 export default function AddDailyDiet({ match }) {
-  formatTime(new Date("January 1 2020 09:30"));
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;

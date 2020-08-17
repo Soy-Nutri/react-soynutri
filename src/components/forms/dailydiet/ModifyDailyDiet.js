@@ -25,19 +25,57 @@ import {
   KeyboardTimePicker,
 } from "@material-ui/pickers";
 
-const ModifyDailyDietStyled = styled.div`
-  /* Hidde spinner number input Chrome, Safari, Edge, Opera */
-  input::-webkit-outer-spin-button,
-  input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
+import MuiAlert from "@material-ui/lab/Alert";
+import { useDispatch, useSelector } from "react-redux";
+import modifyDailyDiets from "../../../redux/ducks/patientsDailyDietsDuck";
 
-  /* Hidde spinner number input Firefox */
-  input[type="number"] {
-    -moz-appearance: textfield;
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
+function formateaRut(rut) {
+  var actual = rut.replace(/^0+/, "");
+  if (actual !== "" && actual.length > 1) {
+    var sinPuntos = actual.replace(/\./g, "");
+    var actualLimpio = sinPuntos.replace(/-/g, "");
+    var inicio = actualLimpio.substring(0, actualLimpio.length - 1);
+    var rutPuntos = "";
+    var i = 0;
+    var j = 1;
+    for (i = inicio.length - 1; i >= 0; i--) {
+      var letra = inicio.charAt(i);
+      rutPuntos = letra + rutPuntos;
+      if (j % 3 === 0 && j <= inicio.length - 1) {
+        rutPuntos = "." + rutPuntos;
+      }
+      j++;
+    }
+    var dv = actualLimpio.substring(actualLimpio.length - 1);
+    rutPuntos = rutPuntos + "-" + dv;
   }
-  /* ------- */
+  return rutPuntos;
+}
+
+function Edad(FechaNacimiento) {
+  var fechaNace = new Date(FechaNacimiento);
+  var fechaActual = new Date();
+
+  var mes = fechaActual.getMonth();
+  var dia = fechaActual.getDate();
+  var año = fechaActual.getFullYear();
+
+  fechaActual.setDate(dia);
+  fechaActual.setMonth(mes);
+  fechaActual.setFullYear(año);
+
+  let edad = Math.floor(
+    (fechaActual - fechaNace) / (1000 * 60 * 60 * 24) / 365
+  );
+
+  return edad;
+}
+
+const ModifyDailyDietStyled = styled.div`
   margin-bottom: 2em;
   .form {
     margin-left: 1em;
@@ -48,7 +86,6 @@ const ModifyDailyDietStyled = styled.div`
     margin-left: auto;
     margin-right: auto;
   }
-
   .title {
     margin-left: auto;
     margin-right: auto;
@@ -57,41 +94,48 @@ const ModifyDailyDietStyled = styled.div`
     font-size: 3.5em;
     /* color: var(--mainPurple); */
   }
-  .input {
+  .name {
     margin-left: auto;
     margin-right: auto;
-  }
-  /* .margin {
-    margin-right: 5px;
-    margin-left: 5px;
-  } */
-
-  @media screen and (min-width: 600px) {
-    .MuiGrid-root.margin.MuiGrid-item.MuiGrid-grid-md-1,
-    .MuiGrid-root.MuiGrid-item.MuiGrid-grid-md-1 {
-      display: none;
-    }
-    .lunch-picker {
-      margin-right: 0.1px;
-    }
-    .grid-invisible {
-      display: none;
-    }
-  }
-  @media screen and (min-width: 960px) {
-    .grid-invisible {
-      display: block;
-    }
+    margin-bottom: 1em;
+    font-size: 1em;
+    /* color: var(--mainPurple); */
   }
 `;
 
-export default function ModifyDailyDiet() {
+function getFecha(date) {
+  let newDate = new Date(date);
+  let month = (newDate.getMonth() + 1).toString();
+  let day = (newDate.getDate() + 1).toString();
+  let year = newDate.getFullYear().toString();
+  let dayS = day.length > 1 ? day : `0${day}`;
+  let monthS = month.length > 1 ? month : `0${month}`;
+  return `${dayS}/${monthS}/${year}`;
+}
+
+function formatTime(date) {
+  let format = new Date(date).toISOString();
+  let time = format.substring(11, 16);
+  return time.toString();
+}
+
+export default function ModifyDailyDiet({ match }) {
   //TODO: obtener default values desde la bd
 
   const { register, errors, handleSubmit, control } = useForm();
-  const onSubmit = (data) => {
+
+  const message = useSelector((state) => state.dailyDiets.newDailyDiet);
+  const dispatch = useDispatch();
+  const onSubmit = (data, e) => {
+    data["date"] = new Date(Date.now()).toISOString().substring(0, 10);
+    data.breakfast_time = formatTime(data.breakfast_time);
+    data.lunch_time = formatTime(data.lunch_time);
+    data.snack_time = formatTime(data.snack_time);
+    data.dinner_time = formatTime(data.dinner_time);
+    //dispatch(addDailyDiet(data));
+    handleOpen();
+    e.target.reset();
     console.log(data);
-    console.log(errors);
   };
 
   const reqmsg = "Campo obligatorio";
@@ -143,8 +187,14 @@ export default function ModifyDailyDiet() {
     }
   };
 
-  const handleClose = () => {
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
     setOpen(false);
+  };
+  const handleOpen = () => {
+    setOpen(true);
   };
 
   return (
@@ -158,6 +208,26 @@ export default function ModifyDailyDiet() {
           <Typography className="title" variant="h5" color="primary">
             Modificar pauta diaria
           </Typography>
+        </Grid>
+
+        <Grid container justify="center" spacing={isMobile ? 0 : 2}>
+          <Grid item xs={12} sm={8} md={4} lg={4}>
+            <TextField
+              defaultValue={match.params.rut}
+              disabled
+              name="rut"
+              type="text"
+              label="Rut (Sin puntos ni guión)"
+              variant="outlined"
+              margin="dense"
+              fullWidth
+              error={errors.rut}
+              helperText={errors.rut ? errors.rut.message : ""}
+              inputRef={register({
+                required: { value: true, message: reqmsg },
+              })}
+            />
+          </Grid>
         </Grid>
 
         <Grid container justify="center" spacing={isMobile ? 0 : 2}>
@@ -212,7 +282,7 @@ export default function ModifyDailyDiet() {
               <Controller
                 as={
                   <KeyboardTimePicker
-                    id="collation_time"
+                    id="snack_time"
                     label="Hora de colación"
                     inputVariant="outlined"
                     keyboardIcon={<WatchLaterIcon />}
@@ -225,7 +295,7 @@ export default function ModifyDailyDiet() {
                     }}
                   />
                 }
-                name="collation_time"
+                name="snack_time"
                 defaultValue={collationTime}
                 control={control}
               />
@@ -302,7 +372,7 @@ export default function ModifyDailyDiet() {
 
           <Grid item xs={12} sm={8} md={4} lg={4}>
             <TextField
-              name="collation"
+              name="snack"
               type="text"
               label="Colación"
               variant="outlined"
@@ -389,6 +459,72 @@ export default function ModifyDailyDiet() {
             lg={2}
             className="grid-invisible"
           ></Grid>
+
+          <Grid item xs={false} md={2} lg={2} className="grid-invisible"></Grid>
+
+          <Grid item xs={12} sm={8} md={4} lg={4}>
+            <TextField
+              name="calories"
+              type="text"
+              label="Calorias de la dieta (Kcal)"
+              variant="outlined"
+              margin="dense"
+              fullWidth
+              inputProps={{ style: { fontSize: "0.8em" } }}
+              error={errors.dinner}
+              helperText={errors.dinner ? errors.dinner.message : ""}
+              inputRef={register({
+                required: { value: true, message: reqmsg },
+              })}
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={8} md={4} lg={4}>
+            <TextField
+              name="proteins"
+              type="text"
+              label="Proteina de la dieta (gr/prot/d)"
+              variant="outlined"
+              margin="dense"
+              fullWidth
+              inputProps={{ style: { fontSize: "0.8em" } }}
+              error={errors.goals}
+              helperText={errors.goals ? errors.goals.message : ""}
+              inputRef={register({
+                required: { value: true, message: reqmsg },
+              })}
+            />
+          </Grid>
+
+          <Grid
+            item
+            xs={false}
+            sm={false}
+            md={2}
+            lg={2}
+            className="grid-invisible"
+          ></Grid>
+
+          <Grid item xs={12} sm={8} md={4} lg={4}>
+            <TextField
+              name="extra_info"
+              type="text"
+              label="Motivación"
+              variant="outlined"
+              margin="dense"
+              fullWidth
+              multiline
+              rows={2}
+              inputProps={{ style: { fontSize: "0.8em" } }}
+              error={errors.post_training}
+              helperText={
+                errors.post_training ? errors.post_training.message : ""
+              }
+              inputRef={register({
+                required: { value: true, message: reqmsg },
+              })}
+            />
+          </Grid>
         </Grid>
         <Grid container justify="center">
           <Button
