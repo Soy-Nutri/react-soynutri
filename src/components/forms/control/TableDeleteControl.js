@@ -91,7 +91,6 @@ export default function StickyHeadTable({ rut, rowsShow, cleanControl }) {
   };
 
   const handleDelete = () => {
-    console.log(dates);
     let dateF = dates.dateF;
     let date = dates.date;
     setOpenSnackbar(true);

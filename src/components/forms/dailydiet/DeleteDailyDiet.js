@@ -106,7 +106,6 @@ export default function DeleteDailyDiet({ match }) {
   const patientInfo = useSelector((state) => state.patients.patientInfo);
 
   const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [rowsEmpty, setRowsEmpty] = useState(false);
 
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
@@ -128,9 +127,7 @@ export default function DeleteDailyDiet({ match }) {
       });
     }
   }
-  console.log(dailyDiet);
-  console.log(dailyDiet.length);
-  console.log("---");
+
   return (
     <DeleteDailyDietStyled>
       <Grid container alignItems="center">
@@ -173,11 +170,11 @@ export default function DeleteDailyDiet({ match }) {
         </Grid>
       )}
 
-      {(dailyDiet && dailyDiet[0] === "error") || rowsEmpty ? (
+      {dailyDiet && dailyDiet[0] === "error" ? (
         <Grid container direction="row" justify="center" alignItems="center">
           <h2>Este usuario no tiene pautas diarias aún.</h2>
         </Grid>
-      ) : dailyDiet && dailyDiet[0] !== "error" ? (
+      ) : dailyDiet && dailyDiet[0] !== "error" && dailyDiet.length > 0 ? (
         <Grid container direction="row" justify="center" alignItems="center">
           <h2>Selecione una fecha para eliminar pauta diaria</h2>
 

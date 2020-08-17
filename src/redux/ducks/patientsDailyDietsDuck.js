@@ -7,6 +7,7 @@ const GET_DAILY_DIETS_ADMIN = "GET_DAILY_DIETS_ADMIN";
 const DELETE_ERROR = "DELETE_ERROR";
 const CLEAR_DELETE_ERRORS = "CLEAR_DELETE_ERRORS";
 const CLEAR_ERRORS = "CLEAR_ERRORS";
+const MODIFY_RES = "MODIFY_RES";
 
 const initialState = {
   dailyDiets: [],
@@ -14,6 +15,7 @@ const initialState = {
   newDailyDiet: "",
   errors: null,
   deleteErrors: null,
+  modifyRes: "",
 };
 
 // Reducer
@@ -31,6 +33,8 @@ export default function controlReducer(state = initialState, action) {
       return { ...state, deleteErrors: action.payload };
     case CLEAR_DELETE_ERRORS:
       return { ...state, deleteErrors: null };
+    case MODIFY_RES:
+      return { ...state, modifyRes: action.payload };
     default:
       return state;
   }
@@ -48,7 +52,6 @@ export const getDailyDiets = (rut) => (dispatch) => {
       }
     })
     .catch((error) => {
-      console.log(error);
       dispatch({ type: GET_DAILY_DIETS, payload: ["error"] });
     });
 };
@@ -58,10 +61,9 @@ export const addDailyDiet = (dailyDietData) => (dispatch) => {
   axios
     .post("patientsDailyDiets/addDailyDiet", dailyDietData)
     .then((res) => {
-      dispatch({ type: ADD_DAILY_DIETS, payload: res.data.message });
-      console.log(res.data);
+      dispatch({ type: ADD_DAILY_DIETS, payload: "ok" });
     })
-    .catch((error) => console.log(error));
+    .catch((error) => dispatch({ type: ADD_DAILY_DIETS, payload: "error" }));
 };
 
 // see daily diet
@@ -79,7 +81,6 @@ export const getDailyDietsAdmin = (rut) => (dispatch) => {
       }
     })
     .catch((error) => {
-      console.log(error);
       dispatch({ type: GET_DAILY_DIETS_ADMIN, payload: ["error"] });
     });
 };
@@ -88,24 +89,20 @@ export const getDailyDietsAdmin = (rut) => (dispatch) => {
 export const deleteDailyDiets = (rut, date) => async (dispatch) => {
   dispatch({ type: CLEAR_DELETE_ERRORS });
   const params = { rut, date };
-  console.log(params);
+
   axios
     .post("/patientsDailyDiets/deleteDailyDiet", params)
     .then((res) => {
-      console.log(":)))");
-      console.log(res.data);
       if (res.data.message !== "Se ha eliminado la pauta diaria.") {
         dispatch({
           type: DELETE_ERROR,
           payload: "Error inesperado!",
         });
       } else {
-        console.log(":)))x2");
         dispatch(getDailyDietsAdmin(rut));
       }
     })
     .catch((error) => {
-      console.log(":(((");
       dispatch({
         type: DELETE_ERROR,
         payload: "Error inesperado!",
@@ -114,4 +111,17 @@ export const deleteDailyDiets = (rut, date) => async (dispatch) => {
 };
 
 // modify daily diet
-export const modifyDailyDiets = () => async (dispatch) => {};
+export const modifyDailyDiets = (daily) => async (dispatch) => {
+  axios
+    .put(`/patientsDailyDiets/modifyDailyDiet`, daily)
+    .then((res) => {
+      if (res.data.message === "Pauta diaria modificada.") {
+        dispatch({ type: MODIFY_RES, payload: "ok" });
+      } else {
+        dispatch({ type: MODIFY_RES, payload: "error" });
+      }
+    })
+    .catch((error) => {
+      dispatch({ type: MODIFY_RES, payload: "error" });
+    });
+};

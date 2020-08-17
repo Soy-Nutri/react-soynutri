@@ -16,6 +16,14 @@ import MuiAlert from "@material-ui/lab/Alert";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteDailyDiets } from "../../../redux/ducks/patientsDailyDietsDuck";
 
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Skeleton from "@material-ui/lab/Skeleton";
+
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -65,6 +73,26 @@ export default function StickyHeadTable({ rut, rowsShow }) {
   };
 
   const deleteDailyDietDate = (date, dateF) => {
+    setDates({ date, dateF });
+    setOpen(true);
+  };
+
+  const [dates, setDates] = React.useState({
+    date: "",
+    dateF: "",
+  });
+  const [open, setOpen] = React.useState(false);
+  const handleClose = () => {
+    setDates({
+      date: "",
+      dateF: "",
+    });
+    setOpen(false);
+  };
+
+  const handleDelete = () => {
+    let dateF = dates.dateF;
+    let date = dates.date;
     setOpenSnackbar(true);
     dispatch(deleteDailyDiets(rut, getFecha(dateF)));
     let auxRows = [];
@@ -74,6 +102,8 @@ export default function StickyHeadTable({ rut, rowsShow }) {
       }
     }
     setRows(auxRows);
+
+    handleClose();
   };
 
   return (
@@ -154,6 +184,33 @@ export default function StickyHeadTable({ rut, rowsShow }) {
           </Alert>
         </Snackbar>
       )}
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"¿Realmente desea eliminar esta pauta diaria?"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {dates.date ? (
+              `La pauta diaria con fecha ${dates.date} será eliminada.`
+            ) : (
+              <Skeleton variant="text" style={{ borderRadius: "5px" }} />
+            )}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => handleClose()} color="primary">
+            Cancelar
+          </Button>
+          <Button onClick={() => handleDelete()} color="primary" autoFocus>
+            Eliminar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Paper>
   );
 }

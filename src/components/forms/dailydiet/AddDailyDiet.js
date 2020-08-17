@@ -100,6 +100,7 @@ export default function AddDailyDiet({ match }) {
   const [open, setOpen] = React.useState(false);
   const { register, errors, handleSubmit, control } = useForm();
   const message = useSelector((state) => state.dailyDiets.newDailyDiet);
+
   const dispatch = useDispatch();
   const onSubmit = (data, e) => {
     data["date"] = new Date(Date.now()).toISOString().substring(0, 10);
@@ -110,7 +111,6 @@ export default function AddDailyDiet({ match }) {
     dispatch(addDailyDiet(data));
     handleOpen();
     e.target.reset();
-    console.log(data);
   };
 
   const reqmsg = "Campo obligatorio";
@@ -130,7 +130,6 @@ export default function AddDailyDiet({ match }) {
 
   const handleBreakfastTime = (date) => {
     setBreakfastTime(date);
-    console.log(date);
   };
   const handleLunchTime = (date) => {
     setLunchTime(date);
@@ -494,10 +493,16 @@ export default function AddDailyDiet({ match }) {
           </Button>
         </Grid>
       </form>
-      {message ? (
+      {message === "error" ? (
+        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+          <Alert onClose={handleClose} severity="error">
+            No puede ingresar más de una pauta diaria al día.
+          </Alert>
+        </Snackbar>
+      ) : message === "ok" ? (
         <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
           <Alert onClose={handleClose} severity="success">
-            {message}
+            Pauta diaria agregada con éxito.
           </Alert>
         </Snackbar>
       ) : (

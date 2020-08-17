@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 //Table
 import TableC from "../../patients/Control/tableControl";
-import TableB from "../../patients/Control/tableBiochemical";
+// import TableB from "../../patients/Control/tableBiochemical";
 
 import Grid from "@material-ui/core/Grid";
 
@@ -76,7 +76,7 @@ export default function SeeControl({ match, history }) {
   const dispatch = useDispatch();
   const patientInfo = useSelector((state) => state.patients.patientInfo);
   const carnet = useSelector((store) => store.carnet.control);
-  const biochemical = useSelector((store) => store.carnet.biochemical);
+  // const biochemical = useSelector((store) => store.carnet.biochemical);
 
   React.useEffect(() => {
     dispatch(getPatientInfo(match.params.rut));
