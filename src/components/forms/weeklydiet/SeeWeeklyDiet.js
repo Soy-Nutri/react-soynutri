@@ -7,7 +7,7 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-
+import Skeleton from "@material-ui/lab/Skeleton";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 
@@ -20,19 +20,15 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
 
 //import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import ListItemText from "@material-ui/core/ListItemText";
-import Checkbox from "@material-ui/core/Checkbox";
+
 
 import Table from "./TableWeekly";
-
 //Redux
 import { useDispatch, useSelector } from "react-redux";
 import { getAllWeeklyDiets } from "../../../redux/ducks/weeklyDietsDucks";
+import { getPatientInfo } from "../../../redux/ducks/patientsDucks";
 
 const SeeWeeklyDietStyled = styled.div`
   /* Hidde spinner number input Chrome, Safari, Edge, Opera */
@@ -95,21 +91,32 @@ const SeeWeeklyDietStyled = styled.div`
   }
 `;
 
+
+function getFecha(date) {
+  let newDate = new Date(date);
+  let month = (newDate.getMonth() + 1).toString();
+  let day = (newDate.getDate() + 1).toString();
+  let year = newDate.getFullYear().toString();
+  let dayS = day.length > 1 ? day : `0${day}`;
+  let monthS = month.length > 1 ? month : `0${month}`;
+  return `${dayS}/${monthS}/${year}`;
+}
+
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-export default function SeeWeeklyDiet() {
-  const { register, errors, handleSubmit } = useForm();
+export default function SeeWeeklyDiet({match}) {
+
   const dispatch = useDispatch();
-  const [open, setOpen] = React.useState(false);
-  const [rut, setRut] = React.useState("");
-
+ 
   const weeklyDiets = useSelector((store) => store.weeklyDiets.getweeklyDiets);
-
   const weeklyDietError = useSelector((store) => store.weeklyDiets.errors);
+  const [rowsEmpty, setRowsEmpty] = React.useState(false);
 
-  console.log(weeklyDiets);
+
+  console.log("Error");
+  console.log(weeklyDietError);
 
   const [checked, setChecked] = React.useState([1]);
 
@@ -126,43 +133,41 @@ export default function SeeWeeklyDiet() {
     setChecked(newChecked);
   };
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
+  
 
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
+  React.useEffect(() => {
+    dispatch(getPatientInfo(match.params.rut));
+    dispatch(getAllWeeklyDiets(match.params.rut));
+  }, [dispatch, match]);
+
+ 
+
+  var rows = [];
+
+
+  if (weeklyDiets && weeklyDiets.length > 0) {
+    console.log("TOY ACA:  \n",weeklyDiets.length);
+    for (let i = 0; i < weeklyDiets.length; i++) {
+      console.log(getFecha(weeklyDiets[i].date));
+      rows.push({
+        date: getFecha(weeklyDiets[i].date),
+        action: "delete",
+        dateF: weeklyDiets[i].date,
+      });
     }
-    setOpen(false);
+  }
+  const [openSnackbar, setOpenSnackbar] = React.useState(false);
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
   };
 
-  const searchPatientsWeekly = () => {
-    dispatch(getAllWeeklyDiets(rut));
+  const cleanControl = () => {
+    setRowsEmpty(true);
+    setOpenSnackbar(true);
   };
 
-  const handleChangeRut = (event) => {
-    setRut(event.target.value);
-  };
 
-  const reqmsg = "Campo obligatorio";
-
-  //Cambiar las horas a las dadas por firebase.
-  // function generate(element) {
-  //   return [0, 1, 2].map((value) =>
-  //       React.cloneElement(element, {
-  //       key: value,
-  //       }),
-  //   );
-  // }
-
-  // function prettyTime(date) {
-  //   // this function makes de datetype date in a "HH:MM" format
-  //   return date.toLocaleTimeString(navigator.language, {
-  //     hour: "2-digit",
-  //     minute: "2-digit",
-  //   });
-  // }
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"), {
@@ -178,44 +183,44 @@ export default function SeeWeeklyDiet() {
           </Typography>
         </Grid>
 
-        <Grid container justify="center" spacing={isMobile ? 0 : 2}>
-          <Grid item xs={12} sm={8} md={4} lg={4}>
-            <TextField
-              value={rut}
-              name="rut"
-              type="text"
-              label="Rut (Sin puntos ni guión)"
-              variant="outlined"
-              margin="dense"
-              fullWidth
-              onChange={handleChangeRut}
-              error={errors.rut}
-              helperText={errors.rut ? errors.rut.message : ""}
-              inputRef={register({
-                required: { value: true, message: reqmsg },
-              })}
-            />
-            <Button
-              className="form-button"
-              variant="outlined"
-              type="submit"
-              color="primary"
-              onClick={() => searchPatientsWeekly()}
-            >
-              Buscar
-            </Button>
-          </Grid>
-        </Grid>
-
+      
         <br></br>
 
+      
         <Grid container justify="center" spacing={isMobile ? 0 : 2}>
           <Grid item xs={12} sm={8} className="semana">
-            {weeklyDiets && weeklyDiets.length > 0 && (
+
+           {(weeklyDietError && weeklyDietError.length > 0) || rowsEmpty ? (
+        <Grid container direction="row" justify="center" alignItems="center">
+          <h2>Este usuario no tiene weekly diets.</h2>
+        </Grid>) :
+             
+             weeklyDiets && weeklyDiets.length > 0 ?(
               <Table weeklyDiets={weeklyDiets}></Table>
-            )}
-          </Grid>
+            
+      
+
+            ) :
+            (
+            
+            <Grid container justify="center" style={{ marginTop: 20 }}>
+              <Grid item container>
+                <Grid item xs={false} sm={3}></Grid>
+
+                <Grid item xs={12} sm={6}>
+                  <Skeleton
+                    variant="rect"
+                    height={200}
+                    style={{ borderRadius: "5px" }}
+                  />
+                </Grid>
+                <Grid item xs={false} sm={3}></Grid>
+              </Grid>
+            </Grid>
+          )}
         </Grid>
+        </Grid>
+
       </div>
     </SeeWeeklyDietStyled>
   );

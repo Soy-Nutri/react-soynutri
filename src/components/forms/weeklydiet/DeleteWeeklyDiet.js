@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { useForm } from "react-hook-form";
+
 
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
@@ -12,6 +12,8 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 
 import MenuItem from "@material-ui/core/MenuItem";
+
+import Skeleton from "@material-ui/lab/Skeleton";
 
 import Select from "@material-ui/core/Select";
 import { makeStyles } from "@material-ui/core/styles";
@@ -26,13 +28,15 @@ import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import ListItemText from "@material-ui/core/ListItemText";
 import Checkbox from "@material-ui/core/Checkbox";
 
-import Table from "./TableWeekly";
-
+import TableDelete from "./TableDeleteWeeklyDiet";
 //Redux
+import { getPatientInfo } from "../../../redux/ducks/patientsDucks";
+
 import { useDispatch, useSelector } from "react-redux";
 import {
   deleteWeeklyDiet,
   getAllWeeklyDiets,
+  getWeeklyDiets,
 } from "../../../redux/ducks/weeklyDietsDucks";
 
 const DeleteWeeklyDietStyled = styled.div`
@@ -110,6 +114,50 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
+
+function formateaRut(rut) {
+  var actual = rut.replace(/^0+/, "");
+  if (actual !== "" && actual.length > 1) {
+    var sinPuntos = actual.replace(/\./g, "");
+    var actualLimpio = sinPuntos.replace(/-/g, "");
+    var inicio = actualLimpio.substring(0, actualLimpio.length - 1);
+    var rutPuntos = "";
+    var i = 0;
+    var j = 1;
+    for (i = inicio.length - 1; i >= 0; i--) {
+      var letra = inicio.charAt(i);
+      rutPuntos = letra + rutPuntos;
+      if (j % 3 === 0 && j <= inicio.length - 1) {
+        rutPuntos = "." + rutPuntos;
+      }
+      j++;
+    }
+    var dv = actualLimpio.substring(actualLimpio.length - 1);
+    rutPuntos = rutPuntos + "-" + dv;
+  }
+  return rutPuntos;
+}
+
+function Edad(FechaNacimiento) {
+  var fechaNace = new Date(FechaNacimiento);
+  var fechaActual = new Date();
+
+  var mes = fechaActual.getMonth();
+  var dia = fechaActual.getDate();
+  var año = fechaActual.getFullYear();
+
+  fechaActual.setDate(dia);
+  fechaActual.setMonth(mes);
+  fechaActual.setFullYear(año);
+
+  let edad = Math.floor(
+    (fechaActual - fechaNace) / (1000 * 60 * 60 * 24) / 365
+  );
+
+  return edad;
+}
+
 //mientras cambie el dia y no aprete el boton se vayan cambiando los datos de los formularios
 // os ino tendria que rellenar un dia obligatoriamente ajajedsaxD
 
@@ -127,23 +175,41 @@ function getFecha(date) {
   return `${dayS}/${monthS}/${year}`;
 }
 
-export default function DeleteWeeklyDiet() {
-  const { register, errors, handleSubmit } = useForm();
+export default function DeleteWeeklyDiet({ match  }) {
+
+
   const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
-  const [rut, setRut] = React.useState("");
+
   const [date, setDate] = React.useState("");
+  const [rowsEmpty, setRowsEmpty] = React.useState(false);
+  const [openSnackbar, setOpenSnackbar] = React.useState(false);
 
   const weeklyDiets = useSelector((store) => store.weeklyDiets.getweeklyDiets);
+  const patientInfo = useSelector((state) => state.patients.patientInfo);
+ 
+  React.useEffect(() => {
+    dispatch(getPatientInfo(match.params.rut));
+    dispatch(getAllWeeklyDiets(match.params.rut));
+  }, [dispatch, match]);
 
+  //console.log("soy el weekly diets "+ weeklyDiets.length);
   const weeklyDietError = useSelector((store) => store.weeklyDiets.errors);
+  console.log("Error");
+  console.log(weeklyDietError);
 
-  // const newPatientWeeklyDiet = useSelector(
-  //   (store) => store.weeklyDiets.addWeeklyDiet
-  // );
-  // const newPatientWeeklyDietError = useSelector(
-  //   (store) => store.weeklyDiets.errors
-  // );
+  var rows = [];
+
+
+  if (weeklyDiets && weeklyDiets.length > 0) {
+    for (let i = 0; i < weeklyDiets.length; i++) {
+      rows.push({
+        date: getFecha(weeklyDiets[i].date),
+        action: "delete",
+        dateF: weeklyDiets[i].date,
+      });
+    }
+  }
 
   const [checked, setChecked] = React.useState([1]);
 
@@ -160,24 +226,11 @@ export default function DeleteWeeklyDiet() {
     setChecked(newChecked);
   };
 
-  // const handleOpen = () => {
-  //   setOpen(true);
-  // };
-
-  // const handleClose = (event, reason) => {
-  //   if (reason === "clickaway") {
-  //     return;
-  //   }
-  //   setOpen(false);
-  // };
-
   const searchPatientsWeekly = () => {
-    dispatch(getAllWeeklyDiets(rut));
+    dispatch(getAllWeeklyDiets(match.params.rut));
   };
 
-  const handleChangeRut = (event) => {
-    setRut(event.target.value);
-  };
+  
 
   const handleChange = (event) => {
     setDate(event.target.value);
@@ -185,37 +238,21 @@ export default function DeleteWeeklyDiet() {
     // dispatch(deleteWeeklyDiet( ))
   };
 
-  const EliminarFecha = () => {
-    var data = {};
-    data["rut"] = rut;
-    data["date"] = date.date;
-    console.log("estos son los datos a enviar desde delete" + data);
-    dispatch(deleteWeeklyDiet(data));
+
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
   };
 
-  const reqmsg = "Campo obligatorio";
 
-  //Cambiar las horas a las dadas por firebase.
-  // function generate(element) {
-  //   return [0, 1, 2].map((value) =>
-  //       React.cloneElement(element, {
-  //       key: value,
-  //       }),
-  //   );
-  // }
+  
+  const cleanControl = () => {
+    setRowsEmpty(true);
+    setOpenSnackbar(true);
+  };
 
-  // function prettyTime(date) {
-  //   // this function makes de datetype date in a "HH:MM" format
-  //   return date.toLocaleTimeString(navigator.language, {
-  //     hour: "2-digit",
-  //     minute: "2-digit",
-  //   });
-  // }
 
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("xs"), {
-    defaultMatches: true,
-  });
+  //const theme = useTheme();
 
   return (
     <DeleteWeeklyDietStyled>
@@ -226,75 +263,89 @@ export default function DeleteWeeklyDiet() {
           </Typography>
         </Grid>
 
-        <Grid container justify="center" spacing={isMobile ? 0 : 2}>
-          <Grid item xs={12} sm={8} md={4} lg={4}>
-            <TextField
-              value={rut}
-              name="rut"
-              type="text"
-              label="Rut (Sin puntos ni guión)"
-              variant="outlined"
-              margin="dense"
-              fullWidth
-              onChange={handleChangeRut}
-              error={errors.rut}
-              helperText={errors.rut ? errors.rut.message : ""}
-              inputRef={register({
-                required: { value: true, message: reqmsg },
-              })}
-            />
-            <Button
-              className="form-button"
-              variant="outlined"
-              type="submit"
-              color="primary"
-              onClick={() => searchPatientsWeekly()}
-            >
-              Buscar
-            </Button>
+
+
+        {patientInfo && patientInfo.names ? (
+        <Grid container alignItems="center">
+          <Grid item xs={12} container justify="center">
+            <Typography className="name" variant="h5">
+              <div>
+                <h1>
+                  {patientInfo.names} {patientInfo.father_last_name}{" "}
+                  {patientInfo.mother_last_name}
+                </h1>
+                <h2>
+                  Rut: {formateaRut(patientInfo.rut)} Edad:{" "}
+                  {Edad(patientInfo.birth_date)} años
+                </h2>
+              </div>
+            </Typography>
           </Grid>
         </Grid>
 
-        <br></br>
+        
+      ) : (
 
-        <Grid container justify="center" spacing={isMobile ? 0 : 2}>
-          <Grid item xs={25} sm={6} md={40} lg={40} className="semana">
-            {weeklyDiets && weeklyDiets.length > 0 && (
-              <div>
+        <Grid container justify="center">
+          <Grid item container>
+            <Grid item xs={false} sm={3}></Grid>
+
+            <Grid item xs={12} sm={6}>
+              <Skeleton
+                variant="rect"
+                height={100}
+                style={{ borderRadius: "5px" }}
+              />
+            </Grid>
+            <Grid item xs={false} sm={3}></Grid>
+          </Grid>
+        </Grid>
+      )}
+          {(weeklyDietError && weeklyDietError.length === 0 ) ||  rowsEmpty ? (    
+  
+                  <Grid container direction="row" justify="center" alignItems="center">
+                        <h2>Este usuario no tiene minutas aún.</h2>
+                  </Grid>
+              ) : weeklyDiets && weeklyDiets.length > 0 ? (
+          
                 <Grid container justify="center">
                   <h4>Selecciona una de las dietas semanales para eliminar</h4>{" "}
                   <br></br>
-                  <Grid item xs={12} sm={4} md={2} lg={2} className="semana">
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="Prueba"
-                      value={date}
-                      onChange={handleChange}
-                    >
-                      {weeklyDiets.map((item) => (
-                        <MenuItem value={item} key={item.date}>
-                          {getFecha(item.date)}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </Grid>
-                  <Button
-                    className="form-button"
-                    variant="outlined"
-                    type="submit"
-                    color="primary"
-                    onClick={EliminarFecha}
+                   <Grid
+                    container
+                    justify="center"
+                    className="table"
+                    style={{ marginTop: 20 }}
                   >
-                    Eliminar minuta semanal
-                  </Button>
+                    <Grid item xs={11} md={9} lg={6}>
+                      <TableDelete
+                        rowsShow={rows}
+                        rut={match.params.rut}
+                        cleanControl={cleanControl}
+                      />
+                    </Grid>
+                  </Grid>
+                  </Grid>
+              ) : (
+            <Grid container justify="center" style={{ marginTop: 20 }}>
+              <Grid item container>
+                <Grid item xs={false} sm={3}></Grid>
+
+                <Grid item xs={12} sm={6}>
+                  <Skeleton
+                    variant="rect"
+                    height={200}
+                    style={{ borderRadius: "5px" }}
+                  />
                 </Grid>
-                <br></br> <br></br>
-                <Table weeklyDiets={weeklyDiets}></Table>
-              </div>
-            )}
-          </Grid>
-        </Grid>
+                <Grid item xs={false} sm={3}></Grid>
+              </Grid>
+            </Grid>
+          )}
       </div>
+
+          
+
     </DeleteWeeklyDietStyled>
   );
 }
