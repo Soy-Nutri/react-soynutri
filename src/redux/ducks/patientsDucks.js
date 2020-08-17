@@ -2,8 +2,8 @@ import axios from "axios";
 
 // Types
 const ADD_PATIENT = "ADD_PATIENT";
-const ADD_PATIENT_ERROR = "ADD_PATIENT_ERROR";
-const CLEAR_ERRORS = "CLEAR_ERRORS";
+const SET_ERROR = "SET_ERROR";
+const CLEAR_ERROR = "CLEAR_ERROR";
 const GET_PATIENTS = "GET_PATIENTS";
 const GET_PATIENT_INFO = "GET_PATIENT_INFO";
 const CLEAR_PATIENT_INFO = "CLEAR_PATIENT_INFO";
@@ -29,9 +29,9 @@ export default function patientsReducer(state = initialState, action) {
   switch (action.type) {
     case ADD_PATIENT:
       return { ...state, newPatient: action.payload };
-    case ADD_PATIENT_ERROR:
+    case SET_ERROR:
       return { ...state, errors: action.payload };
-    case CLEAR_ERRORS:
+    case CLEAR_ERROR:
       return { ...state, errors: null };
     case GET_PATIENTS:
       return { ...state, patientsData: action.payload };
@@ -67,7 +67,7 @@ export default function patientsReducer(state = initialState, action) {
 
 // add a patient
 export const addPatient = (patientData) => (dispatch) => {
-  dispatch({ type: CLEAR_ERRORS });
+  dispatch({ type: CLEAR_ERROR });
   axios
     .post("/patientsAuth/signup", patientData)
     .then(() => {
@@ -77,8 +77,13 @@ export const addPatient = (patientData) => (dispatch) => {
       if (error.response.request.status === 409) {
         // rut already in use
         dispatch({
-          type: ADD_PATIENT_ERROR,
+          type: SET_ERROR,
           payload: "Este rut ya está registrado!",
+        });
+      } else {
+        dispatch({
+          type: SET_ERROR,
+          payload: "Ha ocurrido un error inesperado!",
         });
       }
     });
@@ -86,23 +91,42 @@ export const addPatient = (patientData) => (dispatch) => {
 
 // get a list of patient with basic info
 export const getPatientsList = () => (dispatch) => {
+  dispatch({ type: CLEAR_ERROR });
   axios
     .get("/patients/getId")
     .then((res) => {
       dispatch({ type: GET_PATIENTS, payload: res.data });
     })
-    .catch((error) => console.log(error));
+    .catch(() => {
+      dispatch({
+        type: SET_ERROR,
+        payload: "Ha ocurrido un error inesperado!",
+      });
+    });
 };
 
 // delete a patient by rut
 export const deletePatient = (rut) => async (dispatch) => {
+  dispatch({ type: CLEAR_ERROR });
   // delete changes the state to inactive
   axios
     .post("/patients/deletePerfil", rut)
     .then(() => {})
-    .catch((error) => console.log(error.response));
+    .catch((error) => {
+      if (error.response.request.status === 404) {
+        dispatch({
+          type: SET_ERROR,
+          payload: "No se ha encontrado al paciente solicitado!",
+        });
+      } else {
+        dispatch({
+          type: SET_ERROR,
+          payload: "Ha ocurrido un error inesperado!",
+        });
+      }
+    });
   await new Promise((r) => setTimeout(r, 2000));
-  //window.location.href = "/";
+  window.location.href = "/";
 };
 
 // get all info of a patient by rut (required by the admin)
@@ -113,15 +137,41 @@ export const getPatientInfo = (rut) => (dispatch) => {
     .then((res) => {
       dispatch({ type: GET_PATIENT_INFO, payload: res.data });
     })
-    .catch((error) => console.log(error));
+    .catch((error) => {
+      if (error.response.request.status === 404) {
+        dispatch({
+          type: SET_ERROR,
+          payload: "No se ha encontrado al paciente solicitado!",
+        });
+      } else {
+        dispatch({
+          type: SET_ERROR,
+          payload: "Ha ocurrido un error inesperado!",
+        });
+      }
+    });
 };
 
 // modify a patient
-export const modifyPatient = (data) => (dispatch) => {
+export const modifyPatient = (data) => async (dispatch) => {
+  dispatch({ type: CLEAR_ERROR });
   axios
     .post(`/patients/modifyPerfil`, data)
     .then(() => dispatch({ type: PATIENT_MODIFIED }))
-    .catch((error) => console.log(error.message));
+    .catch((error) => {
+      if (error.response.request.status === 409) {
+        dispatch({
+          type: SET_ERROR,
+          payload: "Contraseña incorrecta!",
+        });
+      } else {
+        dispatch({
+          type: SET_ERROR,
+          payload: "Ha ocurrido un error inesperado!",
+        });
+      }
+    });
+  await new Promise((r) => setTimeout(r, 2000));
 };
 
 // get all info of a patient by rut (required by the patient)
@@ -129,20 +179,48 @@ export const getPatientInfoPatient = (rut) => (dispatch) => {
   axios
     .get(`/patients/getPerfil/${rut}/patient`)
     .then((res) => {
-      console.log(res.data);
       dispatch({ type: GET_PATIENT_INFO_PATIENT, payload: res.data });
     })
-    .catch((error) => console.log(error));
+    .catch((error) => {
+      if (error.response.request.status === 404) {
+        dispatch({
+          type: SET_ERROR,
+          payload: "No se ha encontrado al paciente solicitado!",
+        });
+      } else {
+        dispatch({
+          type: SET_ERROR,
+          payload: "Ha ocurrido un error inesperado!",
+        });
+      }
+    });
 };
 
-// Modify password patient
+// Modify patient password
 export const modifyPassword = (data) => (dispatch) => {
   axios
     .post("/patientsAuth/changePassword", data)
     .then((res) => {
       dispatch({ type: MODIFY_PASSWORD });
     })
-    .catch((error) => console.log(error));
+    .catch((error) => {
+      if (error.response.request.status === 404) {
+        dispatch({
+          type: SET_ERROR,
+          payload: "No se ha encontrado al paciente solicitado!",
+        });
+      } else if (error.response.request.status === 409) {
+        dispatch({
+          type: SET_ERROR,
+          payload: "Usuario/contraseña erronea!",
+        });
+      } else {
+        dispatch({
+          type: SET_ERROR,
+          payload: "Ha ocurrido un error inesperado!",
+        });
+      }
+    });
 };
 
 // when it is searching a patient
@@ -155,5 +233,10 @@ export const getStatistics = () => (dispatch) => {
   axios
     .get("/patients/getStatistics")
     .then((res) => dispatch({ type: GET_STATISTICS, payload: res.data }))
-    .catch((error) => console.log(error));
+    .catch(() =>
+      dispatch({
+        type: SET_ERROR,
+        payload: "Ha ocurrido un error inesperado!",
+      })
+    );
 };

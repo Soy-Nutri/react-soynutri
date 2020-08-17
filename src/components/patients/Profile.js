@@ -44,6 +44,10 @@ function getDate(date) {
 function Profile() {
   const dispatch = useDispatch();
   const patientInfo = useSelector((state) => state.patients.patientInfo);
+  const passError = useSelector((state) => state.patients.errors);
+
+  const { register, errors, handleSubmit } = useForm();
+
   const passwordModified = useSelector(
     (state) => state.patients.passwordModified
   );
@@ -51,21 +55,20 @@ function Profile() {
     dispatch(getPatientInfoPatient(localStorage.rut));
   }, [dispatch]);
 
-  const { register, errors, handleSubmit } = useForm();
-
   const onSubmit = (data) => {
     if (data.newPassword === data.newpass2) {
       data["rut"] = patientInfo.rut;
       delete data.newpass2;
       dispatch(modifyPassword(data));
-      console.log(data);
-      console.log(errors);
-      if (passwordModified) {
-        alert("Contraseña modificada!");
-      }
     } else {
-      alert("Las contraseñas no coinciden!");
+      document.getElementById("pass-error").innerHTML =
+        "<p style='color: red;'>Las contraseñas deben ser iguales!</p>";
     }
+  };
+  console.log(errors);
+
+  const clearError = () => {
+    document.getElementById("pass-error").innerHTML = "";
   };
 
   const reqmsg = "Campo obligatorio";
@@ -135,8 +138,10 @@ function Profile() {
                       margin="dense"
                       className="input"
                       fullWidth
-                      error={errors.weight}
-                      helperText={errors.weight ? errors.weight.message : ""}
+                      error={errors.password}
+                      helperText={
+                        errors.password ? errors.password.message : ""
+                      }
                       inputRef={register({
                         required: { value: true, message: reqmsg },
                       })}
@@ -151,8 +156,11 @@ function Profile() {
                       margin="dense"
                       className="input"
                       fullWidth
-                      error={errors.weight}
-                      helperText={errors.weight ? errors.weight.message : ""}
+                      onChange={() => clearError()}
+                      error={errors.newPassword}
+                      helperText={
+                        errors.newPassword ? errors.newPassword.message : ""
+                      }
                       inputRef={register({
                         required: { value: true, message: reqmsg },
                       })}
@@ -167,13 +175,24 @@ function Profile() {
                       margin="dense"
                       className="input"
                       fullWidth
-                      error={errors.weight}
-                      helperText={errors.weight ? errors.weight.message : ""}
+                      onChange={() => clearError()}
+                      error={errors.newpass2}
+                      helperText={
+                        errors.newpass2 ? errors.newpass2.message : ""
+                      }
                       inputRef={register({
                         required: { value: true, message: reqmsg },
                       })}
                     />
                   </Grid>
+                  <div id="pass-error">
+                    {passwordModified && (
+                      <p style={{ color: "green" }}>
+                        Contraseña modificada con éxito!
+                      </p>
+                    )}
+                    {passError && <p style={{ color: "red" }}>{passError}</p>}
+                  </div>
                 </Grid>
 
                 <Grid container alignItems="center">

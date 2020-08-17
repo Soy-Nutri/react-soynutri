@@ -7,12 +7,14 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
 
 import { useTheme } from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 // redux
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../redux/ducks/authDucks";
 
 const AddPatientStyled = styled.div`
@@ -49,12 +51,19 @@ const AddPatientStyled = styled.div`
   }
 `;
 
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 export default function AddPatient() {
   const { register, errors, handleSubmit } = useForm();
+  const loginError = useSelector((state) => state.auth.error);
+  const [open, setOpen] = React.useState(false);
   // redux
   const dispatch = useDispatch();
   const onSubmit = (userData) => {
     dispatch(loginUser(userData));
+    handleOpen();
   };
 
   const reqmsg = "Campo obligatorio";
@@ -63,6 +72,17 @@ export default function AddPatient() {
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"), {
     defaultMatches: true,
   });
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
+  };
 
   return (
     <AddPatientStyled>
@@ -128,6 +148,13 @@ export default function AddPatient() {
           </Button>
         </Grid>
       </form>
+      {loginError && (
+        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+          <Alert onClose={handleClose} severity="error">
+            {loginError}
+          </Alert>
+        </Snackbar>
+      )}
     </AddPatientStyled>
   );
 }
