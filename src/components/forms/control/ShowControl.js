@@ -101,13 +101,14 @@ export default function SeeControl({ match, history }) {
         ) : (
           <Skeleton
             variant="rect"
-            height={380}
+            height={180}
+            width={500}
             style={{ borderRadius: "5px" }}
           />
         )}
         <h2>Carnet de control</h2>
         {carnet.length === 0 ? (
-          <Skeleton variant="rect" height={600} />
+          <Skeleton variant="rect" height={500} />
         ) : carnet[0] === "error" ? (
           <Grid container direction="row" justify="center" alignItems="center">
             <h3>Este usuario no cuenta con controles aún.</h3>
@@ -115,7 +116,7 @@ export default function SeeControl({ match, history }) {
         ) : (
           <TableC carnet={carnet} />
         )}
-        <h2>Análisis bioquímicos</h2>
+        {/* <h2>Análisis bioquímicos</h2>
         {biochemical.length === 0 ? (
           <Skeleton variant="rect" height={100} />
         ) : biochemical[0] === "error" ? (
@@ -124,7 +125,7 @@ export default function SeeControl({ match, history }) {
           </Grid>
         ) : (
           <TableB biochemical={biochemical} />
-        )}
+        )} */}
       </Container>
     </SeeControlStyled>
   );

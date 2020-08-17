@@ -68,30 +68,36 @@ function App() {
   const mainPrimaryColor = darkState ? purple[500] : "#58157c";
   const mainSecondaryColor = darkState ? deepPurple[500] : deepPurple[900];
 
-  const theme = createMuiTheme(
-    {
-      palette: {
-        type: palletType,
-        primary: {
-          main: mainPrimaryColor,
-        },
-        secondary: {
-          main: mainSecondaryColor,
-        },
+  const theme = createMuiTheme({
+    palette: {
+      type: palletType,
+      primary: {
+        main: mainPrimaryColor,
+      },
+      secondary: {
+        main: mainSecondaryColor,
       },
     },
-    esEs
-  );
+    esEs,
+  });
 
   const handleThemeChange = () => {
     setDarkState(!darkState);
+    localStorage.theme = !darkState ? "dark" : "light";
   };
 
   React.useEffect(() => {
-    const getInfo = () => {
-      setDarkState(prefersDarkMode ? true : false);
+    const obtenerInfo = () => {
+      if (localStorage.theme === "dark") {
+        setDarkState(true);
+      } else if (localStorage.theme === "light") {
+        setDarkState(false);
+      } else {
+        setDarkState(prefersDarkMode ? true : false);
+        localStorage.theme = prefersDarkMode ? "light" : "dark";
+      }
     };
-    getInfo();
+    obtenerInfo();
   }, [prefersDarkMode, setDarkState]);
 
   const store = generateStore();
@@ -119,6 +125,30 @@ function App() {
     }
   }
 
+  const template = (view, rol) => {
+    switch (rol) {
+      case "admin":
+        if (localStorage.rol === "/soynutri-adm") {
+          return view;
+        } else {
+          return Error;
+        }
+        break;
+      case "patient":
+        if (localStorage.rol === "/patient") {
+          return view;
+        } else {
+          return Error;
+        }
+        break;
+      case "unknown":
+        return view;
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <Router>
@@ -130,11 +160,15 @@ function App() {
 
             <Route path="/login" component={Login} />
 
-            <Route path="/agregar_paciente" exact component={AddPatient} />
+            <Route
+              path="/agregar_paciente"
+              exact
+              component={template(AddPatient, "admin")}
+            />
             <Route
               path="/buscar_paciente/:action"
               exact
-              component={SearchPatient}
+              component={template(SearchPatient, "admin")}
             />
             <Route
               path="/ver_paciente/:rut/:elim"
