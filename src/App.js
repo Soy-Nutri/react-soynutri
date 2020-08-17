@@ -135,17 +135,14 @@ function App() {
         } else {
           return Error;
         }
-        break;
       case "patient":
         if (localStorage.rol === "/patient") {
           return view;
         } else {
           return Error;
         }
-        break;
       case "unknown":
         return view;
-        break;
       default:
         break;
     }
@@ -175,85 +172,109 @@ function App() {
             <Route
               path="/ver_paciente/:rut/:elim"
               exact
-              component={SeePatient}
+              component={template(SeePatient, "admin")}
             />
             <Route
               path="/modificar_paciente/:rut"
               exact
-              component={ModifyPatient}
+              component={template(ModifyPatient, "admin")}
             />
-            <Route path="/borrar_paciente" exact component={DeletePatient} />
+            <Route
+              path="/borrar_paciente"
+              exact
+              component={template(DeletePatient, "admin")}
+            />
 
-            <Route path="/agregar_control/:rut" exact component={AddControl} />
+            <Route
+              path="/agregar_control/:rut"
+              exact
+              component={template(AddControl, "admin")}
+            />
             <Route
               path="/modificar_control/:rut"
               exact
-              component={ModifyControl}
+              component={template(ModifyControl, "admin")}
             />
             <Route
               path="/eliminar_control/:rut"
               exact
-              component={DeleteControl}
+              component={template(DeleteControl, "admin")}
             />
             <Route
               path="/buscar_control/:action"
               exact
-              component={SearchControl}
+              component={template(SearchControl, "admin")}
             />
-            <Route path="/ver_control/:rut" exact component={ShowControl} />
+            <Route
+              path="/ver_control/:rut"
+              exact
+              component={template(ShowControl, "admin")}
+            />
 
             <Route
               path="/agregar_pauta_diaria/:rut"
               exact
-              component={AddDailyDiet}
+              component={template(AddDailyDiet, "admin")}
             />
             <Route
               path="/ver_pauta_diaria/:rut"
               exact
-              component={SeeDailyDiet}
+              component={template(SeeDailyDiet, "admin")}
             />
             <Route
               path="/modificar_pauta_diaria/:rut"
               exact
-              component={ModifyDailyDiet}
+              component={template(ModifyDailyDiet, "admin")}
             />
             <Route
               path="/eliminar_pauta_diaria/:rut"
               exact
-              component={DeleteDailyDiet}
+              component={template(DeleteDailyDiet, "admin")}
             />
-            <Route path="/carnet" exact component={PatientControl} />
-            <Route path="/pauta_diaria" exact component={PatientDailyDiets} />
+            <Route
+              path="/carnet"
+              exact
+              component={template(PatientControl, "patient")}
+            />
+            <Route
+              path="/pauta_diaria"
+              exact
+              component={template(PatientDailyDiets, "patient")}
+            />
             <Route
               path="/minuta_semanal"
               exact
-              component={PatientWeeklyDiets}
+              component={template(PatientWeeklyDiets, "patient")}
             />
-            <Route path="/perfil" exact component={Profile} />
+            <Route
+              path="/perfil"
+              exact
+              component={template(Profile, "patient")}
+            />
             <Route
               path="/agregar_minuta_semanal/:rut"
               exact
-              component={WeeklyDiet}
+              component={template(WeeklyDiet, "admin")}
             />
             <Route
               path="/modificar_minuta_semanal/:rut"
               exact
-              component={ModifyWeeklyDiet}
+              component={template(ModifyWeeklyDiet, "admin")}
             />
             <Route
               path="/eliminar_minuta_semanal/:rut"
               exact
-              component={DeleteWeeklyDiet}
+              component={template(DeleteWeeklyDiet, "admin")}
             />
             <Route
               path="/ver_minuta_semanal/:rut"
               exact
-              component={SeeWeeklyDiet}
+              component={template(SeeWeeklyDiet, "admin")}
             />
             <Route
               path="/buscar_minuta_semanal/:action"
               exact
-              component={SearchWeeklyDiets}
+              component={template(SearchWeeklyDiets, "admin")}
             />
 
             <Route component={Error}></Route>
