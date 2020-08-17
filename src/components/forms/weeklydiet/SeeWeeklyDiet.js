@@ -23,7 +23,6 @@ import MuiAlert from "@material-ui/lab/Alert";
 
 //import ListItemIcon from "@material-ui/core/ListItemIcon";
 
-
 import Table from "./TableWeekly";
 //Redux
 import { useDispatch, useSelector } from "react-redux";
@@ -91,7 +90,6 @@ const SeeWeeklyDietStyled = styled.div`
   }
 `;
 
-
 function getFecha(date) {
   let newDate = new Date(date);
   let month = (newDate.getMonth() + 1).toString();
@@ -106,14 +104,12 @@ function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-export default function SeeWeeklyDiet({match}) {
-
+export default function SeeWeeklyDiet({ match }) {
   const dispatch = useDispatch();
- 
+
   const weeklyDiets = useSelector((store) => store.weeklyDiets.getweeklyDiets);
   const weeklyDietError = useSelector((store) => store.weeklyDiets.errors);
   const [rowsEmpty, setRowsEmpty] = React.useState(false);
-
 
   console.log("Error");
   console.log(weeklyDietError);
@@ -133,20 +129,15 @@ export default function SeeWeeklyDiet({match}) {
     setChecked(newChecked);
   };
 
-  
-
   React.useEffect(() => {
     dispatch(getPatientInfo(match.params.rut));
     dispatch(getAllWeeklyDiets(match.params.rut));
   }, [dispatch, match]);
 
- 
-
   var rows = [];
 
-
   if (weeklyDiets && weeklyDiets.length > 0) {
-    console.log("TOY ACA:  \n",weeklyDiets.length);
+    console.log("TOY ACA:  \n", weeklyDiets.length);
     for (let i = 0; i < weeklyDiets.length; i++) {
       console.log(getFecha(weeklyDiets[i].date));
       rows.push({
@@ -167,8 +158,6 @@ export default function SeeWeeklyDiet({match}) {
     setOpenSnackbar(true);
   };
 
-
-
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"), {
     defaultMatches: true,
@@ -183,44 +172,39 @@ export default function SeeWeeklyDiet({match}) {
           </Typography>
         </Grid>
 
-      
         <br></br>
 
-      
         <Grid container justify="center" spacing={isMobile ? 0 : 2}>
           <Grid item xs={12} sm={8} className="semana">
-
-           {(weeklyDietError && weeklyDietError.length > 0) || rowsEmpty ? (
-        <Grid container direction="row" justify="center" alignItems="center">
-          <h2>Este usuario no tiene weekly diets.</h2>
-        </Grid>) :
-             
-             weeklyDiets && weeklyDiets.length > 0 ?(
-              <Table weeklyDiets={weeklyDiets}></Table>
-            
-      
-
-            ) :
-            (
-            
-            <Grid container justify="center" style={{ marginTop: 20 }}>
-              <Grid item container>
-                <Grid item xs={false} sm={3}></Grid>
-
-                <Grid item xs={12} sm={6}>
-                  <Skeleton
-                    variant="rect"
-                    height={200}
-                    style={{ borderRadius: "5px" }}
-                  />
-                </Grid>
-                <Grid item xs={false} sm={3}></Grid>
+            {(weeklyDiets && weeklyDiets[0] === "error") || rowsEmpty ? (
+              <Grid
+                container
+                direction="row"
+                justify="center"
+                alignItems="center"
+              >
+                <h2>Este usuario no tiene minutas semanales aún.</h2>
               </Grid>
-            </Grid>
-          )}
-        </Grid>
-        </Grid>
+            ) : weeklyDiets && weeklyDiets.length > 0 ? (
+              <Table weeklyDiets={weeklyDiets}></Table>
+            ) : (
+              <Grid container justify="center" style={{ marginTop: 20 }}>
+                <Grid item container>
+                  <Grid item xs={false} sm={3}></Grid>
 
+                  <Grid item xs={12} sm={6}>
+                    <Skeleton
+                      variant="rect"
+                      height={200}
+                      style={{ borderRadius: "5px" }}
+                    />
+                  </Grid>
+                  <Grid item xs={false} sm={3}></Grid>
+                </Grid>
+              </Grid>
+            )}
+          </Grid>
+        </Grid>
       </div>
     </SeeWeeklyDietStyled>
   );

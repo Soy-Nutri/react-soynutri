@@ -1,8 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 
-
-
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
@@ -38,6 +36,12 @@ import {
   getAllWeeklyDiets,
   getWeeklyDiets,
 } from "../../../redux/ducks/weeklyDietsDucks";
+
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const DeleteWeeklyDietStyled = styled.div`
   /* Hidde spinner number input Chrome, Safari, Edge, Opera */
@@ -114,8 +118,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
-
 function formateaRut(rut) {
   var actual = rut.replace(/^0+/, "");
   if (actual !== "" && actual.length > 1) {
@@ -175,9 +177,7 @@ function getFecha(date) {
   return `${dayS}/${monthS}/${year}`;
 }
 
-export default function DeleteWeeklyDiet({ match  }) {
-
-
+export default function DeleteWeeklyDiet({ match }) {
   const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
 
@@ -187,7 +187,7 @@ export default function DeleteWeeklyDiet({ match  }) {
 
   const weeklyDiets = useSelector((store) => store.weeklyDiets.getweeklyDiets);
   const patientInfo = useSelector((state) => state.patients.patientInfo);
- 
+
   React.useEffect(() => {
     dispatch(getPatientInfo(match.params.rut));
     dispatch(getAllWeeklyDiets(match.params.rut));
@@ -199,7 +199,6 @@ export default function DeleteWeeklyDiet({ match  }) {
   console.log(weeklyDietError);
 
   var rows = [];
-
 
   if (weeklyDiets && weeklyDiets.length > 0) {
     for (let i = 0; i < weeklyDiets.length; i++) {
@@ -230,27 +229,20 @@ export default function DeleteWeeklyDiet({ match  }) {
     dispatch(getAllWeeklyDiets(match.params.rut));
   };
 
-  
-
   const handleChange = (event) => {
     setDate(event.target.value);
     // console.log("soy el dia" + event.target.value.date );
     // dispatch(deleteWeeklyDiet( ))
   };
 
-
-
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
   };
 
-
-  
   const cleanControl = () => {
     setRowsEmpty(true);
     setOpenSnackbar(true);
   };
-
 
   //const theme = useTheme();
 
@@ -263,89 +255,90 @@ export default function DeleteWeeklyDiet({ match  }) {
           </Typography>
         </Grid>
 
-
-
         {patientInfo && patientInfo.names ? (
-        <Grid container alignItems="center">
-          <Grid item xs={12} container justify="center">
-            <Typography className="name" variant="h5">
-              <div>
-                <h1>
-                  {patientInfo.names} {patientInfo.father_last_name}{" "}
-                  {patientInfo.mother_last_name}
-                </h1>
-                <h2>
-                  Rut: {formateaRut(patientInfo.rut)} Edad:{" "}
-                  {Edad(patientInfo.birth_date)} años
-                </h2>
-              </div>
-            </Typography>
-          </Grid>
-        </Grid>
-
-        
-      ) : (
-
-        <Grid container justify="center">
-          <Grid item container>
-            <Grid item xs={false} sm={3}></Grid>
-
-            <Grid item xs={12} sm={6}>
-              <Skeleton
-                variant="rect"
-                height={100}
-                style={{ borderRadius: "5px" }}
-              />
+          <Grid container alignItems="center">
+            <Grid item xs={12} container justify="center">
+              <Typography className="name" variant="h5">
+                <div>
+                  <h1>
+                    {patientInfo.names} {patientInfo.father_last_name}{" "}
+                    {patientInfo.mother_last_name}
+                  </h1>
+                  <h2>
+                    Rut: {formateaRut(patientInfo.rut)} Edad:{" "}
+                    {Edad(patientInfo.birth_date)} años
+                  </h2>
+                </div>
+              </Typography>
             </Grid>
-            <Grid item xs={false} sm={3}></Grid>
           </Grid>
-        </Grid>
-      )}
-          {(weeklyDietError && weeklyDietError.length === 0 ) ||  rowsEmpty ? (    
-  
-                  <Grid container direction="row" justify="center" alignItems="center">
-                        <h2>Este usuario no tiene minutas aún.</h2>
-                  </Grid>
-              ) : weeklyDiets && weeklyDiets.length > 0 ? (
-          
-                <Grid container justify="center">
-                  <h4>Selecciona una de las dietas semanales para eliminar</h4>{" "}
-                  <br></br>
-                   <Grid
-                    container
-                    justify="center"
-                    className="table"
-                    style={{ marginTop: 20 }}
-                  >
-                    <Grid item xs={11} md={9} lg={6}>
-                      <TableDelete
-                        rowsShow={rows}
-                        rut={match.params.rut}
-                        cleanControl={cleanControl}
-                      />
-                    </Grid>
-                  </Grid>
-                  </Grid>
-              ) : (
-            <Grid container justify="center" style={{ marginTop: 20 }}>
-              <Grid item container>
-                <Grid item xs={false} sm={3}></Grid>
+        ) : (
+          <Grid container justify="center">
+            <Grid item container>
+              <Grid item xs={false} sm={3}></Grid>
 
-                <Grid item xs={12} sm={6}>
-                  <Skeleton
-                    variant="rect"
-                    height={200}
-                    style={{ borderRadius: "5px" }}
-                  />
-                </Grid>
-                <Grid item xs={false} sm={3}></Grid>
+              <Grid item xs={12} sm={6}>
+                <Skeleton
+                  variant="rect"
+                  height={100}
+                  style={{ borderRadius: "5px" }}
+                />
+              </Grid>
+              <Grid item xs={false} sm={3}></Grid>
+            </Grid>
+          </Grid>
+        )}
+        {(weeklyDietError && weeklyDietError.length === 0) ||
+        weeklyDiets[0] === "error" ||
+        rowsEmpty ? (
+          <Grid container direction="row" justify="center" alignItems="center">
+            <h2>Este usuario no tiene minutas aún.</h2>
+          </Grid>
+        ) : weeklyDiets && weeklyDiets.length > 0 ? (
+          <Grid container justify="center">
+            <h4>Selecciona una de las dietas semanales para eliminar</h4>{" "}
+            <br></br>
+            <Grid
+              container
+              justify="center"
+              className="table"
+              style={{ marginTop: 20 }}
+            >
+              <Grid item xs={11} md={9} lg={6}>
+                <TableDelete
+                  rowsShow={rows}
+                  rut={match.params.rut}
+                  cleanControl={cleanControl}
+                />
               </Grid>
             </Grid>
-          )}
+          </Grid>
+        ) : (
+          <Grid container justify="center" style={{ marginTop: 20 }}>
+            <Grid item container>
+              <Grid item xs={false} sm={3}></Grid>
+
+              <Grid item xs={12} sm={6}>
+                <Skeleton
+                  variant="rect"
+                  height={200}
+                  style={{ borderRadius: "5px" }}
+                />
+              </Grid>
+              <Grid item xs={false} sm={3}></Grid>
+            </Grid>
+          </Grid>
+        )}
       </div>
-
-          
-
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert onClose={handleCloseSnackbar} severity="success">
+          Minuta diaria eliminada con éxito.
+        </Alert>
+      </Snackbar>
     </DeleteWeeklyDietStyled>
   );
 }
