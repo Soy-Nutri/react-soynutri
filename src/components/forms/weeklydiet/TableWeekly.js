@@ -7,9 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Description from "./DescriptionTableWeekly";
 
-
 //Redux
-
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,7 +29,6 @@ function getFecha(date) {
   return `${dayS}/${monthS}/${year}`;
 }
 
-
 export default function SimpleAccordion({ weeklyDiets }) {
   const classes = useStyles();
 
@@ -44,7 +41,6 @@ export default function SimpleAccordion({ weeklyDiets }) {
               style={{ marginLeft: 10, marginRight: 10 }}
               defaultExpanded
             >
-            
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"
@@ -57,41 +53,29 @@ export default function SimpleAccordion({ weeklyDiets }) {
               <AccordionDetails>
                 <Description weekly={item} />
               </AccordionDetails>
-             
-            
             </Accordion>
-           
 
             {weeklyDiets.length > 1 && <h2>Historial de minutas</h2>}
-
           </div>
         ) : (
-            <div>
-          <Accordion
-            key={item.date}
-            style={{ marginLeft: 10, marginRight: 10 }}
-          >
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-           
-              <Typography className={classes.heading}>
-                Minuta agregada el {getFecha(item.date)}
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-           
-              <Description weekly={item} />
-          <br></br>
-            </AccordionDetails>
-            
-          </Accordion>
-         <div> </div>
-            
+          <div key={item.date}>
+            <Accordion style={{ marginLeft: 10, marginRight: 10 }}>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography className={classes.heading}>
+                  Minuta agregada el {getFecha(item.date)}
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Description weekly={item} />
+                <br></br>
+              </AccordionDetails>
+            </Accordion>
+            <div> </div>
           </div>
-          
         )
       )}
     </div>
