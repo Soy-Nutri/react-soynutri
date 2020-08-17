@@ -106,6 +106,7 @@ export default function ModifyControl({ match }) {
   const dispatch = useDispatch();
   const control = useSelector((state) => state.control.control);
   const controlErrors = useSelector((state) => state.control.errors);
+  console.log(controlErrors);
   const patientInfo = useSelector((state) => state.patients.patientInfo);
 
   const [openSnackbar, setOpenSnackbar] = useState(false);

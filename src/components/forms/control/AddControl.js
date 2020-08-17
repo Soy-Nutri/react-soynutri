@@ -60,8 +60,10 @@ export default function AddControl({ match }) {
   const dispatch = useDispatch();
   const control = useSelector((state) => state.control.control);
   const controlErrors = useSelector((state) => state.control.errors);
+  console.log(controlErrors);
 
   const [open, setOpen] = React.useState(false);
+  const [append, setAppend] = React.useState(false);
   const handleOpen = () => {
     setOpen(true);
   };
@@ -78,8 +80,12 @@ export default function AddControl({ match }) {
     console.log(data);
     console.log(errors);
     dispatch(addControl(data));
-    handleOpen();
+
     e.target.reset();
+    handleOpen();
+    setTimeout(function () {
+      setAppend(true);
+    }, 4000);
   };
 
   const reqmsg = "Campo obligatorio";
@@ -490,10 +496,10 @@ export default function AddControl({ match }) {
       {controlErrors ? (
         <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
           <Alert onClose={handleClose} severity="error">
-            Ha ocurrido un error, intente otra vez.
+            Solo puede ingresar un control por día.
           </Alert>
         </Snackbar>
-      ) : control ? (
+      ) : control && !append ? (
         <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
           <Alert onClose={handleClose} severity="success">
             Control agregado con éxito.
