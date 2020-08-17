@@ -82,7 +82,9 @@ export default function AddPatient({ history }) {
   const onSubmit = (data, e) => {
     dispatch(addPatient(data));
     handleOpen();
-    e.target.reset();
+    if (newPatientError) {
+      e.target.reset();
+    }
   };
 
   const reqmsg = "Campo obligatorio";

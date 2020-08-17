@@ -3,19 +3,23 @@ import axios from "axios";
 const initialState = {
   rol: "",
   perfil: {},
+  error: null,
 };
 
 // Actions | Types
 const SET_USER = "SET_USER";
-const SET_PERFIL = "SET_PERFIL";
+const SET_PROFILE = "SET_PROFILE";
+const SET_LOGIN_ERROR = "SET_LOGIN_ERROR";
 
 // Reducer
 export default function authReducer(state = initialState, action) {
   switch (action.type) {
     case SET_USER:
       return { ...state, rol: "hola" };
-    case SET_PERFIL:
+    case SET_PROFILE:
       return { ...state, perfil: action.payload };
+    case SET_LOGIN_ERROR:
+      return { ...state, error: action.payload };
     default:
       return state;
   }
@@ -37,7 +41,20 @@ export const loginUser = (userData) => (dispatch) => {
         window.location.href = "/";
       })
       .catch((error) => {
-        return console.log(error);
+        if (
+          error.response.request.status === 404 ||
+          error.response.request.status === 409
+        ) {
+          dispatch({
+            type: SET_LOGIN_ERROR,
+            payload: "Usuario/contraseña erronea!",
+          });
+        } else {
+          dispatch({
+            type: SET_LOGIN_ERROR,
+            payload: "Ha ocurrido un error inesperado!",
+          });
+        }
       });
   } else {
     axios
@@ -56,14 +73,32 @@ export const loginUser = (userData) => (dispatch) => {
           `${res.data.names} ${res.data.father_last_name} ${res.data.mother_last_name}`
         );
         dispatch({
-          type: SET_PERFIL,
+          type: SET_PROFILE,
           payload: res.data,
         });
         window.location.reload();
         window.location.href = "/";
       })
       .catch((error) => {
-        return console.log(error);
+        if (error.response.request.status === 400) {
+          dispatch({
+            type: SET_LOGIN_ERROR,
+            payload: "Tu cuenta está desactivada!",
+          });
+        } else if (
+          error.response.request.status === 404 ||
+          error.response.request.status === 409
+        ) {
+          dispatch({
+            type: SET_LOGIN_ERROR,
+            payload: "Usuario/contraseña erronea!",
+          });
+        } else {
+          dispatch({
+            type: SET_LOGIN_ERROR,
+            payload: "Ha ocurrido un error inesperado!",
+          });
+        }
       });
   }
 };

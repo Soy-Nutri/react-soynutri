@@ -36,6 +36,7 @@ import {
   filterPatient,
   deletePatient,
 } from "../../../redux/ducks/patientsDucks";
+import Typography from "@material-ui/core/Typography";
 
 const SearchPatientStyled = styled.div`
   .paper-input {
@@ -71,6 +72,11 @@ const SearchPatientStyled = styled.div`
   .view-patient {
     cursor: pointer;
   }
+  .title {
+    font-family: yellowtail;
+    text-align: center;
+    font-size: 3.5em;
+  }
 `;
 
 // Data
@@ -100,6 +106,7 @@ export default function SearchPatient({ match }) {
     }
     return state.patients.patientsData;
   });
+  const listError = useSelector((state) => state.patients.errors);
 
   //const [rowss, setRowss] = React.useState([]);
 
@@ -177,6 +184,22 @@ export default function SearchPatient({ match }) {
 
     <SearchPatientStyled>
       <Grid container justify="center">
+        <Grid item container justify="center">
+          <Typography className="title" variant="h5" color="primary">
+            Lista de pacientes
+          </Typography>
+        </Grid>
+        <Grid item container justify="center">
+          <Typography variant="h6" color="primary">
+            {match.params.action === "ver"
+              ? "Ver paciente"
+              : match.params.action === "modificar"
+              ? "Modificar paciente"
+              : match.params.action === "eliminar"
+              ? "Eliminar paciente"
+              : ""}
+          </Typography>
+        </Grid>
         <Grid item xs={10} sm={6} md={5} lg={4}>
           <form>
             <Paper className="paper-input">
@@ -190,11 +213,15 @@ export default function SearchPatient({ match }) {
           </form>
         </Grid>
       </Grid>
-      <Grid container>
+
+      <Grid container justify="center" className="table">
         <Grid item xs={false} md={1} lg={3}></Grid>
-        <BackButton his={history} />
+        <Grid item xs={11} md={9} lg={6}>
+          <BackButton his={history} />
+        </Grid>
         <Grid item xs={false} md={1} lg={3}></Grid>
       </Grid>
+
       {rowss.length === 0 ? (
         <Grid container justify="center" className="table">
           <Grid item xs={false} md={1} lg={3}></Grid>
@@ -349,7 +376,9 @@ export default function SearchPatient({ match }) {
         onClose={handleCloseSnack}
       >
         <Alert onClose={handleCloseSnack} severity="success">
-          El paciente fue eliminado exitosamente!
+          {listError
+            ? { listError }
+            : "El paciente fue eliminado exitosamente!"}
         </Alert>
       </Snackbar>
     </SearchPatientStyled>
