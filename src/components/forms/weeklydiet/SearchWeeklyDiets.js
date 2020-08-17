@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import InputBase from "@material-ui/core/InputBase";
 import Grid from "@material-ui/core/Grid";
-
+import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -12,7 +12,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-
+import BackButton from "../../../utils/BackButton";
 import SearchIcon from "@material-ui/icons/Search";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import CreateIcon from "@material-ui/icons/Create";
@@ -20,6 +20,10 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import AddIcon from "@material-ui/icons/Add";
 
 import Skeleton from "@material-ui/lab/Skeleton";
+
+import { useTheme } from "@material-ui/core/styles";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+
 
 //import Error from "../../Error";
 
@@ -42,6 +46,15 @@ const SearchPatientStyled = styled.div`
         0 0 6px var(--lightPurple);
     }
   }
+  .title {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1em;
+    font-family: yellowtail;
+    font-size: 3.5em;
+    /* color: var(--mainPurple); */
+  }
+
   .input {
     margin-left: 1em;
     flex: 1;
@@ -64,6 +77,13 @@ const SearchPatientStyled = styled.div`
   .view-patient {
     cursor: pointer;
   }
+  .title {
+    font-family: yellowtail;
+    text-align: center;
+    font-size: 3.5em;
+    margin-bottom:0em;
+  }
+  
 `;
 
 // Data
@@ -133,13 +153,42 @@ export default function SearchPatient({ match }) {
   const handleFilterPatient = (e) => {
     dispatch(filterPatient(e.target.value));
   };
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("xs"), {
+    defaultMatches: true,
+  });
+
   return (
     // TODO: ver como mostrar 404 cuando no se cumple esta condicion:
     // match.params.action === "ver" || match.params.action === "modificar" || match.params.action === "eliminar"
 
     <SearchPatientStyled>
       <Grid container justify="center">
+    
+       
+       
+       
         <Grid item xs={10} sm={6} md={5} lg={4}>
+        <Grid item container justify="center">
+          <Typography className="title" variant="h5" color="primary">
+            Lista de pacientes
+          </Typography>
+        </Grid>
+        <Grid item container justify="center">
+          <Typography variant="h6" color="primary">
+            {match.params.action === "ver"
+              ? "Ver paciente"
+              : match.params.action === "modificar"
+              ? "Modificar paciente"
+              : match.params.action === "eliminar"
+              ? "Eliminar paciente"
+              : match.params.action === "agregar"
+              ? "Agregar paciente": ""}
+
+          </Typography>
+        </Grid>
+
+     
           <form>
             <Paper className="paper-input">
               <SearchIcon />
@@ -150,7 +199,10 @@ export default function SearchPatient({ match }) {
               />
             </Paper>
           </form>
+
+          
         </Grid>
+   
       </Grid>
 
       {rowss.length === 0 ? (
@@ -165,6 +217,14 @@ export default function SearchPatient({ match }) {
         <React.Fragment>
           {/* TABLE */}
           <Grid container justify="center" className="table">
+          <Grid item container spacing={isMobile ? 0 : 2}>
+              <Grid item xs={1} sm={1} md={2} lg={3}></Grid>
+              <Grid item xs={11} sm={2} md={3} lg={3}>
+                <BackButton his={history} />
+              </Grid>
+              <Grid item xs={false} sm={2} md={3} lg={4}></Grid>
+            </Grid>
+            
             <Grid item xs={11} md={9} lg={6}>
               <Paper className="paper-table">
                 <TableContainer className="table-container">

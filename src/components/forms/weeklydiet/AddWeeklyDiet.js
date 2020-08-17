@@ -117,17 +117,15 @@ export default function AddWeeklyDiet({ match }) {
 
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
 
+  const weeklyDiet = useSelector((store) => store.weeklyDiets.weeklyDiets);
+  const weeklyDietError = useSelector((store) => store.weeklyDiets.errors);
+
+  console.log("Error");
+  console.log(weeklyDietError);
+
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
   };
-
-  const weeklyDiet = useSelector((store) => store.weeklyDiets.weeklyDiets);
-
-  const weeklyDietError = useSelector((store) => store.weeklyDiets.errors);
-  console.log("weeklydiet");
-  console.log(weeklyDiet);
-  console.log("Erro");
-  console.log(weeklyDietError);
 
   const onSubmit = (data, e) => {
     data["date"] = new Date(Date.now()).toISOString().substring(0, 10);
@@ -452,25 +450,7 @@ export default function AddWeeklyDiet({ match }) {
             />
           </Grid>
 
-          <Grid item xs={12} sm={8} md={4} lg={4}>
-            <TextField
-              name="goals"
-              type="text"
-              label="Metas"
-              variant="outlined"
-              margin="dense"
-              fullWidth
-              multiline
-              // rows={5}
-              inputProps={{ style: { fontSize: "0.8em" } }}
-              //error={errors.goals}
-              helperText={errors.goals ? errors.goals.message : ""}
-              inputRef={register({
-                required: { value: false },
-              })}
-            />
-          </Grid>
-
+      
           <Grid
             item
             xs={false}
@@ -497,9 +477,18 @@ export default function AddWeeklyDiet({ match }) {
           autoHideDuration={6000}
           onClose={handleCloseSnackbar}
         >
-          <Alert onClose={handleCloseSnackbar} severity="error">
-            Ha ocurrido un error, verifique los datos antes de continuar.
-          </Alert>
+        
+            { weeklyDietError==="Paciente no encontrado" ?( 
+              <Alert onClose={handleCloseSnackbar} severity="error">
+               Ese dia que intenta ingresar ya tiene datos.
+               </Alert>
+            ) : (
+            <Alert onClose={handleCloseSnackbar} severity="error">
+               Ha ocurrido un error reintente.
+               </Alert>
+               )}
+           
+       
         </Snackbar>
       ) : weeklyDiet && weeklyDiet.error === undefined ? (
         <Snackbar
@@ -508,7 +497,7 @@ export default function AddWeeklyDiet({ match }) {
           onClose={handleCloseSnackbar}
         >
           <Alert onClose={handleCloseSnackbar} severity="success">
-            Control modificado con éxito.
+            Minuta añadido con éxito.
           </Alert>
         </Snackbar>
       ) : (
