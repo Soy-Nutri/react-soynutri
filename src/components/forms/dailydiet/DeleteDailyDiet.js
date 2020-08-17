@@ -6,7 +6,7 @@ import Grid from "@material-ui/core/Grid";
 
 // redux
 import { useDispatch, useSelector } from "react-redux";
-import { getControls } from "../../../redux/ducks/controlDucks";
+import { getDailyDietsAdmin } from "../../../redux/ducks/patientsDailyDietsDuck";
 import { getPatientInfo } from "../../../redux/ducks/patientsDucks";
 
 import Skeleton from "@material-ui/lab/Skeleton";
@@ -14,7 +14,7 @@ import Skeleton from "@material-ui/lab/Skeleton";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 
-import TableDelete from "./TableDeleteControl";
+import TableDelete from "./TableDeleteDailyDiet";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -62,7 +62,7 @@ function Edad(FechaNacimiento) {
   return edad;
 }
 
-const ModifyControlStyled = styled.div`
+const DeleteDailyDietStyled = styled.div`
   margin-bottom: 2em;
   .form {
     margin-left: 1em;
@@ -73,7 +73,6 @@ const ModifyControlStyled = styled.div`
     margin-left: auto;
     margin-right: auto;
   }
-
   .title {
     margin-left: auto;
     margin-right: auto;
@@ -82,7 +81,6 @@ const ModifyControlStyled = styled.div`
     font-size: 3.5em;
     /* color: var(--mainPurple); */
   }
-
   .name {
     margin-left: auto;
     margin-right: auto;
@@ -102,11 +100,9 @@ function getFecha(date) {
   return `${dayS}/${monthS}/${year}`;
 }
 
-export default function ModifyControl({ match }) {
+export default function DeleteDailyDiet({ match }) {
   const dispatch = useDispatch();
-  const control = useSelector((state) => state.control.control);
-  const controlErrors = useSelector((state) => state.control.errors);
-  console.log(controlErrors);
+  const dailyDiet = useSelector((state) => state.dailyDiets.dailyDietsAdmin);
   const patientInfo = useSelector((state) => state.patients.patientInfo);
 
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -117,32 +113,29 @@ export default function ModifyControl({ match }) {
   };
 
   React.useEffect(() => {
-    dispatch(getControls(match.params.rut));
+    dispatch(getDailyDietsAdmin(match.params.rut));
     dispatch(getPatientInfo(match.params.rut));
   }, [dispatch, match]);
 
   var rows = [];
 
-  if (control && control.length > 0) {
-    for (let i = 0; i < control.length; i++) {
+  if (dailyDiet && dailyDiet[0] !== "error") {
+    for (let i = 0; i < dailyDiet.length; i++) {
       rows.push({
-        date: getFecha(control[i].date),
+        date: getFecha(dailyDiet[i].date),
         action: "delete",
-        dateF: control[i].date,
+        dateF: dailyDiet[i].date,
       });
     }
   }
-
-  const cleanControl = () => {
-    setRowsEmpty(true);
-    setOpenSnackbar(true);
-  };
-
+  console.log(dailyDiet);
+  console.log(dailyDiet.length);
+  console.log("---");
   return (
-    <ModifyControlStyled>
+    <DeleteDailyDietStyled>
       <Grid container alignItems="center">
         <Typography className="title" variant="h5" color="primary">
-          Eliminar control
+          Eliminar pauta diaria
         </Typography>
       </Grid>
 
@@ -180,13 +173,13 @@ export default function ModifyControl({ match }) {
         </Grid>
       )}
 
-      {(controlErrors && controlErrors.length > 0) || rowsEmpty ? (
+      {(dailyDiet && dailyDiet[0] === "error") || rowsEmpty ? (
         <Grid container direction="row" justify="center" alignItems="center">
-          <h2>Este usuario no tiene controles aún.</h2>
+          <h2>Este usuario no tiene pautas diarias aún.</h2>
         </Grid>
-      ) : control && control.length > 0 ? (
+      ) : dailyDiet && dailyDiet[0] !== "error" ? (
         <Grid container direction="row" justify="center" alignItems="center">
-          <h2>Selecione una fecha para eliminar control</h2>
+          <h2>Selecione una fecha para eliminar pauta diaria</h2>
 
           <Grid
             container
@@ -195,11 +188,7 @@ export default function ModifyControl({ match }) {
             style={{ marginTop: 20 }}
           >
             <Grid item xs={11} md={9} lg={6}>
-              <TableDelete
-                rowsShow={rows}
-                rut={match.params.rut}
-                cleanControl={cleanControl}
-              />
+              <TableDelete rowsShow={rows} rut={match.params.rut} />
             </Grid>
           </Grid>
         </Grid>
@@ -226,9 +215,9 @@ export default function ModifyControl({ match }) {
         onClose={handleCloseSnackbar}
       >
         <Alert onClose={handleCloseSnackbar} severity="success">
-          Control eliminado con éxito.
+          Pauta diatria eliminada con éxito.
         </Alert>
       </Snackbar>
-    </ModifyControlStyled>
+    </DeleteDailyDietStyled>
   );
 }

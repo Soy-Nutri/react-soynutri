@@ -32,7 +32,7 @@ import Table from "./TableWeekly";
 import { useDispatch, useSelector } from "react-redux";
 import {
   deleteWeeklyDiet,
-  getWeeklyDiets,
+  getAllWeeklyDiets,
 } from "../../../redux/ducks/weeklyDietsDucks";
 
 const DeleteWeeklyDietStyled = styled.div`
@@ -172,7 +172,7 @@ export default function DeleteWeeklyDiet() {
   // };
 
   const searchPatientsWeekly = () => {
-    dispatch(getWeeklyDiets(rut));
+    dispatch(getAllWeeklyDiets(rut));
   };
 
   const handleChangeRut = (event) => {

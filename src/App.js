@@ -37,6 +37,8 @@ import DeleteControl from "./components/forms/control/DeleteControl";
 // daily diets
 import AddDailyDiet from "./components/forms/dailydiet/AddDailyDiet";
 import ModifyDailyDiet from "./components/forms/dailydiet/ModifyDailyDiet";
+import SeeDailyDiet from "./components/forms/dailydiet/SeeDailyDiet";
+import DeleteDailyDiet from "./components/forms/dailydiet/DeleteDailyDiet";
 
 //Weekly diets
 
@@ -44,7 +46,7 @@ import WeeklyDiet from "./components/forms/weeklydiet/AddWeeklyDiet";
 import ModifyWeeklyDiet from "./components/forms/weeklydiet/ModifyWeeklyDiet";
 import DeleteWeeklyDiet from "./components/forms/weeklydiet/DeleteWeeklyDiet";
 import SeeWeeklyDiet from "./components/forms/weeklydiet/SeeWeeklyDiet";
-
+import SearchWeeklyDiets from "./components/forms/weeklydiet/SearchWeeklyDiets";
 
 // axios
 import axios from "axios";
@@ -68,30 +70,36 @@ function App() {
   const mainPrimaryColor = darkState ? purple[500] : "#58157c";
   const mainSecondaryColor = darkState ? deepPurple[500] : deepPurple[900];
 
-  const theme = createMuiTheme(
-    {
-      palette: {
-        type: palletType,
-        primary: {
-          main: mainPrimaryColor,
-        },
-        secondary: {
-          main: mainSecondaryColor,
-        },
+  const theme = createMuiTheme({
+    palette: {
+      type: palletType,
+      primary: {
+        main: mainPrimaryColor,
+      },
+      secondary: {
+        main: mainSecondaryColor,
       },
     },
-    esEs
-  );
+    esEs,
+  });
 
   const handleThemeChange = () => {
     setDarkState(!darkState);
+    localStorage.theme = !darkState ? "dark" : "light";
   };
 
   React.useEffect(() => {
-    const getInfo = () => {
-      setDarkState(prefersDarkMode ? true : false);
+    const obtenerInfo = () => {
+      if (localStorage.theme === "dark") {
+        setDarkState(true);
+      } else if (localStorage.theme === "light") {
+        setDarkState(false);
+      } else {
+        setDarkState(prefersDarkMode ? true : false);
+        localStorage.theme = prefersDarkMode ? "light" : "dark";
+      }
     };
-    getInfo();
+    obtenerInfo();
   }, [prefersDarkMode, setDarkState]);
 
   const store = generateStore();
@@ -119,6 +127,30 @@ function App() {
     }
   }
 
+  const template = (view, rol) => {
+    switch (rol) {
+      case "admin":
+        if (localStorage.rol === "/soynutri-adm") {
+          return view;
+        } else {
+          return Error;
+        }
+        break;
+      case "patient":
+        if (localStorage.rol === "/patient") {
+          return view;
+        } else {
+          return Error;
+        }
+        break;
+      case "unknown":
+        return view;
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <Router>
@@ -130,11 +162,15 @@ function App() {
 
             <Route path="/login" component={Login} />
 
-            <Route path="/agregar_paciente" exact component={AddPatient} />
+            <Route
+              path="/agregar_paciente"
+              exact
+              component={template(AddPatient, "admin")}
+            />
             <Route
               path="/buscar_paciente/:action"
               exact
-              component={SearchPatient}
+              component={template(SearchPatient, "admin")}
             />
             <Route
               path="/ver_paciente/:rut/:elim"
@@ -167,14 +203,24 @@ function App() {
             <Route path="/ver_control/:rut" exact component={ShowControl} />
 
             <Route
-              path="/agregar_pauta_diaria"
+              path="/agregar_pauta_diaria/:rut"
               exact
               component={AddDailyDiet}
             />
             <Route
-              path="/modificar_pauta_diaria"
+              path="/ver_pauta_diaria/:rut"
+              exact
+              component={SeeDailyDiet}
+            />
+            <Route
+              path="/modificar_pauta_diaria/:rut"
               exact
               component={ModifyDailyDiet}
+            />
+            <Route
+              path="/eliminar_pauta_diaria/:rut"
+              exact
+              component={DeleteDailyDiet}
             />
             <Route path="/carnet" exact component={PatientControl} />
             <Route path="/pauta_diaria" exact component={PatientDailyDiets} />
@@ -184,11 +230,31 @@ function App() {
               component={PatientWeeklyDiets}
             />
             <Route path="/perfil" exact component={Profile} />
-            <Route path="/agregar_minuta_semanal" exact component = {WeeklyDiet} />
-            <Route path="/modificar_minuta_semanal" exact component = {ModifyWeeklyDiet} />
-            <Route path="/eliminar_minuta_semanal" exact component = {DeleteWeeklyDiet} />
-            <Route path="/ver_minuta_semanal" exact component = {SeeWeeklyDiet} />
-
+            <Route
+              path="/agregar_minuta_semanal/:rut"
+              exact
+              component={WeeklyDiet}
+            />
+            <Route
+              path="/modificar_minuta_semanal/:rut"
+              exact
+              component={ModifyWeeklyDiet}
+            />
+            <Route
+              path="/eliminar_minuta_semanal/:rut"
+              exact
+              component={DeleteWeeklyDiet}
+            />
+            <Route
+              path="/ver_minuta_semanal/:rut"
+              exact
+              component={SeeWeeklyDiet}
+            />
+            <Route
+              path="/buscar_minuta_semanal/:action"
+              exact
+              component={SearchWeeklyDiets}
+            />
 
             <Route component={Error}></Route>
           </Switch>

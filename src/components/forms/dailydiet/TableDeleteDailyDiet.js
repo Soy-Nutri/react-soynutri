@@ -14,15 +14,7 @@ import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 
 import { useDispatch, useSelector } from "react-redux";
-import { deleteControl } from "../../../redux/ducks/controlDucks";
-
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Skeleton from "@material-ui/lab/Skeleton";
+import { deleteDailyDiets } from "../../../redux/ducks/patientsDailyDietsDuck";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -49,19 +41,15 @@ function getFecha(date) {
   return `${year}/${monthS}/${dayS}`;
 }
 
-export default function StickyHeadTable({ rut, rowsShow, cleanControl }) {
+export default function StickyHeadTable({ rut, rowsShow }) {
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [rows, setRows] = React.useState(rowsShow);
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
-  const [dates, setDates] = React.useState({
-    date: "",
-    dateF: "",
-  });
 
   const dispatch = useDispatch();
-  const controlErrors = useSelector((state) => state.control.deleteErrors);
+  const dailyDietErrors = useSelector((state) => state.dailyDiets.deleteErrors);
 
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
@@ -76,26 +64,9 @@ export default function StickyHeadTable({ rut, rowsShow, cleanControl }) {
     setPage(0);
   };
 
-  const deleteControlDate = (date, dateF) => {
-    setDates({ date, dateF });
-    setOpen(true);
-  };
-
-  const [open, setOpen] = React.useState(false);
-  const handleClose = () => {
-    setDates({
-      date: "",
-      dateF: "",
-    });
-    setOpen(false);
-  };
-
-  const handleDelete = () => {
-    console.log(dates);
-    let dateF = dates.dateF;
-    let date = dates.date;
+  const deleteDailyDietDate = (date, dateF) => {
     setOpenSnackbar(true);
-    dispatch(deleteControl(rut, getFecha(dateF)));
+    dispatch(deleteDailyDiets(rut, getFecha(dateF)));
     let auxRows = [];
     for (let i = 0; i < rows.length; i++) {
       if (rows[i].date !== date) {
@@ -103,12 +74,6 @@ export default function StickyHeadTable({ rut, rowsShow, cleanControl }) {
       }
     }
     setRows(auxRows);
-
-    if (auxRows.length === 0) {
-      cleanControl();
-    }
-
-    handleClose();
   };
 
   return (
@@ -144,7 +109,7 @@ export default function StickyHeadTable({ rut, rowsShow, cleanControl }) {
                             <DeleteIcon
                               style={{ cursor: "pointer" }}
                               onClick={() =>
-                                deleteControlDate(row.date, row.dateF)
+                                deleteDailyDietDate(row.date, row.dateF)
                               }
                             />
                           ) : (
@@ -168,7 +133,7 @@ export default function StickyHeadTable({ rut, rowsShow, cleanControl }) {
         onChangePage={handleChangePage}
         onChangeRowsPerPage={handleChangeRowsPerPage}
       />
-      {controlErrors ? (
+      {dailyDietErrors ? (
         <Snackbar
           open={openSnackbar}
           autoHideDuration={6000}
@@ -185,38 +150,10 @@ export default function StickyHeadTable({ rut, rowsShow, cleanControl }) {
           onClose={handleCloseSnackbar}
         >
           <Alert onClose={handleCloseSnackbar} severity="success">
-            Control eliminado con éxito.
+            Pauta diaria eliminada con éxito.
           </Alert>
         </Snackbar>
       )}
-
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          {"¿Realmente desea eliminar este control?"}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            {dates.date ? (
-              `El control con fecha ${dates.date} será eliminado`
-            ) : (
-              <Skeleton variant="text" style={{ borderRadius: "5px" }} />
-            )}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => handleClose()} color="primary">
-            Cancelar
-          </Button>
-          <Button onClick={() => handleDelete()} color="primary" autoFocus>
-            Eliminar
-          </Button>
-        </DialogActions>
-      </Dialog>
     </Paper>
   );
 }

@@ -73,11 +73,20 @@ export default function SimpleAccordion({ dates, diets }) {
           id="panel1a-header"
         >
           <Typography className={classes.heading}>
-            Desayuno {date !== "" && diets[date].breakfast.time}
+            Desayuno{" "}
+            {date !== "" &&
+              diets[date] &&
+              diets[date].breakfast &&
+              diets[date].breakfast.time}
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>{date !== "" && diets[date].breakfast.meal}</Typography>
+          <Typography>
+            {date !== "" &&
+              diets[date] &&
+              diets[date].breakfast &&
+              diets[date].breakfast.meal}
+          </Typography>
         </AccordionDetails>
       </Accordion>
 
@@ -88,11 +97,20 @@ export default function SimpleAccordion({ dates, diets }) {
           id="panel1a-header"
         >
           <Typography className={classes.heading}>
-            Almuerzo {date !== "" && diets[date].lunch.time}
+            Almuerzo{" "}
+            {date !== "" &&
+              diets[date] &&
+              diets[date].lunch &&
+              diets[date].lunch.time}
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>{date !== "" && diets[date].lunch.meal}</Typography>
+          <Typography>
+            {date !== "" &&
+              diets[date] &&
+              diets[date].lunch &&
+              diets[date].lunch.meal}
+          </Typography>
         </AccordionDetails>
       </Accordion>
 
@@ -103,11 +121,20 @@ export default function SimpleAccordion({ dates, diets }) {
           id="panel1a-header"
         >
           <Typography className={classes.heading}>
-            Colación {date !== "" && diets[date].snack.time}
+            Colación{" "}
+            {date !== "" &&
+              diets[date] &&
+              diets[date].snack &&
+              diets[date].snack.time}
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>{date !== "" && diets[date].snack.meal}</Typography>
+          <Typography>
+            {date !== "" &&
+              diets[date] &&
+              diets[date].snack &&
+              diets[date].snack.meal}
+          </Typography>
         </AccordionDetails>
       </Accordion>
 
@@ -118,31 +145,40 @@ export default function SimpleAccordion({ dates, diets }) {
           id="panel1a-header"
         >
           <Typography className={classes.heading}>
-            Cena {date !== "" && diets[date].dinner.time}
+            Cena{" "}
+            {date !== "" &&
+              diets[date] &&
+              diets[date].dinner &&
+              diets[date].dinner.time}
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>{date !== "" && diets[date].dinner.meal}</Typography>
+          <Typography>
+            {date !== "" &&
+              diets[date] &&
+              diets[date].dinner &&
+              diets[date].dinner.meal}
+          </Typography>
         </AccordionDetails>
       </Accordion>
 
       <h3 style={{ margin: 0, marginLeft: 20, marginTop: 10 }}>
         Alimentación post entrenamiento
       </h3>
-      <ul>{date !== "" && diets[date].post_training}</ul>
+      <ul>{date !== "" && diets[date] && diets[date].post_training}</ul>
 
       <h4 style={{ margin: 0, marginLeft: 20, marginTop: 10 }}>
-        Esta pauta aporta {date !== "" && diets[date].calories} Kcal y{" "}
-        {date !== "" && diets[date].proteins} gr/prot/d
+        Esta pauta aporta {date !== "" && diets[date] && diets[date].calories}{" "}
+        Kcal y {date !== "" && diets[date] && diets[date].proteins} gr/prot/d
       </h4>
 
       <h3 style={{ margin: 0, marginLeft: 20, marginTop: 10 }}>Metas</h3>
-      <ul>{date !== "" && diets[date].goals}</ul>
+      <ul>{date !== "" && diets[date] && diets[date].goals}</ul>
 
       <h3 style={{ margin: 0, marginLeft: 20, marginTop: 10 }}>
         Información extra
       </h3>
-      <ul>{date !== "" && diets[date].extra_info}</ul>
+      <ul>{date !== "" && diets[date] && diets[date].extra_info}</ul>
     </div>
   );
 }

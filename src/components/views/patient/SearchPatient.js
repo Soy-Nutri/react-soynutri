@@ -18,6 +18,9 @@ import SearchIcon from "@material-ui/icons/Search";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import CreateIcon from "@material-ui/icons/Create";
 import DeleteIcon from "@material-ui/icons/Delete";
+
+import AddIcon from "@material-ui/icons/Add";
+
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -106,8 +109,8 @@ export default function SearchPatient({ match }) {
     }
     return state.patients.patientsData;
   });
-  const listError = useSelector((state) => state.patients.errors);
 
+  const listError = useSelector((state) => state.patients.errors);
   //const [rowss, setRowss] = React.useState([]);
 
   useEffect(() => {
@@ -171,6 +174,14 @@ export default function SearchPatient({ match }) {
       const selected = patients.filter((pat) => pat.rut === rut);
       setPatientInfo(selected[0]);
       handleOpen();
+    } else if (match.params.action === "add_pd") {
+      history.push(`/agregar_pauta_diaria/${rut}`);
+    } else if (match.params.action === "see_pd") {
+      history.push(`/ver_pauta_diaria/${rut}`);
+    } else if (match.params.action === "modify_pd") {
+      history.push(`/modificar_pauta_diaria/${rut}`);
+    } else if (match.params.action === "remove_pd") {
+      history.push(`/eliminar_pauta_diaria/${rut}`);
     }
   };
 
@@ -213,7 +224,6 @@ export default function SearchPatient({ match }) {
           </form>
         </Grid>
       </Grid>
-
       <Grid container justify="center" className="table">
         <Grid item xs={false} md={1} lg={3}></Grid>
         <Grid item xs={11} md={9} lg={6}>
@@ -221,7 +231,6 @@ export default function SearchPatient({ match }) {
         </Grid>
         <Grid item xs={false} md={1} lg={3}></Grid>
       </Grid>
-
       {rowss.length === 0 ? (
         <Grid container justify="center" className="table">
           <Grid item xs={false} md={1} lg={3}></Grid>
@@ -291,18 +300,26 @@ export default function SearchPatient({ match }) {
                                       </span>
                                     ) : column.id !== "icon" ? (
                                       value
-                                    ) : match.params.action === "ver" ? (
+                                    ) : match.params.action === "ver" ||
+                                      match.params.action === "see_pd" ? (
                                       <VisibilityIcon
                                         className="view-patient"
                                         onClick={() => handleClick(row.rut)}
                                       />
-                                    ) : match.params.action === "modificar" ? (
+                                    ) : match.params.action === "modificar" ||
+                                      match.params.action === "modify_pd" ? (
                                       <CreateIcon
                                         className="view-patient"
                                         onClick={() => handleClick(row.rut)}
                                       />
-                                    ) : match.params.action === "eliminar" ? (
+                                    ) : match.params.action === "eliminar" ||
+                                      match.params.action === "remove_pd" ? (
                                       <DeleteIcon
+                                        className="view-patient"
+                                        onClick={() => handleClick(row.rut)}
+                                      />
+                                    ) : match.params.action === "add_pd" ? (
+                                      <AddIcon
                                         className="view-patient"
                                         onClick={() => handleClick(row.rut)}
                                       />
