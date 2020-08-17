@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { useForm} from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
@@ -27,7 +27,6 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import ListItemText from "@material-ui/core/ListItemText";
 import Checkbox from "@material-ui/core/Checkbox";
-
 
 import Table from "./TableWeekly";
 
@@ -78,8 +77,8 @@ const SeeWeeklyDietStyled = styled.div`
       margin-top: 15px;
       margin-left: 15px;
     }
-    .hola{
-      margin-left: 0px
+    .hola {
+      margin-left: 0px;
     }
     .lunch-picker {
       margin-right: 0.1px;
@@ -96,22 +95,18 @@ const SeeWeeklyDietStyled = styled.div`
   }
 `;
 
-
-
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
 export default function SeeWeeklyDiet() {
-  
   const { register, errors, handleSubmit } = useForm();
   const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
   const [rut, setRut] = React.useState("");
 
+  const weeklyDiets = useSelector((store) => store.weeklyDiets.getweeklyDiets);
 
-  const weeklyDiets = useSelector((store)=>store.weeklyDiets.getweeklyDiets);
-  
   const weeklyDietError = useSelector((store) => store.weeklyDiets.errors);
 
   console.log(weeklyDiets);
@@ -142,19 +137,13 @@ export default function SeeWeeklyDiet() {
     setOpen(false);
   };
 
-
-
   const searchPatientsWeekly = () => {
     dispatch(getWeeklyDiets(rut));
-    
   };
 
-  const handleChangeRut = (event) =>{
+  const handleChangeRut = (event) => {
     setRut(event.target.value);
-
   };
-
-
 
   const reqmsg = "Campo obligatorio";
 
@@ -185,7 +174,7 @@ export default function SeeWeeklyDiet() {
       <div>
         <Grid container justify="center">
           <Typography className="title" variant="h5" color="primary">
-           Ver minuta semanal
+            Ver minuta semanal
           </Typography>
         </Grid>
 
@@ -207,48 +196,27 @@ export default function SeeWeeklyDiet() {
               })}
             />
             <Button
-                className="form-button"
-                variant="outlined"
-                type="submit"
-                color="primary"
-                onClick={() => searchPatientsWeekly()}
-              >
-                Buscar
+              className="form-button"
+              variant="outlined"
+              type="submit"
+              color="primary"
+              onClick={() => searchPatientsWeekly()}
+            >
+              Buscar
             </Button>
           </Grid>
-         
         </Grid>
 
         <br></br>
 
-        
         <Grid container justify="center" spacing={isMobile ? 0 : 2}>
-          <Grid
-            item
-            xs={25}
-            sm={6}
-            md={40}
-            lg={40}
-            
-            className="semana"
-          >
-
-      {  weeklyDiets && weeklyDiets.length > 0 &&( 
-
-
-           <Table weeklyDiets={weeklyDiets} ></Table>
-               
-
-         )}
-
-        
-     
-           
-
+          <Grid item xs={12} sm={8} className="semana">
+            {weeklyDiets && weeklyDiets.length > 0 && (
+              <Table weeklyDiets={weeklyDiets}></Table>
+            )}
           </Grid>
         </Grid>
       </div>
-
     </SeeWeeklyDietStyled>
   );
 }

@@ -101,7 +101,7 @@ export default function UserMenu() {
                     className="menu-item"
                     onClick={handleClose}
                     component={Link}
-                    to="/agregar_minuta_semanal"
+                    to="/buscar_minuta_semanal/agregar"
                   >
                     Agregar minuta semanal
                   </MenuItem>
@@ -109,7 +109,7 @@ export default function UserMenu() {
                     className="menu-item"
                     onClick={handleClose}
                     component={Link}
-                    to="/ver_minuta_semanal"
+                    to="/buscar_minuta_semanal/ver"
                   >
                     Ver minuta semanal
                   </MenuItem>
@@ -117,7 +117,7 @@ export default function UserMenu() {
                     className="menu-item"
                     onClick={handleClose}
                     component={Link}
-                    to="/modificar_minuta_semanal"
+                    to="/buscar_minuta_semanal/modificar"
                   >
                     Modificar minuta semanal
                   </MenuItem>
@@ -125,7 +125,7 @@ export default function UserMenu() {
                     className="menu-item"
                     onClick={handleClose}
                     component={Link}
-                    to="/eliminar_minuta_semanal"
+                    to="/buscar_minuta_semanal/eliminar"
                   >
                     Eliminar minuta semanal
                   </MenuItem>

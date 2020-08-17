@@ -52,7 +52,7 @@ export default function WeeklyDietItem(props) {
             onClick={props.handleDrawerClose}
             className={classes.nested}
             component={Link}
-            to="/agregar_minuta_semanal"
+            to="/buscar_minuta_semanal/agregar"
           >
             <ListItemIcon>
               <AddIcon />
@@ -64,7 +64,7 @@ export default function WeeklyDietItem(props) {
             onClick={props.handleDrawerClose}
             className={classes.nested}
             component={Link}
-            to="/ver_minuta_semanal"
+            to="/buscar_minuta_semanal/ver"
           >
             <ListItemIcon>
               <VisibilityIcon />
@@ -76,7 +76,7 @@ export default function WeeklyDietItem(props) {
             onClick={props.handleDrawerClose}
             className={classes.nested}
             component={Link}
-            to="/modificar_minuta_semanal"
+            to="/buscar_minuta_semanal/modificar"
           >
             <ListItemIcon>
               <CreateIcon />
@@ -88,7 +88,7 @@ export default function WeeklyDietItem(props) {
             onClick={props.handleDrawerClose}
             className={classes.nested}
             component={Link}
-            to="/eliminar_minuta_semanal"
+            to="/buscar_minuta_semanal/eliminar"
           >
             <ListItemIcon>
               <DeleteIcon />

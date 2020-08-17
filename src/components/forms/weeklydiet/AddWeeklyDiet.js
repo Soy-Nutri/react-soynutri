@@ -84,16 +84,34 @@ const AddWeeklyDietStyled = styled.div`
       display: block;
     }
   }
+  .name {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1em;
+    font-size: 1.7em;
+    /* color: var(--mainPurple); */
+  }
 `;
 
 //mientras cambie el dia y no aprete el boton se vayan cambiando los datos de los formularios
 // os ino tendria que rellenar un dia obligatoriamente ajajedsaxD
 
+function getFecha(date) {
+  let newDate = new Date(date);
+  let month = (newDate.getMonth() + 1).toString();
+  let day = (newDate.getDate() + 1).toString();
+  let year = newDate.getFullYear().toString();
+  let dayS = day.length > 1 ? day : `0${day}`;
+  let monthS = month.length > 1 ? month : `0${month}`;
+  return `${dayS}/${monthS}/${year}`;
+}
+
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-export default function AddWeeklyDiet() {
+export default function AddWeeklyDiet({ match }) {
+  console.log(match.params.rut);
   const { register, errors, handleSubmit, control } = useForm();
   const dispatch = useDispatch();
 
@@ -112,9 +130,13 @@ export default function AddWeeklyDiet() {
   console.log(weeklyDietError);
 
   const onSubmit = (data, e) => {
-    const fecha = new Date();
-
-    data["date"] = fecha;
+    data["date"] = new Date(Date.now()).toISOString().substring(0, 10);
+    data.timeBreakfast = new Date(data.timeBreakfast)
+      .toISOString()
+      .substring(11, 16);
+    data.timeDinner = new Date(data.timeDinner).toISOString().substring(11, 16);
+    data.timeLunch = new Date(data.timeLunch).toISOString().substring(11, 16);
+    data.timeSnack = new Date(data.timeSnack).toISOString().substring(11, 16);
 
     dispatch(addWeeklyDiet(data));
     console.log(errors);
@@ -181,9 +203,17 @@ export default function AddWeeklyDiet() {
           </Typography>
         </Grid>
 
+        <Grid container alignItems="center">
+          <Typography className="name" variant="h2">
+            Minuta semanal con fecha {getFecha(new Date().toISOString())}
+          </Typography>
+        </Grid>
+
         <Grid container justify="center" spacing={isMobile ? 0 : 2}>
           <Grid item xs={12} sm={8} md={4} lg={4}>
             <TextField
+              defaultValue={match.params.rut}
+              disabled
               name="rut"
               type="text"
               label="Rut (Sin puntos ni guión)"
