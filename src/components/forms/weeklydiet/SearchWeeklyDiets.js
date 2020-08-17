@@ -12,38 +12,28 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import Button from "@material-ui/core/Button";
 
 import SearchIcon from "@material-ui/icons/Search";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import CreateIcon from "@material-ui/icons/Create";
 import DeleteIcon from "@material-ui/icons/Delete";
-
 import AddIcon from "@material-ui/icons/Add";
 
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Snackbar from "@material-ui/core/Snackbar";
-import MuiAlert from "@material-ui/lab/Alert";
 import Skeleton from "@material-ui/lab/Skeleton";
 
 //import Error from "../../Error";
-import BackButton from "../../../utils/BackButton";
+
 // redux
 import { useDispatch, useSelector } from "react-redux";
 import {
   getPatientsList,
   filterPatient,
-  deletePatient,
 } from "../../../redux/ducks/patientsDucks";
+import Container from "@material-ui/core/Container";
 
 const SearchPatientStyled = styled.div`
   .paper-input {
     margin-top: 2em;
-    margin-bottom: 1em;
     padding: 2px 4px 2px 15px;
     display: flex;
     align-items: center;
@@ -57,7 +47,7 @@ const SearchPatientStyled = styled.div`
     flex: 1;
   }
   .table {
-    margin-top: 1em;
+    margin-top: 3em;
   }
   .paper-table {
     width: 100%;
@@ -89,10 +79,6 @@ function createRow(rut, names, father_last_name, mother_last_name) {
   return { rut, names, father_last_name, mother_last_name };
 }
 
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
-
 export default function SearchPatient({ match }) {
   const dispatch = useDispatch();
   const history = useHistory();
@@ -113,9 +99,6 @@ export default function SearchPatient({ match }) {
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [open, setOpen] = React.useState(false);
-  const [patientInfo, setPatientInfo] = React.useState({});
-  const [openSnack, setOpenSnack] = React.useState(false);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -124,29 +107,6 @@ export default function SearchPatient({ match }) {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
-  };
-
-  const handleOpenSnack = () => {
-    setOpenSnack(true);
-  };
-  const handleCloseSnack = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpenSnack(false);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleDelete = (rut) => {
-    dispatch(deletePatient({ rut }));
-    handleClose();
-    handleOpenSnack();
   };
 
   const rowss = patients.map((patient) => {
@@ -160,28 +120,19 @@ export default function SearchPatient({ match }) {
 
   const handleClick = (rut) => {
     if (match.params.action === "ver") {
-      history.push(`/ver_paciente/${rut}/v`);
+      history.push(`/ver_minuta_semanal/${rut}`);
     } else if (match.params.action === "modificar") {
-      history.push(`/modificar_paciente/${rut}`);
+      history.push(`/modificar_minuta_semanal/${rut}`);
     } else if (match.params.action === "eliminar") {
-      const selected = patients.filter((pat) => pat.rut === rut);
-      setPatientInfo(selected[0]);
-      handleOpen();
-    } else if (match.params.action === "add_pd") {
-      history.push(`/agregar_pauta_diaria/${rut}`);
-    } else if (match.params.action === "see_pd") {
-      history.push(`/ver_pauta_diaria/${rut}`);
-    } else if (match.params.action === "modify_pd") {
-      history.push(`/modificar_pauta_diaria/${rut}`);
-    } else if (match.params.action === "remove_pd") {
-      history.push(`/eliminar_pauta_diaria/${rut}`);
+      history.push(`/eliminar_minuta_semanal/${rut}`);
+    } else if (match.params.action === "agregar") {
+      history.push(`/agregar_minuta_semanal/${rut}`);
     }
   };
 
   const handleFilterPatient = (e) => {
     dispatch(filterPatient(e.target.value));
   };
-
   return (
     // TODO: ver como mostrar 404 cuando no se cumple esta condicion:
     // match.params.action === "ver" || match.params.action === "modificar" || match.params.action === "eliminar"
@@ -201,28 +152,19 @@ export default function SearchPatient({ match }) {
           </form>
         </Grid>
       </Grid>
-      <Grid container>
-        <Grid item xs={false} md={1} lg={3}></Grid>
-        <BackButton his={history} />
-        <Grid item xs={false} md={1} lg={3}></Grid>
-      </Grid>
+
       {rowss.length === 0 ? (
-        <Grid container justify="center" className="table">
-          <Grid item xs={false} md={1} lg={3}></Grid>
-          <Grid item xs={11} md={9} lg={6}>
-            <Skeleton
-              variant="rect"
-              height={300}
-              style={{ borderRadius: "5px" }}
-            />
-          </Grid>
-          <Grid item xs={false} md={1} lg={3}></Grid>
-        </Grid>
+        <Container maxWidth="md" style={{ marginTop: "50px" }}>
+          <Skeleton
+            variant="rect"
+            height={300}
+            style={{ borderRadius: "5px" }}
+          />
+        </Container>
       ) : (
         <React.Fragment>
           {/* TABLE */}
           <Grid container justify="center" className="table">
-            <Grid item xs={false} md={1} lg={3}></Grid>
             <Grid item xs={11} md={9} lg={6}>
               <Paper className="paper-table">
                 <TableContainer className="table-container">
@@ -275,25 +217,22 @@ export default function SearchPatient({ match }) {
                                       </span>
                                     ) : column.id !== "icon" ? (
                                       value
-                                    ) : match.params.action === "ver" ||
-                                      match.params.action === "see_pd" ? (
+                                    ) : match.params.action === "ver" ? (
                                       <VisibilityIcon
                                         className="view-patient"
                                         onClick={() => handleClick(row.rut)}
                                       />
-                                    ) : match.params.action === "modificar" ||
-                                      match.params.action === "modify_pd" ? (
+                                    ) : match.params.action === "modificar" ? (
                                       <CreateIcon
                                         className="view-patient"
                                         onClick={() => handleClick(row.rut)}
                                       />
-                                    ) : match.params.action === "eliminar" ||
-                                      match.params.action === "remove_pd" ? (
+                                    ) : match.params.action === "eliminar" ? (
                                       <DeleteIcon
                                         className="view-patient"
                                         onClick={() => handleClick(row.rut)}
                                       />
-                                    ) : match.params.action === "add_pd" ? (
+                                    ) : match.params.action === "agregar" ? (
                                       <AddIcon
                                         className="view-patient"
                                         onClick={() => handleClick(row.rut)}
@@ -326,51 +265,9 @@ export default function SearchPatient({ match }) {
                 />
               </Paper>
             </Grid>
-            <Grid item xs={false} md={1} lg={3}></Grid>
           </Grid>
         </React.Fragment>
       )}
-      {Object.keys(patientInfo).length === 0 ? (
-        ""
-      ) : (
-        <Dialog
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">
-            {"¿Realmente desea eliminar a este paciente?"}
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              "El paciente {patientInfo.names} {patientInfo.father_last_name}{" "}
-              {patientInfo.mother_last_name} será eliminado"
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose} color="primary">
-              Cancelar
-            </Button>
-            <Button
-              onClick={() => handleDelete(patientInfo.rut)}
-              color="primary"
-              autoFocus
-            >
-              Eliminar
-            </Button>
-          </DialogActions>
-        </Dialog>
-      )}
-      <Snackbar
-        open={openSnack}
-        autoHideDuration={6000}
-        onClose={handleCloseSnack}
-      >
-        <Alert onClose={handleCloseSnack} severity="success">
-          El paciente fue eliminado exitosamente!
-        </Alert>
-      </Snackbar>
     </SearchPatientStyled>
   );
 }

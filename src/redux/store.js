@@ -6,6 +6,7 @@ import patientsReducer from "./ducks/patientsDucks";
 import carnetReducer from "./ducks/patientsCarnetDucks";
 import dailyDietsReducer from "./ducks/patientsDailyDietsDuck";
 import patientWeeklyDietsReducer from "./ducks/patientsWeeklyDietsDucks";
+import weeklyDietsReducer from "./ducks/weeklyDietsDucks";
 import generalInfoReducer from "./ducks/generalInfoDucks";
 import controlReducer from "./ducks/controlDucks";
 
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   carnet: carnetReducer,
   dailyDiets: dailyDietsReducer,
   patientWeeklyDiets: patientWeeklyDietsReducer,
+  weeklyDiets:weeklyDietsReducer,
   generalInfo: generalInfoReducer,
   control: controlReducer,
 });

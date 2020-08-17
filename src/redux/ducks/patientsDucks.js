@@ -11,6 +11,7 @@ const PATIENT_MODIFIED = "PATIENT_MODIFIED";
 const GET_PATIENT_INFO_PATIENT = "GET_PATIENT_INFO_PATIENT";
 const MODIFY_PASSWORD = "MODIFY_PASSWORD";
 const FILTER_PATIENT = "FILTER_PATIENT";
+const GET_STATISTICS = "GET_STATISTICS";
 
 const initialState = {
   newPatient: null,
@@ -20,6 +21,7 @@ const initialState = {
   patientInfo: null,
   modifiedPatient: false,
   passwordModified: false,
+  statistics: null,
 };
 
 /* REDUCER */
@@ -54,6 +56,8 @@ export default function patientsReducer(state = initialState, action) {
           .includes(action.payload.toLowerCase())
       );
       return { ...state, patientsDataFiltered };
+    case GET_STATISTICS:
+      return { ...state, statistics: action.payload };
     default:
       return state;
   }
@@ -98,7 +102,7 @@ export const deletePatient = (rut) => async (dispatch) => {
     .then(() => {})
     .catch((error) => console.log(error.response));
   await new Promise((r) => setTimeout(r, 2000));
-  window.location.href = "/";
+  //window.location.href = "/";
 };
 
 // get all info of a patient by rut (required by the admin)
@@ -141,6 +145,15 @@ export const modifyPassword = (data) => (dispatch) => {
     .catch((error) => console.log(error));
 };
 
+// when it is searching a patient
 export const filterPatient = (data) => (dispatch) => {
   dispatch({ type: FILTER_PATIENT, payload: data });
+};
+
+// get statistics to admin dashboard
+export const getStatistics = () => (dispatch) => {
+  axios
+    .get("/patients/getStatistics")
+    .then((res) => dispatch({ type: GET_STATISTICS, payload: res.data }))
+    .catch((error) => console.log(error));
 };

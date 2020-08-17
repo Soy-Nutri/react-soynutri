@@ -249,22 +249,21 @@ export default function AddPatient({ history }) {
               />
             </Grid>
             <Grid item xs={12} sm={4} md={3} lg={2}>
-              <TextField
-                name="alimentation"
-                label="Tipo de alimentación"
-                type="text"
-                variant="outlined"
-                margin="dense"
-                className="input"
-                fullWidth
-                error={errors.alimentation}
-                helperText={
-                  errors.alimentation ? errors.alimentation.message : ""
-                }
-                inputRef={register({
-                  required: { value: true, message: reqmsg },
-                })}
-              />
+              <FormControl variant="outlined" margin="dense" fullWidth>
+                <InputLabel htmlFor="select-alimentation">
+                  Tipo de alimentación
+                </InputLabel>
+                <Select
+                  native
+                  name="alimentation"
+                  label="Alimentación"
+                  inputRef={register}
+                >
+                  <option value={"Omnívoro"}>Omnívoro</option>
+                  <option value={"Vegetariano"}>Vegetariano</option>
+                  <option value={"Vegano"}>Vegano</option>
+                </Select>
+              </FormControl>
             </Grid>
             <Grid item xs={false} sm={2} md={3} lg={4}></Grid>
           </Grid>
@@ -292,9 +291,7 @@ export default function AddPatient({ history }) {
             </Grid>
             <Grid item xs={12} sm={4} md={3} lg={2}>
               <FormControl variant="outlined" margin="dense" fullWidth>
-                <InputLabel htmlFor="outlined-age-native-simple">
-                  Sexo
-                </InputLabel>
+                <InputLabel htmlFor="select-sex">Sexo</InputLabel>
                 <Select native name="sex" label="Sexo" inputRef={register}>
                   <option value={"male"}>Masculino</option>
                   <option value={"female"}>Femenino</option>

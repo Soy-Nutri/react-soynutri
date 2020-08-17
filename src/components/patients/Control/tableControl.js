@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme) => ({
     position: "sticky",
     left: 0,
     backgroundColor: theme.palette.type === "dark" ? "#393939" : "#EEEDED",
+    maxWidth: 20,
   },
 }));
 
