@@ -37,6 +37,8 @@ import DeleteControl from "./components/forms/control/DeleteControl";
 // daily diets
 import AddDailyDiet from "./components/forms/dailydiet/AddDailyDiet";
 import ModifyDailyDiet from "./components/forms/dailydiet/ModifyDailyDiet";
+import SeeDailyDiet from "./components/forms/dailydiet/SeeDailyDiet";
+import DeleteDailyDiet from "./components/forms/dailydiet/DeleteDailyDiet";
 
 //Weekly diets
 
@@ -201,14 +203,24 @@ function App() {
             <Route path="/ver_control/:rut" exact component={ShowControl} />
 
             <Route
-              path="/agregar_pauta_diaria"
+              path="/agregar_pauta_diaria/:rut"
               exact
               component={AddDailyDiet}
             />
             <Route
-              path="/modificar_pauta_diaria"
+              path="/ver_pauta_diaria/:rut"
+              exact
+              component={SeeDailyDiet}
+            />
+            <Route
+              path="/modificar_pauta_diaria/:rut"
               exact
               component={ModifyDailyDiet}
+            />
+            <Route
+              path="/eliminar_pauta_diaria/:rut"
+              exact
+              component={DeleteDailyDiet}
             />
             <Route path="/carnet" exact component={PatientControl} />
             <Route path="/pauta_diaria" exact component={PatientDailyDiets} />
