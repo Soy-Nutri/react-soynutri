@@ -450,7 +450,6 @@ export default function AddWeeklyDiet({ match }) {
             />
           </Grid>
 
-      
           <Grid
             item
             xs={false}
@@ -477,18 +476,15 @@ export default function AddWeeklyDiet({ match }) {
           autoHideDuration={6000}
           onClose={handleCloseSnackbar}
         >
-        
-            { weeklyDietError==="Paciente no encontrado" ?( 
-              <Alert onClose={handleCloseSnackbar} severity="error">
-               Ese dia que intenta ingresar ya tiene datos.
-               </Alert>
-            ) : (
+          {weeklyDietError === "Paciente no encontrado" ? (
             <Alert onClose={handleCloseSnackbar} severity="error">
-               Ha ocurrido un error reintente.
-               </Alert>
-               )}
-           
-       
+              El día que intenta ingresar ya contiene datos.
+            </Alert>
+          ) : (
+            <Alert onClose={handleCloseSnackbar} severity="error">
+              Ha ocurrido un error reintente.
+            </Alert>
+          )}
         </Snackbar>
       ) : weeklyDiet && weeklyDiet.error === undefined ? (
         <Snackbar

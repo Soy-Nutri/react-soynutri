@@ -41,7 +41,7 @@ function getFecha(date) {
   return `${year}/${monthS}/${dayS}`;
 }
 
-export default function StickyHeadTable({ rut, rowsShow }) {
+export default function StickyHeadTable({ rut, rowsShow, cleanControl }) {
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -67,7 +67,6 @@ export default function StickyHeadTable({ rut, rowsShow }) {
   const deleteWeeklyDietDate = (date, dateF) => {
     setOpenSnackbar(true);
 
-    
     dispatch(deleteWeeklyDiet(rut, getFecha(dateF)));
     let auxRows = [];
     for (let i = 0; i < rows.length; i++) {
@@ -76,6 +75,10 @@ export default function StickyHeadTable({ rut, rowsShow }) {
       }
     }
     setRows(auxRows);
+
+    if (auxRows.length === 0) {
+      cleanControl();
+    }
   };
 
   return (
@@ -152,7 +155,7 @@ export default function StickyHeadTable({ rut, rowsShow }) {
           onClose={handleCloseSnackbar}
         >
           <Alert onClose={handleCloseSnackbar} severity="success">
-           Minuta diaria eliminada con éxito.
+            Minuta diaria eliminada con éxito.
           </Alert>
         </Snackbar>
       )}
