@@ -21,6 +21,8 @@ import Menu from "@material-ui/core/Menu";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 import Skeleton from "@material-ui/lab/Skeleton";
+import BackButton from "../../../utils/BackButton";
+
 //redux
 import {
   getPatientInfo,
@@ -68,8 +70,15 @@ export default function SeePatient({ match, history }) {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleDocClose = () => {
+  const handleDocClose = (selected) => {
     setAnchorEl(null);
+    if (selected === "control") {
+      history.push(`/ver_control/${match.params.rut}`);
+    } else if (selected === "daily_diet") {
+      history.push(`/ver_pauta_diaria/${match.params.rut}`);
+    } else if (selected === "weekly_diet") {
+      history.push(`/ver_minuta_semanal/${match.params.rut}`);
+    }
   };
 
   const handleClose = () => {
@@ -106,8 +115,20 @@ export default function SeePatient({ match, history }) {
   return (
     <SeePatientStyled>
       <Container maxWidth="sm">
+        <Typography
+          variant="h3"
+          color="primary"
+          style={{
+            fontFamily: "yellowtail",
+            marginBottom: "1em",
+            textAlign: "center",
+          }}
+        >
+          Perfil de paciente
+        </Typography>
+        <BackButton his={history} />
         {patientInfo ? (
-          <Card>
+          <Card style={{ marginTop: "1em" }}>
             <CardContent>
               {/* <Typography color="textSecondary">adjective</Typography> */}
               <div style={{ lineHeight: "2" }}>
@@ -146,9 +167,15 @@ export default function SeePatient({ match, history }) {
                 open={Boolean(anchorEl)}
                 onClose={handleDocClose}
               >
-                <MenuItem onClick={handleDocClose}>Controles</MenuItem>
-                <MenuItem onClick={handleDocClose}>Pautas Diarias</MenuItem>
-                <MenuItem onClick={handleDocClose}>Minutas Semanales</MenuItem>
+                <MenuItem onClick={() => handleDocClose("control")}>
+                  Controles
+                </MenuItem>
+                <MenuItem onClick={() => handleDocClose("daily_diet")}>
+                  Pautas Diarias
+                </MenuItem>
+                <MenuItem onClick={() => handleDocClose("weekly_diet")}>
+                  Minutas Semanales
+                </MenuItem>
               </Menu>
 
               <Tooltip title="Modificar paciente" placement="top">
@@ -171,7 +198,7 @@ export default function SeePatient({ match, history }) {
           <Skeleton
             variant="rect"
             height={380}
-            style={{ borderRadius: "5px" }}
+            style={{ borderRadius: "5px", marginTop: "1em" }}
           />
         )}
       </Container>
