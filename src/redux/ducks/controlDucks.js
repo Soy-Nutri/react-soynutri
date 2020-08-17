@@ -37,7 +37,6 @@ export default function patientsReducer(state = initialState, action) {
 export const addControl = (control) => (dispatch) => {
   dispatch({ type: CLEAR_ERRORS });
   control.date = new Date(Date.now()).toISOString().substring(0, 10);
-  console.log(control.date);
   axios
     .post("/patientsCarnet/addControl", control)
     .then((res) => {
@@ -102,7 +101,6 @@ export const modifyControl = (control, rut, date) => (dispatch, getState) => {
 export const deleteControl = (rut, date) => async (dispatch) => {
   dispatch({ type: CLEAR_DELETE_ERRORS });
   const params = { rut, date: date.toString().substring(0, 10) };
-  //console.log(params);
   axios
     .post("/patientsCarnet/deleteControl", params)
     .then((res) => {

@@ -13,6 +13,8 @@ import Skeleton from "@material-ui/lab/Skeleton";
 import { getPatientInfo } from "../../../redux/ducks/patientsDucks";
 import Typography from "@material-ui/core/Typography";
 
+import Container from "@material-ui/core/Container";
+
 const DailyDietsStyled = styled.div``;
 
 function formateaRut(rut) {
@@ -82,37 +84,39 @@ export default function DailyDiets({ match }) {
 
   return (
     <DailyDietsStyled style={{ margin: 50 }}>
-      {patientInfo ? (
-        <div>
-          <h1>
-            {patientInfo.names} {patientInfo.father_last_name}{" "}
-            {patientInfo.mother_last_name}
-          </h1>
-          <h2>
-            Rut: {formateaRut(patientInfo.rut)} Edad:{" "}
-            {Edad(patientInfo.birth_date)} años
-          </h2>
-        </div>
-      ) : (
-        <div>
-          <Typography component="div" variant={"h2"} style={{ width: 400 }}>
-            <Skeleton />
-          </Typography>
-          <Typography component="div" variant={"h3"} style={{ width: 350 }}>
-            <Skeleton />
-          </Typography>
-        </div>
-      )}
-      <h2>Plan de alimentación</h2>
-      {dailyDiets.length === 0 ? (
-        <SkeletonTable variant="rect" height={600} />
-      ) : dailyDiets[0] === "error" ? (
-        <Grid container direction="row" justify="center" alignItems="center">
-          <h3>Este usuario no cuenta con planes de alimentación aún.</h3>
-        </Grid>
-      ) : (
-        <Table dates={dates} diets={diets} />
-      )}
+      <Container maxWidth="md" style={{ marginBottom: 20 }}>
+        {patientInfo ? (
+          <div>
+            <h1>
+              {patientInfo.names} {patientInfo.father_last_name}{" "}
+              {patientInfo.mother_last_name}
+            </h1>
+            <h2>
+              Rut: {formateaRut(patientInfo.rut)} Edad:{" "}
+              {Edad(patientInfo.birth_date)} años
+            </h2>
+          </div>
+        ) : (
+          <div>
+            <Typography component="div" variant={"h2"} style={{ width: 400 }}>
+              <Skeleton />
+            </Typography>
+            <Typography component="div" variant={"h3"} style={{ width: 350 }}>
+              <Skeleton />
+            </Typography>
+          </div>
+        )}
+        <h2>Plan de alimentación</h2>
+        {dailyDiets.length === 0 ? (
+          <SkeletonTable variant="rect" height={600} />
+        ) : dailyDiets[0] === "error" ? (
+          <Grid container direction="row" justify="center" alignItems="center">
+            <h3>Este usuario no cuenta con planes de alimentación aún.</h3>
+          </Grid>
+        ) : (
+          <Table dates={dates} diets={diets} />
+        )}
+      </Container>
     </DailyDietsStyled>
   );
 }

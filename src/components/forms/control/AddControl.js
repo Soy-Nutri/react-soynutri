@@ -60,7 +60,6 @@ export default function AddControl({ match }) {
   const dispatch = useDispatch();
   const control = useSelector((state) => state.control.control);
   const controlErrors = useSelector((state) => state.control.errors);
-  console.log(controlErrors);
 
   const [open, setOpen] = React.useState(false);
   const [append, setAppend] = React.useState(false);
@@ -77,8 +76,6 @@ export default function AddControl({ match }) {
 
   const { register, errors, handleSubmit } = useForm();
   const onSubmit = (data, e) => {
-    console.log(data);
-    console.log(errors);
     dispatch(addControl(data));
 
     e.target.reset();
