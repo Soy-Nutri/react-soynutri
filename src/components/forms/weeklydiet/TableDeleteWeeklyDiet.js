@@ -9,10 +9,16 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import DeleteIcon from "@material-ui/icons/Delete";
-
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
+import Skeleton from "@material-ui/lab/Skeleton";
 
+import Button from "@material-ui/core/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteWeeklyDiet } from "../../../redux/ducks/weeklyDietsDucks";
 
@@ -46,7 +52,22 @@ export default function StickyHeadTable({ rut, rowsShow, cleanControl }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [rows, setRows] = React.useState(rowsShow);
+
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
+
+
+  const [open, setOpen] = React.useState(false);
+
+  const [dates, setDates] = React.useState({
+    date: "",
+    dateF: "",
+  });
+
+const handleClose = () => {
+  
+
+    setOpen(false);
+  };
 
   const dispatch = useDispatch();
   const dailyDietErrors = useSelector((state) => state.dailyDiets.deleteErrors);
@@ -64,13 +85,21 @@ export default function StickyHeadTable({ rut, rowsShow, cleanControl }) {
     setPage(0);
   };
 
-  const deleteWeeklyDietDate = (date, dateF) => {
-    setOpenSnackbar(true);
+  const handleDelete = (date, dateF) => {
+  
+     setDates({ date,dateF });
+     setOpen(true);
 
-    dispatch(deleteWeeklyDiet(rut, getFecha(dateF)));
+  }
+
+  const deleteWeeklyDietDate = () => {
+    setOpenSnackbar(true);
+    let date2F = dates.dateF;
+    let date2 = dates.date
+    dispatch(deleteWeeklyDiet(rut, getFecha(date2F)));
     let auxRows = [];
     for (let i = 0; i < rows.length; i++) {
-      if (rows[i].date !== date) {
+      if (rows[i].date !== date2) {
         auxRows.push(rows[i]);
       }
     }
@@ -79,6 +108,7 @@ export default function StickyHeadTable({ rut, rowsShow, cleanControl }) {
     if (auxRows.length === 0) {
       cleanControl();
     }
+    handleClose();
   };
 
   return (
@@ -114,7 +144,7 @@ export default function StickyHeadTable({ rut, rowsShow, cleanControl }) {
                             <DeleteIcon
                               style={{ cursor: "pointer" }}
                               onClick={() =>
-                                deleteWeeklyDietDate(row.date, row.dateF)
+                                handleDelete(row.date, row.dateF)
                               }
                             />
                           ) : (
@@ -159,6 +189,35 @@ export default function StickyHeadTable({ rut, rowsShow, cleanControl }) {
           </Alert>
         </Snackbar>
       )}
+
+      
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"¿Realmente desea eliminar este control?"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {dates.date ? (
+              `La minuta con fecha ${dates.date} será eliminado`
+            ) : (
+              <Skeleton variant="text" style={{ borderRadius: "5px" }} />
+            )}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => handleClose()} color="primary">
+            Cancelar
+          </Button>
+          <Button onClick={() => deleteWeeklyDietDate()} color="primary" autoFocus>
+            Eliminar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Paper>
   );
 }

@@ -111,7 +111,7 @@ function Alert(props) {
 }
 
 export default function AddWeeklyDiet({ match }) {
-  console.log(match.params.rut);
+  //console.log(match.params.rut);
   const { register, errors, handleSubmit, control } = useForm();
   const dispatch = useDispatch();
 
@@ -120,8 +120,8 @@ export default function AddWeeklyDiet({ match }) {
   const weeklyDiet = useSelector((store) => store.weeklyDiets.weeklyDiets);
   const weeklyDietError = useSelector((store) => store.weeklyDiets.errors);
 
-  console.log("Error");
-  console.log(weeklyDietError);
+  //console.log("Error");
+ // console.log(weeklyDietError);
 
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
@@ -137,10 +137,10 @@ export default function AddWeeklyDiet({ match }) {
     data.timeSnack = new Date(data.timeSnack).toISOString().substring(11, 16);
 
     dispatch(addWeeklyDiet(data));
-    console.log(errors);
+   // console.log(errors);
     setOpenSnackbar(true);
     e.target.reset();
-    console.log(data);
+  //  console.log(data);
   };
 
   const reqmsg = "Campo obligatorio";
@@ -177,7 +177,7 @@ export default function AddWeeklyDiet({ match }) {
 
   const handleChangeDay = (event) => {
     if (event.target.value === "Dia de la semana") {
-      console.log("selecionnaste" + event.target.value);
+      //console.log("selecionnaste" + event.target.value);
     } else {
       setDayOfWeek(event.target.value);
     }
