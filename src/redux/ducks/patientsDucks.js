@@ -163,10 +163,10 @@ export const modifyPatient = (data) => async (dispatch) => {
     .post(`/patients/modifyPerfil`, data)
     .then(() => dispatch({ type: PATIENT_MODIFIED }))
     .catch((error) => {
-      if (error.response.request.status === 409) {
+      if (error.response.request.status === 404) {
         dispatch({
           type: SET_ERROR,
-          payload: "Contraseña incorrecta!",
+          payload: "No se encuentra el paciente!",
         });
       } else {
         dispatch({

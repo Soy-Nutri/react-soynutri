@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 import { useForm } from "react-hook-form";
-
+import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
@@ -15,6 +15,7 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import MuiAlert from "@material-ui/lab/Alert";
 import SkeletonForm from "./SkeletonForm";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getPatientInfo,
@@ -29,6 +30,7 @@ const ModifyPatientStyled = styled.div`
   }
   .form-button {
     margin-top: 1.5em;
+    margin-bottom: 1.5em;
     margin-left: auto;
     margin-right: auto;
   }
@@ -43,26 +45,56 @@ const ModifyPatientStyled = styled.div`
   }
 `;
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+    alignItems: "center",
+  },
+  wrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+  },
+  buttonProgress: {
+    color: theme.primary,
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
+}));
+
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
 export default function ModifyPatient({ match }) {
+  const classes = useStyles();
   const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
   const patientInfo = useSelector((state) => state.patients.patientInfo);
+  const error = useSelector((state) => state.patients.errors);
   const modifiedPatient = useSelector(
     (state) => state.patients.modifiedPatient
   );
   const { register, errors, handleSubmit } = useForm();
 
   const onSubmit = (data, e) => {
-    e.preventDefault();
-
-    data["rut"] = match.params.rut;
-    dispatch(modifyPatient(data));
-    setOpen(true);
+    if (!loading) {
+      setLoading(true);
+      e.preventDefault();
+      data["rut"] = match.params.rut;
+      dispatch(modifyPatient(data));
+      setOpen(true);
+    }
   };
+
+  React.useEffect(() => {
+    if (error || modifiedPatient) {
+      setLoading(false);
+    }
+  }, [error, modifiedPatient]);
 
   const handleClose = () => {
     setOpen(false);
@@ -300,15 +332,24 @@ export default function ModifyPatient({ match }) {
               </Grid>
             </Grid>
 
-            <Grid container alignItems="center">
-              <Button
-                className="form-button"
-                variant="outlined"
-                color="primary"
-                type="submit"
-              >
-                Guardar cambios
-              </Button>
+            <Grid container justify="center" alignItems="center">
+              <div className={classes.wrapper}>
+                <Button
+                  className="form-button"
+                  variant="outlined"
+                  type="submit"
+                  color="primary"
+                  disabled={loading}
+                >
+                  Guardar cambios
+                </Button>
+                {loading && (
+                  <CircularProgress
+                    size={24}
+                    className={classes.buttonProgress}
+                  />
+                )}
+              </div>
             </Grid>
           </React.Fragment>
         ) : (
