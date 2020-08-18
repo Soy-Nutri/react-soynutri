@@ -18,6 +18,8 @@ import { addControl } from "../../../redux/ducks/controlDucks";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 
+import { getId } from "../../../redux/ducks/patientsDucks";
+
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -91,6 +93,14 @@ export default function AddControl({ match }) {
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"), {
     defaultMatches: true,
   });
+
+  React.useEffect(() => {
+    dispatch(getId(match.params.rut));
+  }, [dispatch, match]);
+  const exists = useSelector((state) => state.patients.exists);
+  if (exists === "error") {
+    window.location.href = "/error";
+  }
 
   return (
     <AddControlStyled>

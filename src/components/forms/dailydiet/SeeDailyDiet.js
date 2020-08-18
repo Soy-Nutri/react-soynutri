@@ -14,6 +14,7 @@ import { getPatientInfo } from "../../../redux/ducks/patientsDucks";
 import Typography from "@material-ui/core/Typography";
 
 import Container from "@material-ui/core/Container";
+import { getId } from "../../../redux/ducks/patientsDucks";
 
 const DailyDietsStyled = styled.div``;
 
@@ -68,9 +69,14 @@ export default function DailyDiets({ match }) {
     const getInfoDailyDiets = () => {
       dispatch(getPatientInfo(match.params.rut));
       dispatch(getDailyDietsAdmin(match.params.rut));
+      dispatch(getId(match.params.rut));
     };
     getInfoDailyDiets();
   }, [dispatch, match.params.rut]);
+  const exists = useSelector((state) => state.patients.exists);
+  if (exists === "error") {
+    window.location.href = "/error";
+  }
 
   let dates = [];
   let diets = {};

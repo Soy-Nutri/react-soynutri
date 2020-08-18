@@ -12,6 +12,7 @@ const GET_PATIENT_INFO_PATIENT = "GET_PATIENT_INFO_PATIENT";
 const MODIFY_PASSWORD = "MODIFY_PASSWORD";
 const FILTER_PATIENT = "FILTER_PATIENT";
 const GET_STATISTICS = "GET_STATISTICS";
+const EXISTS = "EXISTS";
 
 const initialState = {
   newPatient: null,
@@ -22,6 +23,7 @@ const initialState = {
   modifiedPatient: false,
   passwordModified: false,
   statistics: null,
+  exists: "",
 };
 
 /* REDUCER */
@@ -58,6 +60,8 @@ export default function patientsReducer(state = initialState, action) {
       return { ...state, patientsDataFiltered };
     case GET_STATISTICS:
       return { ...state, statistics: action.payload };
+    case EXISTS:
+      return { ...state, exists: action.payload };
     default:
       return state;
   }
@@ -237,6 +241,27 @@ export const getStatistics = () => (dispatch) => {
       dispatch({
         type: SET_ERROR,
         payload: "Ha ocurrido un error inesperado!",
+      })
+    );
+};
+
+export const getId = (rut) => (dispatch) => {
+  dispatch({
+    type: EXISTS,
+    payload: "",
+  });
+  axios
+    .get(`/patients/getPerfil/${rut}/admin`)
+    .then((res) => {
+      dispatch({
+        type: EXISTS,
+        payload: "ok",
+      });
+    })
+    .catch(() =>
+      dispatch({
+        type: EXISTS,
+        payload: "error",
       })
     );
 };

@@ -10,6 +10,8 @@ import { getPatientInfo } from "../../../redux/ducks/patientsDucks";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllWeeklyDiets } from "../../../redux/ducks/weeklyDietsDucks";
 
+import { getId } from "../../../redux/ducks/patientsDucks";
+
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 function Alert(props) {
@@ -152,7 +154,12 @@ export default function DeleteWeeklyDiet({ match }) {
   React.useEffect(() => {
     dispatch(getPatientInfo(match.params.rut));
     dispatch(getAllWeeklyDiets(match.params.rut));
+    dispatch(getId(match.params.rut));
   }, [dispatch, match]);
+  const exists = useSelector((state) => state.patients.exists);
+  if (exists === "error") {
+    window.location.href = "/error";
+  }
 
   const weeklyDietError = useSelector((store) => store.weeklyDiets.errors);
 

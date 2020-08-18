@@ -15,6 +15,7 @@ import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 
 import TableDelete from "./TableDeleteControl";
+import { getId } from "../../../redux/ducks/patientsDucks";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -118,6 +119,7 @@ export default function ModifyControl({ match }) {
   React.useEffect(() => {
     dispatch(getControls(match.params.rut));
     dispatch(getPatientInfo(match.params.rut));
+    dispatch(getId(match.params.rut));
   }, [dispatch, match]);
 
   var rows = [];
@@ -136,6 +138,11 @@ export default function ModifyControl({ match }) {
     setRowsEmpty(true);
     setOpenSnackbar(true);
   };
+
+  const exists = useSelector((state) => state.patients.exists);
+  if (exists === "error") {
+    window.location.href = "/error";
+  }
 
   return (
     <ModifyControlStyled>
