@@ -119,10 +119,7 @@ function getFecha(date) {
 }
 
 export default function ModifyDailyDiet({ match }) {
-  //TODO: obtener default values desde la bd
-
   const { register, errors, handleSubmit, control } = useForm();
-
   const dispatch = useDispatch();
   const dailyDiets = useSelector((state) => state.dailyDiets.dailyDietsAdmin);
   const patientInfo = useSelector((state) => state.patients.patientInfo);
@@ -212,9 +209,6 @@ export default function ModifyDailyDiet({ match }) {
       proteins: event.target.value.proteins,
       date: event.target.value.date,
     });
-
-    // console.log(event.target.value);
-    //console.log(event.target.value.breakfast.time);
 
     setBreakfastTime(
       new Date(`2020 January 1 ${event.target.value.breakfast.time}`).getTime()

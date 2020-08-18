@@ -61,7 +61,6 @@ import Profile from "./components/patients/Profile";
 
 axios.defaults.baseURL =
   "https://us-central1-back-f0378.cloudfunctions.net/api";
-//axios.defaults.baseURL = "https://pokeapi.co/api/v2";
 
 function App() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -157,7 +156,7 @@ function App() {
           <Switch>
             <Route path="/" exact component={HomeDashboard} />
 
-            <Route path="/login" component={Login} />
+            <Route path="/login" exact component={Login} />
 
             <Route
               path="/agregar_paciente"
@@ -277,7 +276,7 @@ function App() {
               component={template(SearchWeeklyDiets, "admin")}
             />
 
-            <Route component={Error}></Route>
+            <Route component={Error} />
           </Switch>
         </Provider>
       </Router>
@@ -286,5 +285,3 @@ function App() {
 }
 
 export default App;
-
-//<Route path="/ver_minuta_semanal" exact component = {SeeWeeklyDiet} />

@@ -13,7 +13,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 //Table
 import TableC from "../../patients/Control/tableControl";
-// import TableB from "../../patients/Control/tableBiochemical";
 
 import Grid from "@material-ui/core/Grid";
 

@@ -39,17 +39,6 @@ export default function weeklyDietsReducer(state = initialState, action) {
   }
 }
 
-//Tengo que hacer para obtener las horas
-
-//export const getPatients = () => (dispatch) => {
-//  axios
-//    .get("/patients/getId")
-//    .then((res) => {
-//     dispatch({ type: GET_PATIENTS, payload: res.data });
-//    })
-//    .catch((error) => console.log(error));
-//};
-
 //Añadir weekly diet
 
 export const addWeeklyDiet = (weeklyDiets) => (dispatch) => {
@@ -60,7 +49,6 @@ export const addWeeklyDiet = (weeklyDiets) => (dispatch) => {
       dispatch({ type: ADD_WEEKLY_DIET, payload: res.data });
     })
     .catch((error) => {
-
       dispatch({
         type: ADD_ERROR_WEEKLY_DIET,
         payload: "Paciente no encontrado",
@@ -85,13 +73,12 @@ export const getWeeklyDiets = (rut) => (dispatch) => {
             date = res.data.Weekly_Diets[i];
           }
         }
-  
+
         dispatch({ type: GET_WEEKLY_DIETS, payload: date });
       }
     })
 
     .catch((error) => {
-  
       dispatch({
         type: GET_ERROR_WEEKLY_DIETS,
         payload: "Error inesperado!",
@@ -130,12 +117,10 @@ export const modifyWeeklyDiet = (weeklyDiets) => (dispatch) => {
       dispatch(getWeeklyDiets(weeklyDiets.rut));
     })
     .catch((error) => {
-     
       dispatch({
         type: ADD_ERROR_WEEKLY_DIET,
         payload: "Paciente no encontrado o minuta no encontrada",
       });
-
     });
 };
 
@@ -144,13 +129,10 @@ export const deleteWeeklyDiet = (rut, fecha) => async (dispatch) => {
   dispatch({ type: CLEAR_DELETE_ERRORS });
   var a = { rut: rut, date: fecha };
 
-
   axios
     .post("/patientsWeeklyDiets/deleteWeekOfWeeklyDiets", a)
     .then((res) => {
- 
       if (res.data.messaje !== "Delete Week.") {
-
         dispatch({
           type: DELETE_ERROR,
           PAYLOAD: "Error inesperado!",
@@ -160,7 +142,6 @@ export const deleteWeeklyDiet = (rut, fecha) => async (dispatch) => {
       }
     })
     .catch((error) => {
-  
       dispatch({
         type: DELETE_ERROR,
         PAYLOAD: "Error inesperado!",

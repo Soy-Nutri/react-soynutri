@@ -23,9 +23,6 @@ import Skeleton from "@material-ui/lab/Skeleton";
 import Typography from "@material-ui/core/Typography";
 import BackButton from "../../../utils/BackButton";
 
-// import { useTheme } from "@material-ui/core/styles";
-// import useMediaQuery from "@material-ui/core/useMediaQuery";
-
 //import Error from "../../Error";
 
 // redux
@@ -34,7 +31,6 @@ import {
   getPatientsList,
   filterPatient,
 } from "../../../redux/ducks/patientsDucks";
-// import Container from "@material-ui/core/Container";
 
 const SearchPatientStyled = styled.div`
   .paper-input {
@@ -95,15 +91,12 @@ function createRow(rut, names, father_last_name, mother_last_name) {
 export default function SearchPatient({ match }) {
   const dispatch = useDispatch();
   const history = useHistory();
-  //const patients = useSelector((state) => state.patients.patientsData);
   const patients = useSelector((state) => {
     if (state.patients.patientsDataFiltered.length > 0) {
       return state.patients.patientsDataFiltered;
     }
     return state.patients.patientsData;
   });
-
-  //const [rowss, setRowss] = React.useState([]);
 
   useEffect(() => {
     dispatch(getPatientsList());
@@ -147,15 +140,7 @@ export default function SearchPatient({ match }) {
     dispatch(filterPatient(e.target.value));
   };
 
-  // const theme = useTheme();
-  // const isMobile = useMediaQuery(theme.breakpoints.down("xs"), {
-  //   defaultMatches: true,
-  // });
-
   return (
-    // TODO: ver como mostrar 404 cuando no se cumple esta condicion:
-    // match.params.action === "ver" || match.params.action === "modificar" || match.params.action === "eliminar"
-
     <SearchPatientStyled style={{ margin: 10 }}>
       <Grid container alignItems="center" justify="center">
         <Typography className="title" variant="h5" color="primary">

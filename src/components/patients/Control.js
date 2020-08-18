@@ -10,8 +10,6 @@ import {
 
 //Table
 import TableC from "./Control/tableControl";
-// import TableB from "./Control/tableBiochemical";
-
 import Grid from "@material-ui/core/Grid";
 import Skeleton from "@material-ui/lab/Skeleton";
 

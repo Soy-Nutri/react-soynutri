@@ -182,9 +182,7 @@ export default function ModifyWeeklyDiet({ match }) {
 
   const weeklyDiets = useSelector((store) => store.weeklyDiets.getweeklyDiets);
   const patientInfo = useSelector((state) => state.patients.patientInfo);
-  const weeklyDietError = useSelector((store) => store.weeklyDiets.errors);
-
-  console.log("soy un error  ",weeklyDietError);
+  //const weeklyDietError = useSelector((store) => store.weeklyDiets.errors);
 
   const reqmsg = "Campo obligatorio";
 
@@ -281,8 +279,6 @@ export default function ModifyWeeklyDiet({ match }) {
     weklypatient2["timeDinner"] = timdinn;
 
     dispatch(modifyWeeklyDiet(weklypatient2));
-    //console.log(weklypatient2);
-    //actual  weeklyDiets
 
     setDayOfWeek("");
     setOpenSnackbar(true);
@@ -341,7 +337,6 @@ export default function ModifyWeeklyDiet({ match }) {
           </Grid>
         </Grid>
       )}
-      
 
       {weeklyDiets && weeklyDiets.date && dayOfWeek === "" && (
         <React.Fragment>

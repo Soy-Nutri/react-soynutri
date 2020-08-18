@@ -111,8 +111,6 @@ export default function ModifyControl({ match }) {
   const { register, errors, handleSubmit } = useForm();
 
   const onSubmit = (data, e) => {
-    // console.log(data);
-    // console.log(errors);
     dispatch(modifyControl(data, rut, newDate.date));
     setOpenSnackbar(true);
     handleClickDelete();
@@ -170,7 +168,6 @@ export default function ModifyControl({ match }) {
     setDate(event.target.value);
     setControlPatient(event.target.value);
     setNewDate(event.target.value);
-    //console.log(event.target.value);
   };
 
   const handleClickDelete = () => {

@@ -9,7 +9,6 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 
 import WatchLaterIcon from "@material-ui/icons/WatchLater";
-//import InputLabel from '@material-ui/core/InputLabel';
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -111,7 +110,6 @@ function Alert(props) {
 }
 
 export default function AddWeeklyDiet({ match }) {
-  //console.log(match.params.rut);
   const { register, errors, handleSubmit, control } = useForm();
   const dispatch = useDispatch();
 
@@ -119,9 +117,6 @@ export default function AddWeeklyDiet({ match }) {
 
   const weeklyDiet = useSelector((store) => store.weeklyDiets.weeklyDiets);
   const weeklyDietError = useSelector((store) => store.weeklyDiets.errors);
-
-  //console.log("Error");
- // console.log(weeklyDietError);
 
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
@@ -137,10 +132,9 @@ export default function AddWeeklyDiet({ match }) {
     data.timeSnack = new Date(data.timeSnack).toISOString().substring(11, 16);
 
     dispatch(addWeeklyDiet(data));
-   // console.log(errors);
+
     setOpenSnackbar(true);
     e.target.reset();
-  //  console.log(data);
   };
 
   const reqmsg = "Campo obligatorio";

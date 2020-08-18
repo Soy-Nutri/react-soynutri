@@ -34,7 +34,6 @@ export const getControl = (rut) => (dispatch) => {
       }
     })
     .catch((error) => {
-      console.log(error);
       dispatch({ type: GET_CONTROL, payload: ["error"] });
     });
 };
@@ -50,7 +49,6 @@ export const getBiochemical = (rut) => (dispatch) => {
       }
     })
     .catch((error) => {
-      console.log(error);
       dispatch({ type: GET_BIOCHEMICAL, payload: ["error"] });
     });
 };
@@ -66,7 +64,6 @@ export const getControlAdmin = (rut) => (dispatch) => {
       }
     })
     .catch((error) => {
-      console.log(error);
       dispatch({ type: GET_CONTROL, payload: ["error"] });
     });
 };
@@ -82,7 +79,6 @@ export const getBiochemicalAdmin = (rut) => (dispatch) => {
       }
     })
     .catch((error) => {
-      console.log(error);
       dispatch({ type: GET_BIOCHEMICAL, payload: ["error"] });
     });
 };

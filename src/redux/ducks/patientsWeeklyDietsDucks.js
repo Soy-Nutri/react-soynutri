@@ -29,7 +29,6 @@ export const getWeeklyDiets = (rut) => (dispatch) => {
       }
     })
     .catch((error) => {
-      console.log(error);
       dispatch({ type: GET_WEEKLY_DIETS, payload: ["error"] });
     });
 };

@@ -117,7 +117,6 @@ export default function UserMenu() {
                     className="menu-item"
                     onClick={handleClose}
                     component={Link}
-                    //to="/modificar_pauta_diaria"
                     to="/buscar_paciente/modificar_pauta_diaria"
                   >
                     Modificar pauta diaria
@@ -126,7 +125,6 @@ export default function UserMenu() {
                     className="menu-item"
                     onClick={handleClose}
                     component={Link}
-                    //to="/eliminar_pauta_diaria"
                     to="/buscar_paciente/eliminar_pauta_diaria"
                   >
                     Eliminar pauta diaria

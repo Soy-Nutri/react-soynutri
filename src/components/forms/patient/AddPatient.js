@@ -295,8 +295,8 @@ export default function AddPatient({ history }) {
               <FormControl variant="outlined" margin="dense" fullWidth>
                 <InputLabel htmlFor="select-sex">Sexo</InputLabel>
                 <Select native name="sex" label="Sexo" inputRef={register}>
-                  <option value={"male"}>Masculino</option>
-                  <option value={"female"}>Femenino</option>
+                  <option value={"Masculino"}>Masculino</option>
+                  <option value={"Femenino"}>Femenino</option>
                 </Select>
               </FormControl>
             </Grid>

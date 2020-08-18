@@ -4,18 +4,11 @@ import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Skeleton from "@material-ui/lab/Skeleton";
 
-// import Snackbar from "@material-ui/core/Snackbar";
-// import MuiAlert from "@material-ui/lab/Alert";
-//import ListItemIcon from "@material-ui/core/ListItemIcon";
 import TableDelete from "./TableDeleteWeeklyDiet";
 //Redux
 import { getPatientInfo } from "../../../redux/ducks/patientsDucks";
 import { useDispatch, useSelector } from "react-redux";
-import {
-
-  getAllWeeklyDiets,
-
-} from "../../../redux/ducks/weeklyDietsDucks";
+import { getAllWeeklyDiets } from "../../../redux/ducks/weeklyDietsDucks";
 
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
@@ -161,10 +154,7 @@ export default function DeleteWeeklyDiet({ match }) {
     dispatch(getAllWeeklyDiets(match.params.rut));
   }, [dispatch, match]);
 
-  //console.log("soy el weekly diets "+ weeklyDiets.length);
   const weeklyDietError = useSelector((store) => store.weeklyDiets.errors);
- // console.log("Error");
-  //console.log(weeklyDietError);
 
   var rows = [];
 
@@ -177,9 +167,6 @@ export default function DeleteWeeklyDiet({ match }) {
       });
     }
   }
-
-
-
 
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
@@ -235,7 +222,8 @@ export default function DeleteWeeklyDiet({ match }) {
           </Grid>
         )}
         {(weeklyDietError && weeklyDietError.length === 0) ||
-        weeklyDiets[0] === "error" || weeklyDietError==="Error inesperado!" ||
+        weeklyDiets[0] === "error" ||
+        weeklyDietError === "Error inesperado!" ||
         rowsEmpty ? (
           <Grid container direction="row" justify="center" alignItems="center">
             <h2>Este usuario no tiene minutas aún.</h2>

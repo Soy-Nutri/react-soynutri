@@ -26,7 +26,6 @@ function getColors(stops) {
   for (let i = 0; i < stops; i++) {
     let c = i / stops;
     let randomColor = rainbowStop(c, 1, 0.5);
-    //while (colors.includes(randomColor)) randomColor = rainbowStop(c, 1, 0.5);
     if (colors.includes("#ffffff")) randomColor = rainbowStop(c, 1, 0.5);
     colors.push(randomColor);
   }
@@ -153,7 +152,7 @@ export default function AdminDashboard() {
                 </Typography>
                 <Bar
                   data={{
-                    labels: ["Femenino", "Masculino"],
+                    labels: Object.keys(statistics.sex),
                     datasets: [
                       {
                         label: "Cantidad de pacientes",

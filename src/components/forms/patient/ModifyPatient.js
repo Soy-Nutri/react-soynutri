@@ -276,8 +276,8 @@ export default function ModifyPatient({ match }) {
                       inputRef={register}
                       defaultValue={patientInfo.sex}
                     >
-                      <option value={"male"}>Masculino</option>
-                      <option value={"female"}>Femenino</option>
+                      <option value={"Masculino"}>Masculino</option>
+                      <option value={"Femenino"}>Femenino</option>
                     </Select>
                   </FormControl>
                 </Grid>

@@ -65,7 +65,6 @@ function Profile() {
         "<p style='color: red;'>Las contraseñas deben ser iguales!</p>";
     }
   };
-  console.log(errors);
 
   const clearError = () => {
     document.getElementById("pass-error").innerHTML = "";

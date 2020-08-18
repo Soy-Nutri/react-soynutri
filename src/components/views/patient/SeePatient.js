@@ -61,9 +61,7 @@ export default function SeePatient({ match, history }) {
   const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
   const [openSnack, setOpenSnack] = React.useState(false);
-  //const [patientInfo, setPatientInfo] = React.useState({});
   const patientInfo = useSelector((state) => state.patients.patientInfo);
-
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleDocClick = (event) => {

@@ -141,14 +141,6 @@ export default function AddDailyDiet({ match }) {
     setDinnerTime(date);
   };
 
-  // function prettyTime(date) {
-  //   // this function makes de datetype date in a "HH:MM" format
-  //   return date.toLocaleTimeString(navigator.language, {
-  //     hour: "2-digit",
-  //     minute: "2-digit",
-  //   });
-  // }
-
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"), {
     defaultMatches: true,

@@ -1,27 +1,10 @@
 import React from "react";
 import styled from "styled-components";
-
-//import { useForm } from "react-hook-form";
-
-//import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
-//import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Skeleton from "@material-ui/lab/Skeleton";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
-
-/*
-import MenuItem from "@material-ui/core/MenuItem";
-
-import Select from "@material-ui/core/Select";
-import { makeStyles } from "@material-ui/core/styles";
-*/
-
-//import Snackbar from "@material-ui/core/Snackbar";
-//import MuiAlert from "@material-ui/lab/Alert";
-
-//import ListItemIcon from "@material-ui/core/ListItemIcon";
 
 import Table from "./TableWeekly";
 //Redux
@@ -100,18 +83,10 @@ function getFecha(date) {
   return `${dayS}/${monthS}/${year}`;
 }
 
-
-
 export default function SeeWeeklyDiet({ match }) {
   const dispatch = useDispatch();
-
   const weeklyDiets = useSelector((store) => store.weeklyDiets.getweeklyDiets);
   const weeklyDietError = useSelector((store) => store.weeklyDiets.errors);
- // const [rowsEmpty, setRowsEmpty] = React.useState(false);
-
-  //console.log("Error");
-  //console.log(weeklyDietError);
-
 
   React.useEffect(() => {
     dispatch(getPatientInfo(match.params.rut));
@@ -121,9 +96,7 @@ export default function SeeWeeklyDiet({ match }) {
   var rows = [];
 
   if (weeklyDiets && weeklyDiets.length > 0) {
-    //console.log("TOY ACA:  \n", weeklyDiets.length);
     for (let i = 0; i < weeklyDiets.length; i++) {
-     // console.log(getFecha(weeklyDiets[i].date));
       rows.push({
         date: getFecha(weeklyDiets[i].date),
         action: "delete",
@@ -150,7 +123,8 @@ export default function SeeWeeklyDiet({ match }) {
 
         <Grid container justify="center" spacing={isMobile ? 0 : 2}>
           <Grid item xs={12} sm={8} className="semana">
-            {(weeklyDiets && weeklyDiets[0] === "error") || weeklyDietError==="Error inesperado!"   ? (
+            {(weeklyDiets && weeklyDiets[0] === "error") ||
+            weeklyDietError === "Error inesperado!" ? (
               <Grid
                 container
                 direction="row"
