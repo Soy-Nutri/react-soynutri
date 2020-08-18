@@ -10,6 +10,7 @@ const initialState = {
 const SET_USER = "SET_USER";
 const SET_PROFILE = "SET_PROFILE";
 const SET_LOGIN_ERROR = "SET_LOGIN_ERROR";
+const CLEAR_LOGIN_ERROR = "CLEAR_LOGIN_ERROR";
 
 // Reducer
 export default function authReducer(state = initialState, action) {
@@ -20,6 +21,8 @@ export default function authReducer(state = initialState, action) {
       return { ...state, perfil: action.payload };
     case SET_LOGIN_ERROR:
       return { ...state, error: action.payload };
+    case CLEAR_LOGIN_ERROR:
+      return { ...state, error: null };
     default:
       return state;
   }
@@ -27,6 +30,7 @@ export default function authReducer(state = initialState, action) {
 
 // Actions creators
 export const loginUser = (userData) => (dispatch) => {
+  dispatch({ type: CLEAR_LOGIN_ERROR });
   if (userData.rut.substring(0, 1) === "#") {
     userData.rut = userData.rut.replace("#", "");
     axios
