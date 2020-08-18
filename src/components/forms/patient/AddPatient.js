@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 import { useForm } from "react-hook-form";
-
+import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
@@ -12,7 +12,7 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
-
+import CircularProgress from "@material-ui/core/CircularProgress";
 import BackButton from "../../../utils/BackButton";
 
 import { useTheme } from "@material-ui/core/styles";
@@ -42,6 +42,7 @@ const AddPatientStyled = styled.div`
   }
   .form-button {
     margin-top: 1em;
+    margin-bottom: 1em;
     margin-left: auto;
     margin-right: auto;
   }
@@ -56,14 +57,35 @@ const AddPatientStyled = styled.div`
   }
 `;
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+    alignItems: "center",
+  },
+  wrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+  },
+  buttonProgress: {
+    color: theme.primary,
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
+}));
+
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
 export default function AddPatient({ history }) {
+  const classes = useStyles();
   const { register, errors, handleSubmit } = useForm();
   const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
 
   const newPatient = useSelector((state) => state.patients.newPatient);
   const newPatientError = useSelector((state) => state.patients.errors);
@@ -79,11 +101,20 @@ export default function AddPatient({ history }) {
     setOpen(false);
   };
 
+  React.useEffect(() => {
+    if (newPatient || newPatientError) {
+      setLoading(false);
+    }
+  }, [dispatch, newPatient, newPatientError]);
+
   const onSubmit = (data, e) => {
-    dispatch(addPatient(data));
-    handleOpen();
-    if (newPatientError) {
-      e.target.reset();
+    if (!loading) {
+      setLoading(true);
+      dispatch(addPatient(data));
+      handleOpen();
+      if (newPatientError) {
+        e.target.reset();
+      }
     }
   };
 
@@ -304,15 +335,21 @@ export default function AddPatient({ history }) {
           </Grid>
         </Grid>
 
-        <Grid container alignItems="center">
-          <Button
-            className="form-button"
-            variant="outlined"
-            type="submit"
-            color="primary"
-          >
-            Agregar paciente
-          </Button>
+        <Grid container justify="center" alignItems="center">
+          <div className={classes.wrapper}>
+            <Button
+              className="form-button"
+              variant="outlined"
+              type="submit"
+              color="primary"
+              disabled={loading}
+            >
+              Agregar paciente
+            </Button>
+            {loading && (
+              <CircularProgress size={24} className={classes.buttonProgress} />
+            )}
+          </div>
         </Grid>
       </form>
 

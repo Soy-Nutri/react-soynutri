@@ -20,7 +20,6 @@ import Login from "./components/forms/Login";
 import AddPatient from "./components/forms/patient/AddPatient";
 import SeePatient from "./components/views/patient/SeePatient";
 import ModifyPatient from "./components/forms/patient/ModifyPatient";
-import DeletePatient from "./components/forms/patient/DeletePatient";
 import SearchPatient from "./components/views/patient/SearchPatient";
 //Patient documents
 import PatientControl from "./components/patients/Control";
@@ -177,11 +176,6 @@ function App() {
               path="/modificar_paciente/:rut"
               exact
               component={template(ModifyPatient, "admin")}
-            />
-            <Route
-              path="/borrar_paciente"
-              exact
-              component={template(DeletePatient, "admin")}
             />
 
             <Route
