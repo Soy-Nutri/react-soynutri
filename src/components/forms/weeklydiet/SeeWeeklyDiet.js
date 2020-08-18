@@ -11,6 +11,49 @@ import Table from "./TableWeekly";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllWeeklyDiets } from "../../../redux/ducks/weeklyDietsDucks";
 import { getPatientInfo } from "../../../redux/ducks/patientsDucks";
+import { getId } from "../../../redux/ducks/patientsDucks";
+
+function formateaRut(rut) {
+  var actual = rut.replace(/^0+/, "");
+  if (actual !== "" && actual.length > 1) {
+    var sinPuntos = actual.replace(/\./g, "");
+    var actualLimpio = sinPuntos.replace(/-/g, "");
+    var inicio = actualLimpio.substring(0, actualLimpio.length - 1);
+    var rutPuntos = "";
+    var i = 0;
+    var j = 1;
+    for (i = inicio.length - 1; i >= 0; i--) {
+      var letra = inicio.charAt(i);
+      rutPuntos = letra + rutPuntos;
+      if (j % 3 === 0 && j <= inicio.length - 1) {
+        rutPuntos = "." + rutPuntos;
+      }
+      j++;
+    }
+    var dv = actualLimpio.substring(actualLimpio.length - 1);
+    rutPuntos = rutPuntos + "-" + dv;
+  }
+  return rutPuntos;
+}
+
+function Edad(FechaNacimiento) {
+  var fechaNace = new Date(FechaNacimiento);
+  var fechaActual = new Date();
+
+  var mes = fechaActual.getMonth();
+  var dia = fechaActual.getDate();
+  var año = fechaActual.getFullYear();
+
+  fechaActual.setDate(dia);
+  fechaActual.setMonth(mes);
+  fechaActual.setFullYear(año);
+
+  let edad = Math.floor(
+    (fechaActual - fechaNace) / (1000 * 60 * 60 * 24) / 365
+  );
+
+  return edad;
+}
 
 const SeeWeeklyDietStyled = styled.div`
   /* Hidde spinner number input Chrome, Safari, Edge, Opera */
@@ -71,6 +114,13 @@ const SeeWeeklyDietStyled = styled.div`
       display: block;
     }
   }
+  .name {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1em;
+    font-size: 1em;
+    /* color: var(--mainPurple); */
+  }
 `;
 
 function getFecha(date) {
@@ -87,11 +137,18 @@ export default function SeeWeeklyDiet({ match }) {
   const dispatch = useDispatch();
   const weeklyDiets = useSelector((store) => store.weeklyDiets.getweeklyDiets);
   const weeklyDietError = useSelector((store) => store.weeklyDiets.errors);
+  const patientInfo = useSelector((state) => state.patients.patientInfo);
 
   React.useEffect(() => {
     dispatch(getPatientInfo(match.params.rut));
     dispatch(getAllWeeklyDiets(match.params.rut));
+    dispatch(getPatientInfo(match.params.rut));
+    dispatch(getId(match.params.rut));
   }, [dispatch, match]);
+  const exists = useSelector((state) => state.patients.exists);
+  if (exists === "error") {
+    window.location.href = "/error";
+  }
 
   var rows = [];
 
@@ -118,6 +175,40 @@ export default function SeeWeeklyDiet({ match }) {
             Ver minuta semanal
           </Typography>
         </Grid>
+
+        {patientInfo && patientInfo.names ? (
+          <Grid container alignItems="center">
+            <Grid item xs={12} container justify="center">
+              <Typography className="name" variant="h5">
+                <div>
+                  <h1>
+                    {patientInfo.names} {patientInfo.father_last_name}{" "}
+                    {patientInfo.mother_last_name}
+                  </h1>
+                  <h2>
+                    Rut: {formateaRut(patientInfo.rut)} Edad:{" "}
+                    {Edad(patientInfo.birth_date)} años
+                  </h2>
+                </div>
+              </Typography>
+            </Grid>
+          </Grid>
+        ) : (
+          <Grid container justify="center">
+            <Grid item container>
+              <Grid item xs={false} sm={3}></Grid>
+
+              <Grid item xs={12} sm={6}>
+                <Skeleton
+                  variant="rect"
+                  height={100}
+                  style={{ borderRadius: "5px" }}
+                />
+              </Grid>
+              <Grid item xs={false} sm={3}></Grid>
+            </Grid>
+          </Grid>
+        )}
 
         <br></br>
 

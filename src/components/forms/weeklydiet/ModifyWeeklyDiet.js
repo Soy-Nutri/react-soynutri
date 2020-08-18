@@ -41,6 +41,8 @@ import Skeleton from "@material-ui/lab/Skeleton";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 
+import { getId } from "../../../redux/ducks/patientsDucks";
+
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -191,7 +193,12 @@ export default function ModifyWeeklyDiet({ match }) {
   React.useEffect(() => {
     dispatch(getWeeklyDiets(match.params.rut));
     dispatch(getPatientInfo(match.params.rut));
+    dispatch(getId(match.params.rut));
   }, [dispatch, match.params.rut]);
+  const exists = useSelector((state) => state.patients.exists);
+  if (exists === "error") {
+    window.location.href = "/error";
+  }
 
   const handleClickDelete = () => {
     setDayOfWeek("");
@@ -330,12 +337,18 @@ export default function ModifyWeeklyDiet({ match }) {
         </Grid>
       )}
 
-      {weeklyDiets && weeklyDiets.date && (
+      {weeklyDiets && weeklyDiets.date ? (
         <Grid container justify="center">
           <Grid container justify="center">
             <h2>Fecha de la minuta semanal {getFecha(weeklyDiets.date)}</h2>
           </Grid>
         </Grid>
+      ) : weeklyDiets === "error" ? (
+        <Grid container direction="row" justify="center" alignItems="center">
+          <h2>Este usuario no tiene minutas aún.</h2>
+        </Grid>
+      ) : (
+        ""
       )}
 
       {weeklyDiets && weeklyDiets.date && dayOfWeek === "" && (
