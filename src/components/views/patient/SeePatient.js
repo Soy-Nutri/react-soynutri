@@ -29,6 +29,7 @@ import {
   deletePatient,
 } from "../../../redux/ducks/patientsDucks";
 import { useDispatch, useSelector } from "react-redux";
+import { getId } from "../../../redux/ducks/patientsDucks";
 
 const SeePatientStyled = styled.div`
   /* .card {
@@ -98,7 +99,16 @@ export default function SeePatient({ match, history }) {
 
   React.useEffect(() => {
     dispatch(getPatientInfo(match.params.rut));
+    dispatch(getId(match.params.rut));
   }, [dispatch, match.params.rut]);
+  const exists = useSelector((state) => state.patients.exists);
+  if (exists === "error") {
+    window.location.href = "/error";
+  }
+
+  if (match.params.elim !== "v") {
+    window.location.href = "/error";
+  }
 
   const handleModifyClick = (rut) => {
     history.push(`/modificar_paciente/${rut}`);

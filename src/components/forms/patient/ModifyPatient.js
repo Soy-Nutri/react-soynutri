@@ -21,6 +21,7 @@ import {
   getPatientInfo,
   modifyPatient,
 } from "../../../redux/ducks/patientsDucks";
+import { getId } from "../../../redux/ducks/patientsDucks";
 
 const ModifyPatientStyled = styled.div`
   margin-bottom: 2em;
@@ -94,7 +95,13 @@ export default function ModifyPatient({ match }) {
     if (error || modifiedPatient) {
       setLoading(false);
     }
-  }, [dispatch, error, modifiedPatient]);
+    dispatch(getId(match.params.rut));
+  }, [error, modifiedPatient, dispatch, match]);
+  
+  const exists = useSelector((state) => state.patients.exists);
+  if (exists === "error") {
+    window.location.href = "/error";
+  }
 
   const handleClose = () => {
     setOpen(false);

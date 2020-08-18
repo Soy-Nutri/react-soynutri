@@ -94,7 +94,20 @@ function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
+const actionAvailable = [
+  "ver",
+  "modificar",
+  "eliminar",
+  "agregar_pauta_diaria",
+  "ver_pauta_diaria",
+  "modificar_pauta_diaria",
+  "eliminar_pauta_diaria",
+];
+
 export default function SearchPatient({ match }) {
+  if (actionAvailable.indexOf(match.params.action) === -1) {
+    window.location.href = "/error";
+  }
   const dispatch = useDispatch();
   const history = useHistory();
   //const patients = useSelector((state) => state.patients.patientsData);

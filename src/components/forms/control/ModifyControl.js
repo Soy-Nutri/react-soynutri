@@ -24,6 +24,8 @@ import MuiAlert from "@material-ui/lab/Alert";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 
+import { getId } from "../../../redux/ducks/patientsDucks";
+
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -167,7 +169,14 @@ export default function ModifyControl({ match }) {
     setRut(match.params.rut);
     dispatch(getControls(match.params.rut));
     dispatch(getPatientInfo(match.params.rut));
-  }, [dispatch, match, controlErrors]);
+    dispatch(getId(match.params.rut));
+  }, [dispatch, match]);
+
+
+  const exists = useSelector((state) => state.patients.exists);
+  if (exists === "error") {
+    window.location.href = "/error";
+  }
 
   const [date, setDate] = React.useState("");
   const [newDate, setNewDate] = React.useState("");

@@ -5,16 +5,15 @@ import Container from "@material-ui/core/Container";
 import Skeleton from "@material-ui/lab/Skeleton";
 //redux
 import { getPatientInfo } from "../../../redux/ducks/patientsDucks";
-import {
-  getControlAdmin,
-  getBiochemicalAdmin,
-} from "../../../redux/ducks/patientsCarnetDucks";
+import { getControlAdmin } from "../../../redux/ducks/patientsCarnetDucks";
 import { useDispatch, useSelector } from "react-redux";
 
 //Table
 import TableC from "../../patients/Control/tableControl";
 
 import Grid from "@material-ui/core/Grid";
+
+import { getId } from "../../../redux/ducks/patientsDucks";
 
 const SeeControlStyled = styled.div`
   /* .card {
@@ -75,13 +74,16 @@ export default function SeeControl({ match, history }) {
   const dispatch = useDispatch();
   const patientInfo = useSelector((state) => state.patients.patientInfo);
   const carnet = useSelector((store) => store.carnet.control);
-  // const biochemical = useSelector((store) => store.carnet.biochemical);
 
   React.useEffect(() => {
     dispatch(getPatientInfo(match.params.rut));
     dispatch(getControlAdmin(match.params.rut));
-    dispatch(getBiochemicalAdmin(match.params.rut));
+    dispatch(getId(match.params.rut));
   }, [dispatch, match.params.rut]);
+  const exists = useSelector((state) => state.patients.exists);
+  if (exists === "error") {
+    window.location.href = "/error";
+  }
 
   return (
     <SeeControlStyled>
