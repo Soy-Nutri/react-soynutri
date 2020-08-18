@@ -88,7 +88,12 @@ function createRow(rut, names, father_last_name, mother_last_name) {
   return { rut, names, father_last_name, mother_last_name };
 }
 
+const actionAvailable = ["agregar", "ver", "modificar", "eliminar"];
+
 export default function SearchPatient({ match }) {
+  if (actionAvailable.indexOf(match.params.action) === -1) {
+    window.location.href = "/error";
+  }
   const dispatch = useDispatch();
   const history = useHistory();
   const patients = useSelector((state) => {
