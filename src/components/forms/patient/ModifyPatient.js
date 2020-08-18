@@ -94,7 +94,7 @@ export default function ModifyPatient({ match }) {
     if (error || modifiedPatient) {
       setLoading(false);
     }
-  }, [error, modifiedPatient]);
+  }, [dispatch, error, modifiedPatient]);
 
   const handleClose = () => {
     setOpen(false);
@@ -323,8 +323,8 @@ export default function ModifyPatient({ match }) {
                       inputRef={register}
                       defaultValue={patientInfo.state}
                     >
-                      <option value={"active"}>Activo</option>
-                      <option value={"unactive"}>Inactivo</option>
+                      <option value={"activo"}>Activo</option>
+                      <option value={"inactivo"}>Inactivo</option>
                     </Select>
                   </FormControl>
                 </Grid>

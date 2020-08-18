@@ -7,7 +7,8 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-
+import { makeStyles } from "@material-ui/core/styles";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import WatchLaterIcon from "@material-ui/icons/WatchLater";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
@@ -47,6 +48,7 @@ const AddWeeklyDietStyled = styled.div`
   }
   .form-button {
     margin-top: 1em;
+    margin-bottom: 1em;
   }
 
   .title {
@@ -92,6 +94,25 @@ const AddWeeklyDietStyled = styled.div`
   }
 `;
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+    alignItems: "center",
+  },
+  wrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+  },
+  buttonProgress: {
+    color: theme.primary,
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
+}));
+
 //mientras cambie el dia y no aprete el boton se vayan cambiando los datos de los formularios
 // os ino tendria que rellenar un dia obligatoriamente ajajedsaxD
 
@@ -110,11 +131,12 @@ function Alert(props) {
 }
 
 export default function AddWeeklyDiet({ match }) {
+  const classes = useStyles();
   const { register, errors, handleSubmit, control } = useForm();
   const dispatch = useDispatch();
 
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
-
+  const [loading, setLoading] = React.useState(false);
   const weeklyDiet = useSelector((store) => store.weeklyDiets.weeklyDiets);
   const weeklyDietError = useSelector((store) => store.weeklyDiets.errors);
 
@@ -123,19 +145,30 @@ export default function AddWeeklyDiet({ match }) {
   };
 
   const onSubmit = (data, e) => {
-    data["date"] = new Date(Date.now()).toISOString().substring(0, 10);
-    data.timeBreakfast = new Date(data.timeBreakfast)
-      .toISOString()
-      .substring(11, 16);
-    data.timeDinner = new Date(data.timeDinner).toISOString().substring(11, 16);
-    data.timeLunch = new Date(data.timeLunch).toISOString().substring(11, 16);
-    data.timeSnack = new Date(data.timeSnack).toISOString().substring(11, 16);
+    if (!loading) {
+      setLoading(true);
+      data["date"] = new Date(Date.now()).toISOString().substring(0, 10);
+      data.timeBreakfast = new Date(data.timeBreakfast)
+        .toISOString()
+        .substring(11, 16);
+      data.timeDinner = new Date(data.timeDinner)
+        .toISOString()
+        .substring(11, 16);
+      data.timeLunch = new Date(data.timeLunch).toISOString().substring(11, 16);
+      data.timeSnack = new Date(data.timeSnack).toISOString().substring(11, 16);
 
-    dispatch(addWeeklyDiet(data));
+      dispatch(addWeeklyDiet(data));
 
-    setOpenSnackbar(true);
-    e.target.reset();
+      setOpenSnackbar(true);
+      e.target.reset();
+    }
   };
+
+  React.useEffect(() => {
+    if (weeklyDietError || (weeklyDiet && weeklyDiet.error === undefined)) {
+      setLoading(false);
+    }
+  }, [weeklyDietError, weeklyDiet]);
 
   const reqmsg = "Campo obligatorio";
 
@@ -454,14 +487,20 @@ export default function AddWeeklyDiet({ match }) {
           ></Grid>
         </Grid>
         <Grid container justify="center">
-          <Button
-            className="form-button"
-            variant="outlined"
-            type="submit"
-            color="primary"
-          >
-            Guardar Minuta Semanal
-          </Button>
+          <div className={classes.wrapper}>
+            <Button
+              className="form-button"
+              variant="outlined"
+              type="submit"
+              color="primary"
+              disabled={loading}
+            >
+              Guardar Minuta Semanal
+            </Button>
+            {loading && (
+              <CircularProgress size={24} className={classes.buttonProgress} />
+            )}
+          </div>
         </Grid>
       </form>
       {weeklyDietError ? (

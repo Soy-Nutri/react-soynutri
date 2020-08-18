@@ -9,7 +9,8 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 
 import WatchLaterIcon from "@material-ui/icons/WatchLater";
-
+import { makeStyles } from "@material-ui/core/styles";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 
@@ -49,6 +50,7 @@ const AddDailyDietStyled = styled.div`
   }
   .form-button {
     margin-top: 1em;
+    margin-bottom: 1em;
   }
 
   .title {
@@ -79,6 +81,25 @@ const AddDailyDietStyled = styled.div`
   }
 `;
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+    alignItems: "center",
+  },
+  wrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+  },
+  buttonProgress: {
+    color: theme.primary,
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
+}));
+
 function formatTime(date) {
   let format = new Date(date).toISOString();
   let time = format.substring(11, 16);
@@ -86,6 +107,7 @@ function formatTime(date) {
 }
 
 export default function AddDailyDiet({ match }) {
+  const classes = useStyles();
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -99,19 +121,29 @@ export default function AddDailyDiet({ match }) {
 
   const [open, setOpen] = React.useState(false);
   const { register, errors, handleSubmit, control } = useForm();
+  const [loading, setLoading] = React.useState(false);
   const message = useSelector((state) => state.dailyDiets.newDailyDiet);
 
   const dispatch = useDispatch();
   const onSubmit = (data, e) => {
-    data["date"] = new Date(Date.now()).toISOString().substring(0, 10);
-    data.breakfast_time = formatTime(data.breakfast_time);
-    data.lunch_time = formatTime(data.lunch_time);
-    data.snack_time = formatTime(data.snack_time);
-    data.dinner_time = formatTime(data.dinner_time);
-    dispatch(addDailyDiet(data));
-    handleOpen();
-    e.target.reset();
+    if (!loading) {
+      setLoading(true);
+      data["date"] = new Date(Date.now()).toISOString().substring(0, 10);
+      data.breakfast_time = formatTime(data.breakfast_time);
+      data.lunch_time = formatTime(data.lunch_time);
+      data.snack_time = formatTime(data.snack_time);
+      data.dinner_time = formatTime(data.dinner_time);
+      dispatch(addDailyDiet(data));
+      handleOpen();
+      e.target.reset();
+    }
   };
+
+  React.useEffect(() => {
+    if (message) {
+      setLoading(false);
+    }
+  }, [message]);
 
   const reqmsg = "Campo obligatorio";
 
@@ -475,14 +507,20 @@ export default function AddDailyDiet({ match }) {
           </Grid>
         </Grid>
         <Grid container justify="center">
-          <Button
-            className="form-button"
-            variant="outlined"
-            type="submit"
-            color="primary"
-          >
-            Agregar pauta diaria
-          </Button>
+          <div className={classes.wrapper}>
+            <Button
+              className="form-button"
+              variant="outlined"
+              type="submit"
+              color="primary"
+              disabled={loading}
+            >
+              Agregar pauta diaria
+            </Button>
+            {loading && (
+              <CircularProgress size={24} className={classes.buttonProgress} />
+            )}
+          </div>
         </Grid>
       </form>
       {message === "error" ? (
