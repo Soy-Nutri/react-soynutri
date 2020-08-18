@@ -21,9 +21,8 @@ import AddIcon from "@material-ui/icons/Add";
 
 import Skeleton from "@material-ui/lab/Skeleton";
 
-import { useTheme } from "@material-ui/core/styles";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-
+// import { useTheme } from "@material-ui/core/styles";
+// import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 //import Error from "../../Error";
 
@@ -33,7 +32,7 @@ import {
   getPatientsList,
   filterPatient,
 } from "../../../redux/ducks/patientsDucks";
-import Container from "@material-ui/core/Container";
+// import Container from "@material-ui/core/Container";
 
 const SearchPatientStyled = styled.div`
   .paper-input {
@@ -60,7 +59,7 @@ const SearchPatientStyled = styled.div`
     flex: 1;
   }
   .table {
-    margin-top: 3em;
+    margin-top: 1em;
   }
   .paper-table {
     width: 100%;
@@ -81,9 +80,8 @@ const SearchPatientStyled = styled.div`
     font-family: yellowtail;
     text-align: center;
     font-size: 3.5em;
-    margin-bottom:0em;
+    margin-bottom: 0em;
   }
-  
 `;
 
 // Data
@@ -153,10 +151,10 @@ export default function SearchPatient({ match }) {
   const handleFilterPatient = (e) => {
     dispatch(filterPatient(e.target.value));
   };
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("xs"), {
-    defaultMatches: true,
-  });
+  // const theme = useTheme();
+  // const isMobile = useMediaQuery(theme.breakpoints.down("xs"), {
+  //   defaultMatches: true,
+  // });
 
   return (
     // TODO: ver como mostrar 404 cuando no se cumple esta condicion:
@@ -164,31 +162,26 @@ export default function SearchPatient({ match }) {
 
     <SearchPatientStyled>
       <Grid container justify="center">
-    
-       
-       
-       
         <Grid item xs={10} sm={6} md={5} lg={4}>
-        <Grid item container justify="center">
-          <Typography className="title" variant="h5" color="primary">
-            Lista de pacientes
-          </Typography>
-        </Grid>
-        <Grid item container justify="center">
-          <Typography variant="h6" color="primary">
-            {match.params.action === "ver"
-              ? "Ver minuta a paciente"
-              : match.params.action === "modificar"
-              ? "Modificar minuta a paciente"
-              : match.params.action === "eliminar"
-              ? "Eliminar minuta a paciente"
-              : match.params.action === "agregar"
-              ? "Agregar minuta a paciente": ""}
+          <Grid item container justify="center">
+            <Typography className="title" variant="h5" color="primary">
+              Lista de pacientes
+            </Typography>
+          </Grid>
+          <Grid item container justify="center">
+            <Typography variant="h6" color="primary">
+              {match.params.action === "ver"
+                ? "Ver minuta a paciente"
+                : match.params.action === "modificar"
+                ? "Modificar minuta a paciente"
+                : match.params.action === "eliminar"
+                ? "Eliminar minuta a paciente"
+                : match.params.action === "agregar"
+                ? "Agregar minuta a paciente"
+                : ""}
+            </Typography>
+          </Grid>
 
-          </Typography>
-        </Grid>
-
-     
           <form>
             <Paper className="paper-input">
               <SearchIcon />
@@ -199,32 +192,32 @@ export default function SearchPatient({ match }) {
               />
             </Paper>
           </form>
-
-          
         </Grid>
-   
+      </Grid>
+      <Grid container justify="center" className="table">
+        <Grid item xs={false} md={1} lg={3}></Grid>
+        <Grid item xs={11} md={9} lg={6}>
+          <BackButton his={history} />
+        </Grid>
+        <Grid item xs={false} md={1} lg={3}></Grid>
       </Grid>
 
       {rowss.length === 0 ? (
-        <Container maxWidth="md" style={{ marginTop: "50px" }}>
-          <Skeleton
-            variant="rect"
-            height={300}
-            style={{ borderRadius: "5px" }}
-          />
-        </Container>
+        <Grid container justify="center" className="table">
+          <Grid item xs={false} md={1} lg={3}></Grid>
+          <Grid item xs={11} md={9} lg={6}>
+            <Skeleton
+              variant="rect"
+              height={300}
+              style={{ borderRadius: "5px" }}
+            />
+          </Grid>
+          <Grid item xs={false} md={1} lg={3}></Grid>
+        </Grid>
       ) : (
         <React.Fragment>
           {/* TABLE */}
           <Grid container justify="center" className="table">
-          <Grid item container spacing={isMobile ? 0 : 2}>
-              <Grid item xs={1} sm={1} md={2} lg={3}></Grid>
-              <Grid item xs={11} sm={2} md={3} lg={3}>
-                <BackButton his={history} />
-              </Grid>
-              <Grid item xs={false} sm={2} md={3} lg={4}></Grid>
-            </Grid>
-            
             <Grid item xs={11} md={9} lg={6}>
               <Paper className="paper-table">
                 <TableContainer className="table-container">

@@ -174,13 +174,13 @@ export default function SearchPatient({ match }) {
       const selected = patients.filter((pat) => pat.rut === rut);
       setPatientInfo(selected[0]);
       handleOpen();
-    } else if (match.params.action === "add_pd") {
+    } else if (match.params.action === "agregar_pauta_diaria") {
       history.push(`/agregar_pauta_diaria/${rut}`);
-    } else if (match.params.action === "see_pd") {
+    } else if (match.params.action === "ver_pauta_diaria") {
       history.push(`/ver_pauta_diaria/${rut}`);
-    } else if (match.params.action === "modify_pd") {
+    } else if (match.params.action === "modificar_pauta_diaria") {
       history.push(`/modificar_pauta_diaria/${rut}`);
-    } else if (match.params.action === "remove_pd") {
+    } else if (match.params.action === "eliminar_pauta_diaria") {
       history.push(`/eliminar_pauta_diaria/${rut}`);
     }
   };
@@ -208,6 +208,14 @@ export default function SearchPatient({ match }) {
               ? "Modificar paciente"
               : match.params.action === "eliminar"
               ? "Eliminar paciente"
+              : match.params.action === "agregar_pauta_diaria"
+              ? "Agregar pauta diaria"
+              : match.params.action === "ver_pauta_diaria"
+              ? "Ver pauta diaria"
+              : match.params.action === "modificar_pauta_diaria"
+              ? "Modificar pauta diaria"
+              : match.params.action === "eliminar_pauta_diaria"
+              ? "Eliminar pauta diaria"
               : ""}
           </Typography>
         </Grid>
@@ -301,24 +309,28 @@ export default function SearchPatient({ match }) {
                                     ) : column.id !== "icon" ? (
                                       value
                                     ) : match.params.action === "ver" ||
-                                      match.params.action === "see_pd" ? (
+                                      match.params.action ===
+                                        "ver_pauta_diaria" ? (
                                       <VisibilityIcon
                                         className="view-patient"
                                         onClick={() => handleClick(row.rut)}
                                       />
                                     ) : match.params.action === "modificar" ||
-                                      match.params.action === "modify_pd" ? (
+                                      match.params.action ===
+                                        "modificar_pauta_diaria" ? (
                                       <CreateIcon
                                         className="view-patient"
                                         onClick={() => handleClick(row.rut)}
                                       />
                                     ) : match.params.action === "eliminar" ||
-                                      match.params.action === "remove_pd" ? (
+                                      match.params.action ===
+                                        "eliminar_pauta_diaria" ? (
                                       <DeleteIcon
                                         className="view-patient"
                                         onClick={() => handleClick(row.rut)}
                                       />
-                                    ) : match.params.action === "add_pd" ? (
+                                    ) : match.params.action ===
+                                      "agregar_pauta_diaria" ? (
                                       <AddIcon
                                         className="view-patient"
                                         onClick={() => handleClick(row.rut)}
