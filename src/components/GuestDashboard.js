@@ -92,7 +92,7 @@ export default function GuestDashboard() {
                     nutriName
                   )}
                 </Typography>
-                <Typography align="center">
+                <Typography align="center" variant="subtitle1" component="h2">
                   {academicInfo === undefined ? (
                     <Grid align="center">
                       <Skeleton width="33%" />
@@ -122,6 +122,7 @@ export default function GuestDashboard() {
             <br></br>
             <Typography
               variant="h5"
+              component="h2"
               align="center"
               color="textSecondary"
               paragraph
