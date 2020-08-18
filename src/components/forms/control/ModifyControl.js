@@ -13,6 +13,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { getControls, modifyControl } from "../../../redux/ducks/controlDucks";
 import { getPatientInfo } from "../../../redux/ducks/patientsDucks";
 
+import { makeStyles } from "@material-ui/core/styles";
+import CircularProgress from "@material-ui/core/CircularProgress";
+
 import Skeleton from "@material-ui/lab/Skeleton";
 
 import Snackbar from "@material-ui/core/Snackbar";
@@ -77,6 +80,7 @@ const ModifyControlStyled = styled.div`
   }
   .form-button {
     margin-top: 1em;
+    margin-button: 1em;
     margin-left: auto;
     margin-right: auto;
   }
@@ -99,6 +103,25 @@ const ModifyControlStyled = styled.div`
   }
 `;
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+    alignItems: "center",
+  },
+  wrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+  },
+  buttonProgress: {
+    color: theme.primary,
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
+}));
+
 function getFecha(date) {
   let newDate = new Date(date);
   let month = (newDate.getMonth() + 1).toString();
@@ -110,13 +133,18 @@ function getFecha(date) {
 }
 
 export default function ModifyControl({ match }) {
+  const classes = useStyles();
   const { register, errors, handleSubmit } = useForm();
-
+  const [loading, setLoading] = React.useState(false);
   const onSubmit = (data, e) => {
-    dispatch(modifyControl(data, rut, newDate.date));
-    setOpenSnackbar(true);
-    handleClickDelete();
-    e.target.reset();
+    if (!loading) {
+      setLoading(true);
+      dispatch(modifyControl(data, rut, newDate.date));
+      setOpenSnackbar(true);
+      handleClickDelete();
+      e.target.reset();
+      setLoading(false);
+    }
   };
 
   const reqmsg = "Campo obligatorio";
@@ -143,6 +171,7 @@ export default function ModifyControl({ match }) {
     dispatch(getPatientInfo(match.params.rut));
     dispatch(getId(match.params.rut));
   }, [dispatch, match]);
+
 
   const exists = useSelector((state) => state.patients.exists);
   if (exists === "error") {
@@ -644,27 +673,25 @@ export default function ModifyControl({ match }) {
             </Grid>
           </Grid>
 
-          <Grid container alignItems="center">
-            <Button
-              className="form-button"
-              variant="outlined"
-              type="submit"
-              color="primary"
-              onClick={handleClickOpen}
-            >
-              Guardar cambios
-            </Button>
-          </Grid>
-          <Grid container alignItems="center">
-            <Button
-              className="form-button"
-              variant="outlined"
-              type="submit"
-              color="primary"
-              onClick={handleClickDelete}
-            >
-              Cancelar
-            </Button>
+          <Grid container justify="center" alignItems="center">
+            <div className={classes.wrapper}>
+              <Button
+                className="form-button"
+                variant="outlined"
+                type="submit"
+                color="primary"
+                onClick={handleClickOpen}
+                disabled={loading}
+              >
+                Guardar cambios
+              </Button>
+              {loading && (
+                <CircularProgress
+                  size={24}
+                  className={classes.buttonProgress}
+                />
+              )}
+            </div>
           </Grid>
         </form>
       )}

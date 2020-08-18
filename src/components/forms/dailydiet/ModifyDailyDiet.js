@@ -7,6 +7,8 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
+import { makeStyles } from "@material-ui/core/styles";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
@@ -82,6 +84,25 @@ function Edad(FechaNacimiento) {
   return edad;
 }
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+    alignItems: "center",
+  },
+  wrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+  },
+  buttonProgress: {
+    color: theme.primary,
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
+}));
+
 const ModifyDailyDietStyled = styled.div`
   margin-bottom: 2em;
   .form {
@@ -90,6 +111,7 @@ const ModifyDailyDietStyled = styled.div`
   }
   .form-button {
     margin-top: 1em;
+    margin-bottom: 1em;
     margin-left: auto;
     margin-right: auto;
   }
@@ -121,17 +143,23 @@ function getFecha(date) {
 }
 
 export default function ModifyDailyDiet({ match }) {
+  const classes = useStyles();
   const { register, errors, handleSubmit, control } = useForm();
   const dispatch = useDispatch();
   const dailyDiets = useSelector((state) => state.dailyDiets.dailyDietsAdmin);
   const patientInfo = useSelector((state) => state.patients.patientInfo);
   const res = useSelector((state) => state.dailyDiets.modifyRes);
+  const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
+    if (res) {
+      setLoading(false);
+    }
     dispatch(getDailyDietsAdmin(match.params.rut));
     dispatch(getPatientInfo(match.params.rut));
     dispatch(getId(match.params.rut));
-  }, [dispatch, match]);
+  }, [dispatch, match, res]);
+  
   const exists = useSelector((state) => state.patients.exists);
   if (exists === "error") {
     window.location.href = "/error";
@@ -252,43 +280,46 @@ export default function ModifyDailyDiet({ match }) {
   };
 
   const handleModifyDay = (event) => {
-    //tiempos
-    let breakfast_time = document.getElementById("breakfast_time").value;
-    let lunch_time = document.getElementById("lunch_time").value;
-    let snack_time = document.getElementById("snack_time").value;
-    let dinner_time = document.getElementById("dinner_time").value;
-    //campos
-    let breakfast = document.getElementById("breakfast").value;
-    let lunch = document.getElementById("lunch").value;
-    let snack = document.getElementById("snack").value;
-    let post_training = document.getElementById("post_training").value;
-    let dinner = document.getElementById("dinner").value;
-    let goals = document.getElementById("goals").value;
-    let calories = document.getElementById("calories").value;
-    let proteins = document.getElementById("proteins").value;
-    let extra_info = document.getElementById("extra_info").value;
+    if (!loading) {
+      setLoading(true);
+      //tiempos
+      let breakfast_time = document.getElementById("breakfast_time").value;
+      let lunch_time = document.getElementById("lunch_time").value;
+      let snack_time = document.getElementById("snack_time").value;
+      let dinner_time = document.getElementById("dinner_time").value;
+      //campos
+      let breakfast = document.getElementById("breakfast").value;
+      let lunch = document.getElementById("lunch").value;
+      let snack = document.getElementById("snack").value;
+      let post_training = document.getElementById("post_training").value;
+      let dinner = document.getElementById("dinner").value;
+      let goals = document.getElementById("goals").value;
+      let calories = document.getElementById("calories").value;
+      let proteins = document.getElementById("proteins").value;
+      let extra_info = document.getElementById("extra_info").value;
 
-    let newDaily = {};
-    newDaily.rut = match.params.rut;
-    newDaily.date = date.substring(0, 10);
-    newDaily.breakfast_time = breakfast_time;
-    newDaily.breakfast = breakfast;
-    newDaily.lunch_time = lunch_time;
-    newDaily.lunch = lunch;
-    newDaily.snack_time = snack_time;
-    newDaily.snack = snack;
-    newDaily.post_training = post_training;
-    newDaily.dinner_time = dinner_time;
-    newDaily.dinner = dinner;
-    newDaily.calories = calories;
-    newDaily.proteins = proteins;
-    newDaily.goals = goals;
-    newDaily.extra_info = extra_info;
+      let newDaily = {};
+      newDaily.rut = match.params.rut;
+      newDaily.date = date.substring(0, 10);
+      newDaily.breakfast_time = breakfast_time;
+      newDaily.breakfast = breakfast;
+      newDaily.lunch_time = lunch_time;
+      newDaily.lunch = lunch;
+      newDaily.snack_time = snack_time;
+      newDaily.snack = snack;
+      newDaily.post_training = post_training;
+      newDaily.dinner_time = dinner_time;
+      newDaily.dinner = dinner;
+      newDaily.calories = calories;
+      newDaily.proteins = proteins;
+      newDaily.goals = goals;
+      newDaily.extra_info = extra_info;
 
-    dispatch(modifyDailyDiets(newDaily));
+      dispatch(modifyDailyDiets(newDaily));
 
-    setOpenSnackbar(true);
-    handleClickDelete();
+      setOpenSnackbar(true);
+      handleClickDelete();
+    }
   };
 
   return (
@@ -756,26 +787,24 @@ export default function ModifyDailyDiet({ match }) {
             </Grid>
           </Grid>
           <Grid container justify="center">
-            <Button
-              className="form-button"
-              variant="outlined"
-              type="submit"
-              color="primary"
-              onClick={handleModifyDay}
-            >
-              Guardar cambios
-            </Button>
-          </Grid>
-          <Grid container justify="center">
-            <Button
-              className="form-button"
-              variant="outlined"
-              type="submit"
-              color="primary"
-              onClick={handleClickDelete}
-            >
-              Cancelar
-            </Button>
+            <div className={classes.wrapper}>
+              <Button
+                className="form-button"
+                variant="outlined"
+                type="submit"
+                color="primary"
+                onClick={handleModifyDay}
+                disabled={loading}
+              >
+                Guardar cambios
+              </Button>
+              {loading && (
+                <CircularProgress
+                  size={24}
+                  className={classes.buttonProgress}
+                />
+              )}
+            </div>
           </Grid>
         </form>
       )}

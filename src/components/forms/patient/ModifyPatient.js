@@ -97,6 +97,7 @@ export default function ModifyPatient({ match }) {
     }
     dispatch(getId(match.params.rut));
   }, [error, modifiedPatient, dispatch, match]);
+  
   const exists = useSelector((state) => state.patients.exists);
   if (exists === "error") {
     window.location.href = "/error";
@@ -329,8 +330,8 @@ export default function ModifyPatient({ match }) {
                       inputRef={register}
                       defaultValue={patientInfo.state}
                     >
-                      <option value={"active"}>Activo</option>
-                      <option value={"unactive"}>Inactivo</option>
+                      <option value={"activo"}>Activo</option>
+                      <option value={"inactivo"}>Inactivo</option>
                     </Select>
                   </FormControl>
                 </Grid>

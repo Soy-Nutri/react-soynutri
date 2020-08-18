@@ -7,10 +7,10 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-
+import CircularProgress from "@material-ui/core/CircularProgress";
 import { useTheme } from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
-
+import { makeStyles } from "@material-ui/core/styles";
 // redux
 import { useDispatch, useSelector } from "react-redux";
 import { addControl } from "../../../redux/ducks/controlDucks";
@@ -44,6 +44,7 @@ const AddControlStyled = styled.div`
   }
   .form-button {
     margin-top: 1em;
+    margin-bottom: 1em;
     margin-left: auto;
     margin-right: auto;
   }
@@ -58,13 +59,34 @@ const AddControlStyled = styled.div`
   }
 `;
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+    alignItems: "center",
+  },
+  wrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+  },
+  buttonProgress: {
+    color: theme.primary,
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
+}));
+
 export default function AddControl({ match }) {
   const dispatch = useDispatch();
+  const classes = useStyles();
   const control = useSelector((state) => state.control.control);
   const controlErrors = useSelector((state) => state.control.errors);
 
   const [open, setOpen] = React.useState(false);
   const [append, setAppend] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
   const handleOpen = () => {
     setOpen(true);
   };
@@ -78,14 +100,23 @@ export default function AddControl({ match }) {
 
   const { register, errors, handleSubmit } = useForm();
   const onSubmit = (data, e) => {
-    dispatch(addControl(data));
+    if (!loading) {
+      setLoading(true);
+      dispatch(addControl(data));
 
-    e.target.reset();
-    handleOpen();
-    setTimeout(function () {
-      setAppend(true);
-    }, 4000);
+      e.target.reset();
+      handleOpen();
+      setTimeout(function () {
+        setAppend(true);
+      }, 4000);
+    }
   };
+
+  React.useEffect(() => {
+    if (controlErrors || (control && !append)) {
+      setLoading(false);
+    }
+  }, [controlErrors, control, append]);
 
   const reqmsg = "Campo obligatorio";
 
@@ -489,15 +520,21 @@ export default function AddControl({ match }) {
           </Grid>
         </Grid>
 
-        <Grid container alignItems="center">
-          <Button
-            className="form-button"
-            variant="outlined"
-            type="submit"
-            color="primary"
-          >
-            Agregar control
-          </Button>
+        <Grid container justify="center" alignItems="center">
+          <div className={classes.wrapper}>
+            <Button
+              className="form-button"
+              variant="outlined"
+              type="submit"
+              color="primary"
+              disabled={loading}
+            >
+              Agregar control
+            </Button>
+            {loading && (
+              <CircularProgress size={24} className={classes.buttonProgress} />
+            )}
+          </div>
         </Grid>
       </form>
       {controlErrors ? (

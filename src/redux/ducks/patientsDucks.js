@@ -8,6 +8,7 @@ const GET_PATIENTS = "GET_PATIENTS";
 const GET_PATIENT_INFO = "GET_PATIENT_INFO";
 const CLEAR_PATIENT_INFO = "CLEAR_PATIENT_INFO";
 const PATIENT_MODIFIED = "PATIENT_MODIFIED";
+const PATIENT_NOT_MODIFIED = "PATIENT_NOT_MODIFIED";
 const GET_PATIENT_INFO_PATIENT = "GET_PATIENT_INFO_PATIENT";
 const MODIFY_PASSWORD = "MODIFY_PASSWORD";
 const FILTER_PATIENT = "FILTER_PATIENT";
@@ -43,6 +44,8 @@ export default function patientsReducer(state = initialState, action) {
       return { ...state, patientInfo: null };
     case PATIENT_MODIFIED:
       return { ...state, modifiedPatient: true };
+    case PATIENT_NOT_MODIFIED:
+      return { ...state, modifiedPatient: false };
     case GET_PATIENT_INFO_PATIENT:
       return { ...state, patientInfo: action.payload };
     case MODIFY_PASSWORD:
@@ -96,6 +99,7 @@ export const addPatient = (patientData) => (dispatch) => {
 // get a list of patient with basic info
 export const getPatientsList = () => (dispatch) => {
   dispatch({ type: CLEAR_ERROR });
+  dispatch({ type: CLEAR_PATIENT_INFO });
   axios
     .get("/patients/getId")
     .then((res) => {
@@ -159,6 +163,8 @@ export const getPatientInfo = (rut) => (dispatch) => {
 // modify a patient
 export const modifyPatient = (data) => async (dispatch) => {
   dispatch({ type: CLEAR_ERROR });
+  dispatch({ type: PATIENT_NOT_MODIFIED });
+  dispatch({ type: CLEAR_PATIENT_INFO });
   axios
     .post(`/patients/modifyPerfil`, data)
     .then(() => dispatch({ type: PATIENT_MODIFIED }))
