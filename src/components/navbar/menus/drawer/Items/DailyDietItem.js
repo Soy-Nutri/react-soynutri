@@ -52,7 +52,7 @@ export default function DailyDietItem(props) {
             onClick={props.handleDrawerClose}
             className={classes.nested}
             component={Link}
-            to="/agregar_pauta_diaria"
+            to="/buscar_paciente/agregar_pauta_diaria"
           >
             <ListItemIcon>
               <AddIcon />
@@ -64,7 +64,7 @@ export default function DailyDietItem(props) {
             onClick={props.handleDrawerClose}
             className={classes.nested}
             component={Link}
-            to="/ver_pauta_diaria"
+            to="/buscar_paciente/ver_pauta_diaria"
           >
             <ListItemIcon>
               <VisibilityIcon />
@@ -76,7 +76,7 @@ export default function DailyDietItem(props) {
             onClick={props.handleDrawerClose}
             className={classes.nested}
             component={Link}
-            to="/modificar_pauta_diaria"
+            to="/buscar_paciente/modificar_pauta_diaria"
           >
             <ListItemIcon>
               <CreateIcon />
@@ -88,7 +88,7 @@ export default function DailyDietItem(props) {
             onClick={props.handleDrawerClose}
             className={classes.nested}
             component={Link}
-            to="/eliminar_pauta_diaria"
+            to="/buscar_paciente/eliminar_pauta_diaria"
           >
             <ListItemIcon>
               <DeleteIcon />
