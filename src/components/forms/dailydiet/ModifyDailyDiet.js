@@ -130,6 +130,74 @@ const ModifyDailyDietStyled = styled.div`
     font-size: 1em;
     /* color: var(--mainPurple); */
   }
+  /* Hidde spinner number input Chrome, Safari, Edge, Opera */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Hidde spinner number input Firefox */
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+  /* ------- */
+  margin-bottom: 2em;
+  .form {
+    margin-left: 1em;
+    margin-right: 1em;
+  }
+  .form-button {
+    margin-top: 1em;
+  }
+
+  .title {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1em;
+    font-family: yellowtail;
+    font-size: 3.5em;
+    /* color: var(--mainPurple); */
+  }
+  .semana {
+    margin-top: px;
+    margin-left: 25px;
+  }
+
+  /*Cambiar estilo en media screen para las minutas */
+  @media screen and (min-width: 600px) {
+    .MuiGrid-root.margin.MuiGrid-item.MuiGrid-grid-md-1,
+    .MuiGrid-root.MuiGrid-item.MuiGrid-grid-md-1 {
+      display: none;
+    }
+    .texto {
+      margin-right: 0.2px;
+    }
+    .semana {
+      margin-top: px;
+      margin-left: px;
+    }
+    .lunch-picker {
+      margin-right: 0.1px;
+    }
+
+    .grid-invisible {
+      display: none;
+    }
+  }
+  @media screen and (min-width: 960px) {
+    .grid-invisible {
+      display: block;
+    }
+  }
+
+  .name {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1em;
+    font-size: 1em;
+    /* color: var(--mainPurple); */
+  }
 `;
 
 function getFecha(date) {
@@ -159,7 +227,7 @@ export default function ModifyDailyDiet({ match }) {
     dispatch(getPatientInfo(match.params.rut));
     dispatch(getId(match.params.rut));
   }, [dispatch, match, res]);
-  
+
   const exists = useSelector((state) => state.patients.exists);
   if (exists === "error") {
     window.location.href = "/error";

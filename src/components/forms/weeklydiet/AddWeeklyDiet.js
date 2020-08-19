@@ -536,7 +536,7 @@ export default function AddWeeklyDiet({ match }) {
           onClose={handleCloseSnackbar}
         >
           <Alert onClose={handleCloseSnackbar} severity="success">
-            Minuta añadido con éxito.
+            Minuta añadida con éxito.
           </Alert>
         </Snackbar>
       ) : (
