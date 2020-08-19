@@ -34,7 +34,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "host": "react-scripts build && firebase deploy"
+    "host": "react-scripts build && firebase deploy",
+    "danilo": "git checkout master && git pull && git checkout Danilo && git merge master",
+    "nacho": "git checkout master && git pull && git checkout JoseSantamaria && git merge master"
   },
   "eslintConfig": {
     "extends": "react-app"
