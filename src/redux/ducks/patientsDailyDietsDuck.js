@@ -117,6 +117,7 @@ export const modifyDailyDiets = (daily) => async (dispatch) => {
     .then((res) => {
       if (res.data.message === "Pauta diaria modificada.") {
         dispatch({ type: MODIFY_RES, payload: "ok" });
+        dispatch(getDailyDietsAdmin(daily.rut));
       } else {
         dispatch({ type: MODIFY_RES, payload: "error" });
       }

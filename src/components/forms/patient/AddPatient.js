@@ -22,6 +22,8 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useDispatch, useSelector } from "react-redux";
 import { addPatient } from "../../../redux/ducks/patientsDucks";
 
+import { validRut } from "../../../utils/validateRut";
+
 const AddPatientStyled = styled.div`
   /* Hidde spinner number input Chrome, Safari, Edge, Opera */
   input::-webkit-outer-spin-button,
@@ -118,6 +120,20 @@ export default function AddPatient({ history }) {
     }
   };
 
+  const handleVerifyRut = (e) => {
+    if (e.target.value.length !== 0) {
+      if (!validRut(e.target.value)) {
+        let errorElement = document.getElementById("rut-error");
+        errorElement.innerHTML =
+          "<p style='color: red; font-size: 10px;'>Rut inválido</p>";
+      }
+    }
+  };
+  const clearRutError = () => {
+    let errorElement = document.getElementById("rut-error");
+    errorElement.innerHTML = "";
+  };
+
   const reqmsg = "Campo obligatorio";
 
   const theme = useTheme();
@@ -152,19 +168,20 @@ export default function AddPatient({ history }) {
               <TextField
                 name="rut"
                 type="text"
-                label="Rut"
+                label="Rut (Sin puntos ni guión)"
                 variant="outlined"
                 margin="dense"
                 className="input"
                 fullWidth
+                onBlur={handleVerifyRut}
+                onFocus={clearRutError}
                 error={errors.rut}
-                helperText={
-                  errors.rut ? errors.rut.message : "Sin puntos ni guión"
-                }
+                helperText={errors.rut ? errors.rut.message : ""}
                 inputRef={register({
                   required: { value: true, message: reqmsg },
                 })}
               />
+              <div id="rut-error"></div>
             </Grid>
             <Grid item xs={12} sm={4} md={3} lg={2}>
               <TextField
