@@ -142,13 +142,13 @@ export default function SimpleTable({ weekly }) {
           <TableRow>
             <TableCell>Día</TableCell>
 
-            <TableCell align="right">
+            <TableCell align="left">
               Desayuno {header[0].timeBreakfast}
             </TableCell>
-            <TableCell align="right">Almuerzo {header[0].timeLunch}</TableCell>
-            <TableCell align="right">Colación {header[0].timeSnack}</TableCell>
-            <TableCell align="right">Post entreno</TableCell>
-            <TableCell align="right">Cena {header[0].timeDinner}</TableCell>
+            <TableCell align="left">Almuerzo {header[0].timeLunch}</TableCell>
+            <TableCell align="left">Colación {header[0].timeSnack}</TableCell>
+            <TableCell align="left">Post entreno</TableCell>
+            <TableCell align="left">Cena {header[0].timeDinner}</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -157,11 +157,11 @@ export default function SimpleTable({ weekly }) {
               <TableCell component="th" scope="row">
                 {row.day}
               </TableCell>
-              <TableCell align="right">{row.breakfast}</TableCell>
-              <TableCell align="right">{row.lunch}</TableCell>
-              <TableCell align="right">{row.snack}</TableCell>
-              <TableCell align="right">{row.post_training}</TableCell>
-              <TableCell align="right">{row.dinner}</TableCell>
+              <TableCell align="left">{row.breakfast}</TableCell>
+              <TableCell align="left">{row.lunch}</TableCell>
+              <TableCell align="left">{row.snack}</TableCell>
+              <TableCell align="left">{row.post_training}</TableCell>
+              <TableCell align="left">{row.dinner}</TableCell>
             </TableRow>
           ))}
         </TableBody>
