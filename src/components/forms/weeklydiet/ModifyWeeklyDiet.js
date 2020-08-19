@@ -200,9 +200,9 @@ export default function ModifyWeeklyDiet({ match }) {
     window.location.href = "/error";
   }
 
-  const handleClickDelete = () => {
-    setDayOfWeek("");
-  };
+  // const handleClickDelete = () => {
+  //   setDayOfWeek("");
+  // };
 
   const [breakfastTime, setBreakfastTime] = React.useState(
     new Date("January 1 2020 09:30").getTime()
@@ -647,18 +647,6 @@ export default function ModifyWeeklyDiet({ match }) {
               onClick={handleModifyDay}
             >
               Modificar minuta semanal del dia {dayOfWeek}
-            </Button>
-          </Grid>
-
-          <Grid container justify="center">
-            <Button
-              className="form-button"
-              variant="outlined"
-              type="submit"
-              color="primary"
-              onClick={handleClickDelete}
-            >
-              Cancelar
             </Button>
           </Grid>
         </React.Fragment>

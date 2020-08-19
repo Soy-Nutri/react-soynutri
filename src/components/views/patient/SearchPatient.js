@@ -159,7 +159,7 @@ export default function SearchPatient({ match }) {
   };
 
   const handleDelete = (rut) => {
-    dispatch(deletePatient({ rut }));
+    dispatch(deletePatient(rut));
     handleClose();
     handleOpenSnack();
   };

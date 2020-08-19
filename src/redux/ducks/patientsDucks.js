@@ -117,8 +117,9 @@ export const getPatientsList = () => (dispatch) => {
 export const deletePatient = (rut) => async (dispatch) => {
   dispatch({ type: CLEAR_ERROR });
   // delete changes the state to inactive
+  console.log(rut);
   axios
-    .post("/patients/deletePerfil", rut)
+    .delete(`/patients/delete/${rut}`)
     .then(() => {})
     .catch((error) => {
       if (error.response.request.status === 404) {
@@ -134,7 +135,7 @@ export const deletePatient = (rut) => async (dispatch) => {
       }
     });
   await new Promise((r) => setTimeout(r, 2000));
-  window.location.href = "/";
+  window.location.reload();
 };
 
 // get all info of a patient by rut (required by the admin)
@@ -182,6 +183,7 @@ export const modifyPatient = (data) => async (dispatch) => {
       }
     });
   await new Promise((r) => setTimeout(r, 2000));
+  window.location.href = "/buscar_paciente/modificar";
 };
 
 // get all info of a patient by rut (required by the patient)

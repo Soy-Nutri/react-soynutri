@@ -69,7 +69,7 @@ function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-export default function ModifyPatient({ match }) {
+export default function ModifyPatient({ match, history }) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
@@ -95,9 +95,12 @@ export default function ModifyPatient({ match }) {
     if (error || modifiedPatient) {
       setLoading(false);
     }
+    if (!patientInfo) {
+      dispatch(getPatientInfo(match.params.rut));
+    }
     dispatch(getId(match.params.rut));
-  }, [error, modifiedPatient, dispatch, match]);
-  
+  }, [error, modifiedPatient, dispatch, match, patientInfo]);
+
   const exists = useSelector((state) => state.patients.exists);
   if (exists === "error") {
     window.location.href = "/error";
